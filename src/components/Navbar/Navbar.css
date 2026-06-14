@@ -1,0 +1,20 @@
+.navbar{
+    background-color: var(--tarjeta);
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 16px;
+}
+
+.nav-item {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.nav-item button {
+    background-color: transparent;
+    border: none;
+    color: var(--texto-gris);
+    cursor: pointer;
+    font-size: 14px;
+}

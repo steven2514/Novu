@@ -1,0 +1,26 @@
+.formulario {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    flex-wrap: wrap;
+}
+
+.formulario input,
+.formulario select {
+    background-color: var(--tarjeta);
+    color: var(--texto);
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.formulario button {
+    background-color: var(--principal);
+    color: var(--texto);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
