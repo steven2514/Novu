@@ -1,12 +1,17 @@
+import { useNavigate } from 'react-router-dom';
 import Formulario from '../components/Formulario/Formulario';
+import './AgregarIngreso.css';
 
-function agregarIngreso({setTransacciones}) {
+function AgregarIngreso({ setTransacciones }) {
+    const navigate = useNavigate();
+
     return (
-        <div>
-            <h1>Ingreso</h1>
-            <Formulario setTransacciones={setTransacciones} tipo="ingreso"/>
+        <div className='bloqueIngreso'>
+            <h1>Agregar Ingreso</h1>
+            <Formulario setTransacciones={setTransacciones} tipo="ingreso" />
+            <button className='ingresos' onClick={() => navigate('/')}>Regresar</button>
         </div>
     );
 }
 
-export default agregarIngreso;
+export default AgregarIngreso;

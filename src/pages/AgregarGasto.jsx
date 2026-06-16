@@ -1,13 +1,20 @@
+import { useNavigate} from 'react-router-dom';
 import Formulario from '../components/Formulario/Formulario';
+import './AgregarGasto.css'
 
-function agregarGasto({ setTransacciones}) {
+
+function AgregarGasto({ setTransacciones }) {
+    
+    const navigate = useNavigate();
     return (
-        <div>
-            <h1>Gasto</h1>
-            <Formulario setTransacciones={setTransacciones} tipo="gasto"/>
+        <div className='bloqueGasto'>
+            <h1>Agregar Gasto</h1>
+            <Formulario setTransacciones={setTransacciones} tipo="gasto" />
             
+            <button className='gastos' onClick={() => navigate('/')}>Regresar</button>
+           
         </div>
     );
 }
 
-export default agregarGasto;
+export default AgregarGasto;

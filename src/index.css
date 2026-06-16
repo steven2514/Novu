@@ -20,3 +20,13 @@ body {
   color: #FFFFFF;
   font-family: system-ui, sans-serif;
 }
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.contenido {
+  flex: 1;
+  overflow-y: auto;
+}

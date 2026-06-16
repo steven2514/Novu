@@ -1,0 +1,25 @@
+h1 {
+    padding: 20px;
+}
+
+.bloqueIngreso {
+    background-color: var(--fondo);
+    text-align: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.ingresos {
+    background-color: var(--principal);
+    color: var(--texto);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translate(-50%);
+
+}

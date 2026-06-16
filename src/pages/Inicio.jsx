@@ -2,7 +2,7 @@ import Header from '../components/Header/Header';
 import Balance from '../components/Balance/Balance';
 import Transacciones from '../components/Transacciones/Transacciones';
 import Navbar from '../components/Navbar/Navbar';
-import Formulario from '../components/Formulario/Formulario'
+
 import { useState } from 'react';
 
 function Inicio({ transacciones, setTransacciones }) {
@@ -34,7 +34,7 @@ function Inicio({ transacciones, setTransacciones }) {
             <Header />
             <Balance balance={balance} totalIngresos={totalIngresos} totalGastos={totalGasto} setMostrarFormulario={setMostrarFormulario} />
             <Transacciones transacciones={transacciones} eliminar={eliminar}></Transacciones>
-            
+
         </div>
     );
 }
