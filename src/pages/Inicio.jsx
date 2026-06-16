@@ -1,7 +1,5 @@
-import Header from '../components/Header/Header';
-import Balance from '../components/Balance/Balance';
-import Transacciones from '../components/Transacciones/Transacciones';
-import Navbar from '../components/Navbar/Navbar';
+
+import TarjetaResumen from '../components/TarjetaResumen/TarjetaResumen';
 
 import { useState } from 'react';
 
@@ -24,17 +22,25 @@ function Inicio({ transacciones, setTransacciones }) {
         .reduce((acc, t) => acc + Number(t.monto)
             , 0);
 
-    function eliminar(index) {
-        setTransacciones(transacciones.filter((_, i) => i !== index));
-    }
+
+    const fecha = new Date().toLocaleDateString('es-CO', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 
 
     return (
-        <div>
-            <Header />
-            <Balance balance={balance} totalIngresos={totalIngresos} totalGastos={totalGasto} setMostrarFormulario={setMostrarFormulario} />
-            <Transacciones transacciones={transacciones} eliminar={eliminar}></Transacciones>
-
+        <div className='dashboard'>
+            <h1>Dashboard</h1>
+            <p>{fecha}</p>
+            <div className='tarjetas-grid'>
+            <TarjetaResumen titulo="Balance Total" valor={balance} color="principal"/>
+            <TarjetaResumen titulo="ingresos" valor={totalIngresos} color="principal"/>
+            <TarjetaResumen titulo="gastos" valor={totalGasto} color="principal"/>
+            <TarjetaResumen titulo="metas" valor={0} color="principal"/>
+            </div>
         </div>
     );
 }
