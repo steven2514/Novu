@@ -17,8 +17,6 @@ function Transacciones({ transacciones, eliminar, abrirModal }) {
     const transaccionesFiltradas = transacciones
         .filter(t => filtro === 'todos' || t.tipo === filtro);
 
-
-
     return (
         <div className="transacciones-page">
 
@@ -46,9 +44,15 @@ function Transacciones({ transacciones, eliminar, abrirModal }) {
 
             <div className="trans-lista-section">
                 <div className="trans-filtros">
-                    <button onClick={() => setFiltro('todos')}>Todas</button>
-                    <button onClick={() => setFiltro('ingreso')}>Ingresos</button>
-                    <button onClick={() => setFiltro('gasto')}>Gastos</button>
+                    <button
+                        className={filtro === 'todos' ? 'activo' : ''}
+                        onClick={() => setFiltro('todos')}>Todas</button>
+                    <button
+                        className={filtro === 'ingreso' ? 'activo' : ''}
+                        onClick={() => setFiltro('ingreso')}>Ingresos</button>
+                    <button
+                        className={filtro === 'gasto' ? 'activo' : ''}
+                        onClick={() => setFiltro('gasto')}>Gastos</button>
                 </div>
 
                 <div className="trans-lista">
@@ -59,12 +63,21 @@ function Transacciones({ transacciones, eliminar, abrirModal }) {
                             .filter(t => filtro === 'todos' || t.tipo === filtro)
                             .map((t) => (
                                 <div className="transaccion-item" key={t.index}>
-                                    <div>
-                                        <p>{t.descripcion}</p>
-                                        <p>{t.tipo}</p>
+                                    <div className="transaccion-icono" style={{
+                                        backgroundColor: t.tipo === 'ingreso' ? '#00D2A022' : '#FF6B6B22'
+                                    }}>
+                                        <span style={{ color: t.tipo === 'ingreso' ? '#00D2A0' : '#FF6B6B' }}>
+                                            {t.tipo === 'ingreso' ? '↗' : '↙'}
+                                        </span>
+                                    </div>
+                                    <div className="transaccion-info">
+                                        <p className="transaccion-descripcion">{t.descripcion}</p>
+                                        <p className="transaccion-meta">
+                                            {t.categoria} • {t.cuenta} • {t.fecha}
+                                        </p>
                                     </div>
                                     <p className={t.tipo === 'ingreso' ? 'monto-ingreso' : 'monto-gasto'}>
-                                        ${t.monto}
+                                        {t.tipo === 'ingreso' ? '+' : '-'}${Number(t.monto).toLocaleString('es-CO')}
                                     </p>
                                     <button className="btn-eliminar" onClick={() => eliminar(t.index)}>🗑️</button>
                                 </div>

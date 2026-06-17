@@ -16,6 +16,7 @@ function App() {
     const [transacciones, setTransacciones] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalTipo, setModalTipo] = useState('');
+    const [cuentas, setCuentas] = useState([]);
 
     function abrirModal(tipo) {
         setModalTipo(tipo);
@@ -33,7 +34,7 @@ function App() {
                 <div className='contenido'>
                     <Routes>
                         <Route path='/' element={<Inicio transacciones={transacciones} setTransacciones={setTransacciones} />} />
-                        <Route path='/cuentas' element={<Cuenta />} />
+                        <Route path='/cuentas' element={<Cuenta  cuentas={cuentas} setCuentas={setCuentas}/>} />
                         <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar}/>} />
                         <Route path='/Suscripciones' element={<Suscripciones />} />
                         <Route path='/Metas' element={<Meta />} />
@@ -41,7 +42,7 @@ function App() {
                         <Route path='/Aprendizaje' element={<Aprendizaje />} />
                     </Routes>
                     <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
-                        <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} />
+                        <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas } />
                     </Modal>
                 </div>
             </div>
