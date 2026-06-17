@@ -1,8 +1,63 @@
-function Suscripciones() {
+import { useState } from "react";
+import './Suscripciones.css';
+import Modal from '../components/Modal/Modal';
+import FormularioSuscripcion from "../components/FormularioSuscripcion/FormularioSuscripcion";
+
+function Suscripciones({ cuentas }) {
+
+    const [suscripciones, setSuscripciones] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const gastoMensual = suscripciones.reduce((acc, c) => acc + Number(c.monto), 0);
+
     return (
-        <div>
-            <h1>Suscripciones</h1>
+        <div className="suscripciones-page">
+            <div className="suscripciones-header">
+                <div>
+                    <h1>Suscripciones</h1>
+                    <p>Control de pagos recurrentes</p>
+                </div>
+                <button onClick={() => setModalVisible(true)}>+ Nueva Suscripción</button>
+            </div>
+
+            <div className="tarjeta-gasto">
+                <p>Gasto Mensual en Suscripciones</p>
+                <h2>${gastoMensual.toLocaleString('es-CO')}</h2>
+            </div>
+
+            {suscripciones.length === 0 ? (
+                <div className="seccion-vacia">
+                    <p>No hay suscripciones</p>
+                    <p>Agrega tus servicios recurrentes</p>
+                    <button onClick={() => setModalVisible(true)}>+ Agregar Suscripción</button>
+                </div>
+            ) : (
+                <div className="suscripciones-lista">
+                        {suscripciones.map((sus, index) => {
+
+                            const hoy = new Date();
+                            const fechaRenovacion = new Date(sus.fechaRenovacion);
+                            const diferencia = fechaRenovacion - hoy;
+                            const dias = diferencia / (1000 * 60 * 60 * 24);
+
+                            return(
+                                <div key={index} className="suscripcion-tarjeta" style={{ borderColor: sus.color }}>
+                                    
+                                <span className="suscripcion-icono">{sus.icono}</span>
+                                <p className="suscripcion-nombre">{sus.nombre}</p>
+                                <p className="suscripcion-monto">${Number(sus.monto).toLocaleString('es-CO')}</p>
+                                <p className="suscripcion-dias">Faltan {Math.round(dias)} días</p>
+                                <button className="btn-eliminar-cuenta" onClick={() => setSuscripciones(prev => prev.filter((_, i) => i !== index))}>🗑️</button>
+                            </div>
+                        )})}
+                </div>
+            )}
+
+            <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
+                <FormularioSuscripcion setSuscripciones={setSuscripciones} onClose={() => setModalVisible(false)} cuentas={cuentas} />
+            </Modal>
         </div>
+
+
     );
 }
 

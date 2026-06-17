@@ -1,0 +1,118 @@
+.formulario-suscripcion {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.formulario-suscripcion h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1A1A2E;
+    margin-bottom: 20px;
+}
+
+.formulario-suscripcion label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1A1A2E;
+    margin-top: 16px;
+    margin-bottom: 6px;
+}
+
+.formulario-suscripcion input[type="text"],
+.formulario-suscripcion input[type="number"],
+.formulario-suscripcion input[type="date"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #1A1A2E;
+    box-sizing: border-box;
+}
+
+.formulario-suscripcion input::placeholder {
+    color: #9CA3AF;
+}
+
+.formulario-suscripcion input:focus {
+    outline: none;
+    border-color: #6C63FF;
+}
+
+.formulario-suscripcion select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    font-size: 15px;
+    color: #1A1A2E;
+    background-color: #FFFFFF;
+    box-sizing: border-box;
+}
+
+.formulario-suscripcion select:focus {
+    outline: none;
+    border-color: #6C63FF;
+}
+
+.iconos-opciones {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.icono-opcion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #FFFFFF;
+}
+
+.icono-opcion.seleccionado {
+    border-color: #6C63FF;
+    background-color: #6C63FF11;
+}
+
+.color-opciones {
+    display: flex;
+    gap: 10px;
+}
+
+.color-circulo {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.color-circulo.seleccionado {
+    border-color: #6C63FF;
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #6C63FF;
+}
+
+.formulario-suscripcion button {
+    width: 100%;
+    margin-top: 24px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #FFFFFF;
+    cursor: pointer;
+    background: linear-gradient(135deg, #6C63FF, #4338CA);
+}
+
+.formulario-suscripcion button:hover {
+    opacity: 0.9;
+}

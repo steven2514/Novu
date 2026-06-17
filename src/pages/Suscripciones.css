@@ -1,0 +1,132 @@
+.suscripciones-page {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.suscripciones-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.suscripciones-header h1 {
+    font-size: 1.8rem;
+    color: #1A1A2E;
+}
+
+.suscripciones-header p {
+    color: #6B7280;
+    font-size: 1rem;
+}
+
+.suscripciones-header button {
+    background-color: #6C63FF;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.tarjeta-gasto {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.tarjeta-gasto p {
+    color: #6B7280;
+    margin-bottom: 0.5rem;
+}
+
+.tarjeta-gasto h2 {
+    font-size: 2.5rem;
+    color: #1A1A2E;
+}
+
+.seccion-vacia {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.seccion-vacia p:first-child {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1A1A2E;
+}
+
+.seccion-vacia p:last-of-type {
+    color: #6B7280;
+}
+
+.seccion-vacia button {
+    background-color: #6C63FF;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.suscripcion-tarjeta {
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 2px solid;
+    padding: 1.5rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.suscripcion-icono {
+    font-size: 2rem;
+}
+
+.suscripcion-nombre {
+    font-weight: 600;
+    color: #1A1A2E;
+    font-size: 1.1rem;
+}
+
+.suscripcion-monto {
+    color: #1A1A2E;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.suscripcion-dias {
+    color: #6B7280;
+    font-size: 0.9rem;
+}
+
+.suscripciones-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.btn-eliminar-cuenta {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+}

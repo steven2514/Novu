@@ -36,7 +36,7 @@ function App() {
                         <Route path='/' element={<Inicio transacciones={transacciones} setTransacciones={setTransacciones} />} />
                         <Route path='/cuentas' element={<Cuenta  cuentas={cuentas} setCuentas={setCuentas}/>} />
                         <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar}/>} />
-                        <Route path='/Suscripciones' element={<Suscripciones />} />
+                        <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas } />} />
                         <Route path='/Metas' element={<Meta />} />
                         <Route path='/Calendario' element={<Calendario />} />
                         <Route path='/Aprendizaje' element={<Aprendizaje />} />
