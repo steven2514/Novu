@@ -1,13 +1,21 @@
 :root {
-    --fondo: #0D0F14;
-    --tarjeta: #1E2330;
-    --principal: #6C63FF;
-    --positivo: #00D2A0;
-    --negativo: #FF6B6B;
-    --ahorro: #FFB347;
-    --texto: #FFFFFF;
-    --texto-gris: #9CA3AF;
+  --fondo: #F4F5F7;
+  --tarjeta: #FFFFFF;
+  --principal: #6C63FF;
+  --positivo: #00A878;
+  --negativo: #E53935;
+  --ahorro: #FFB347;
+  --texto: #1A1A2E;
+  --texto-gris: #6B7280;
 }
+
+body {
+  background-color: var(--fondo);
+  color: var(--texto);
+  font-family: system-ui, sans-serif;
+}
+
+
 
 * {
   margin: 0;
@@ -15,11 +23,7 @@
   box-sizing: border-box;
 }
 
-body {
-  background-color: #0D0F14;
-  color: #FFFFFF;
-  font-family: system-ui, sans-serif;
-}
+
 
 .layout {
   display: flex;

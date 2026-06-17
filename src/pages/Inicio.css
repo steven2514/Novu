@@ -1,0 +1,24 @@
+.dashboard {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.dashboard h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1A1A2E;
+}
+
+.dashboard>p {
+    font-size: 14px;
+    color: #6B7280;
+    margin-top: -16px;
+}
+
+.tarjetas-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}

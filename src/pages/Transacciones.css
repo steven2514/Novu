@@ -1,0 +1,126 @@
+.transacciones-page{
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.trans-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.trans-header h1{
+    font-size: 28px;
+    font-weight: 700;
+    color: #1A1A2E;
+}
+
+.trans-header p{
+    font-size: 14px;
+    color: #6B7280;
+    margin-top: 4px;
+}
+
+.trans-botones-header{
+    display: flex;
+    gap: 12px;
+}
+
+.btn-ingreso{
+    background-color: #16A34A;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-gasto {
+    background-color: #DC2626;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.trans-totales {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.tarjeta-total {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #E5E7EB;
+}
+
+.tarjeta-total p {
+    font-size: 14px;
+    color: #6B7280;
+    margin-bottom: 8px;
+}
+
+.monto-ingreso {
+    font-size: 28px;
+    font-weight: 700;
+    color: #16A34A;
+}
+
+.monto-gasto {
+    font-size: 28px;
+    font-weight: 700;
+    color: #DC2626;
+}
+
+.trans-lista-section {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #E5E7EB;
+}
+
+.trans-filtros {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.trans-filtros button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #6B7280;
+}
+
+.trans-filtros button.activo {
+    background-color: #EDE9FE;
+    color: var(--principal);
+    border-color: var(--principal);
+    font-weight: 600;
+}
+
+.vacio {
+    text-align: center;
+    color: #9CA3AF;
+    padding: 32px;
+}
+
+.btn-eliminar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #DC2626;
+}

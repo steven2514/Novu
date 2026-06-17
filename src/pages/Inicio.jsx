@@ -1,11 +1,11 @@
-
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import TarjetaResumen from '../components/TarjetaResumen/TarjetaResumen';
 
-import { useState } from 'react';
+import './Inicio.css';
 
 function Inicio({ transacciones, setTransacciones }) {
 
-    const [mostrarFormulario, setMostrarFormulario] = useState(false);
+    
 
     const balance = transacciones.reduce((acc, t) => {
         if (t.tipo === 'ingreso') return acc + Number(t.monto);
@@ -36,10 +36,10 @@ function Inicio({ transacciones, setTransacciones }) {
             <h1>Dashboard</h1>
             <p>{fecha}</p>
             <div className='tarjetas-grid'>
-            <TarjetaResumen titulo="Balance Total" valor={balance} color="principal"/>
-            <TarjetaResumen titulo="ingresos" valor={totalIngresos} color="principal"/>
-            <TarjetaResumen titulo="gastos" valor={totalGasto} color="principal"/>
-            <TarjetaResumen titulo="metas" valor={0} color="principal"/>
+                <TarjetaResumen titulo="BALANCE TOTAL" valor={balance} color="principal" subtitulo="0 cuentas activas" />
+                <TarjetaResumen titulo="INGRESOS" valor={totalIngresos} color="positivo" subtitulo="Este mes" />
+                <TarjetaResumen titulo="GASTOS" valor={totalGasto} color="negativo" subtitulo="Este mes" />
+                <TarjetaResumen titulo="METAS" valor={0} color="texto" subtitulo="En progreso" />
             </div>
         </div>
     );

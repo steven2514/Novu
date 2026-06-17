@@ -1,18 +1,30 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Inicio from './pages/Inicio';
-import AgregarIngreso from './pages/AgregarIngreso';
-import AgregarGasto from './pages/AgregarGasto';
 import Sidebar from './components/Sidebar/Sidebar';
 import Transacciones from './pages/Transacciones';
 import Suscripciones from './pages/Suscripciones'
+import Cuenta from './pages/Cuentas';
 import Meta from './pages/Metas';
 import Calendario from './pages/Calendario';
 import Aprendizaje from './pages/Aprendizaje';
+import Modal from './components/Modal/Modal';
 import { useState } from 'react';
+import Formulario from './components/Formulario/Formulario';
 
 function App() {
 
     const [transacciones, setTransacciones] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalTipo, setModalTipo] = useState('');
+
+    function abrirModal(tipo) {
+        setModalTipo(tipo);
+        setModalVisible(true);
+    }
+
+    function eliminar(index) {
+        setTransacciones(prev => prev.filter((_, i) => i !== index));
+    }
 
     return (
         <BrowserRouter>
@@ -20,16 +32,17 @@ function App() {
                 <Sidebar />
                 <div className='contenido'>
                     <Routes>
-                        <Route path='/' element={<Inicio
-                        transacciones={transacciones} setTransacciones={setTransacciones} />} />
-                        <Route path='/agregarGasto' element={<AgregarGasto setTransacciones={setTransacciones}/>} />
-                        <Route path='/agregarIngreso' element={<AgregarIngreso setTransacciones={setTransacciones} />} />
-                        <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones}/>} />
-                        <Route path='/Suscripciones' element={<Suscripciones/> } />
-                        <Route path='/Metas'  element={<Meta/>}/>
-                        <Route path='/Calendario' element={<Calendario/> } />
-                        <Route path='/Aprendizaje' element={<Aprendizaje/> } />
+                        <Route path='/' element={<Inicio transacciones={transacciones} setTransacciones={setTransacciones} />} />
+                        <Route path='/cuentas' element={<Cuenta />} />
+                        <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar}/>} />
+                        <Route path='/Suscripciones' element={<Suscripciones />} />
+                        <Route path='/Metas' element={<Meta />} />
+                        <Route path='/Calendario' element={<Calendario />} />
+                        <Route path='/Aprendizaje' element={<Aprendizaje />} />
                     </Routes>
+                    <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
+                        <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} />
+                    </Modal>
                 </div>
             </div>
         </BrowserRouter>
