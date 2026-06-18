@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Modal from '../components/Modal/Modal';
 import './Cuentas.css';
+import { supabase } from '../supabase';
 import FormularioCuenta from "../components/FormularioCuenta/FormularioCuenta";
 
 function Cuentas({cuentas=[], setCuentas}) {
@@ -42,14 +43,17 @@ function Cuentas({cuentas=[], setCuentas}) {
                                 <div className="cuentas-lista">
                                     {cuentasFiltradas.map((cuenta, index) => {
                                         const tipoLabel = tipo === 'credito' ? 'Crédito' : tipo === 'debito' ? 'Débito' : 'Efectivo';
-                                        const indexReal = cuentas.indexOf(cuenta);
+                                      
                                         return (
                                             <div key={index} className="cuenta-tarjeta">
                                                 <div className="cuenta-tarjeta-header">
                                                     <div className="cuenta-icono" style={{ backgroundColor: cuenta.color + '22' }}>
                                                         <span style={{ color: cuenta.color }}>$</span>
                                                     </div>
-                                                    <button className="btn-eliminar-cuenta" onClick={() => setCuentas(prev => prev.filter((_, i) => i !== indexReal))}>🗑️</button>
+                                                    <button className="btn-eliminar-cuenta" onClick={() => {
+                                                        supabase.from('cuentas').delete().eq('id', cuenta.id).then(() => { });
+                                                        setCuentas(prev => prev.filter(c => c.id !== cuenta.id));
+                                                    }}>🗑️</button>
                                                 </div>
                                                 <p className="cuenta-nombre">{cuenta.nombre}</p>
                                                 {cuenta.banco && <p className="cuenta-banco">{cuenta.banco}</p>}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import './FormularioCuenta.css';
 import { Icon } from '../Icon';
+import { supabase } from '../../supabase';
 
 function FormularioCuenta({setCuenta, onClose}) {
     const [nombre, setNombre] = useState('');
@@ -10,7 +11,9 @@ function FormularioCuenta({setCuenta, onClose}) {
     const [color, setColor] = useState('#6C63FF');
 
     function guardar() {
-        setCuenta(prev => [...prev, { nombre, tipo, saldo, banco, color }]);
+        const nueva = { nombre, tipo, saldo, banco, color };
+        supabase.from('cuentas').insert([nueva]).then(() => {});
+        setCuenta(prev => [...prev, nueva]);
         setNombre('');
         setTipo('');
         setSaldo('');

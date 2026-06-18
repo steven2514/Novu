@@ -1,6 +1,7 @@
 import { useState } from "react"
 import './Formulario.css';
 import { Icon } from '../Icon';
+import { supabase } from '../../supabase';
 
 function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas }) {
 
@@ -12,7 +13,9 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas }) {
     const [fecha] = useState(new Date())
 
     function agregar() {
-        setTransacciones(prev => [...prev, { descripcion, monto, tipo, categoria, cuenta, fecha, fuente }]);
+        const nueva = { descripcion, monto, tipo, categoria, cuenta, fecha, fuente };
+        supabase.from('transacciones').insert([nueva]).then(() => {});
+        setTransacciones(prev => [...prev, nueva]);
         setCuentas(prev => prev.map(c => {
             if (c.nombre !== cuenta) return c;
             const nuevoSaldo = tipo == 'ingreso' ? Number(c.saldo) + Number(monto)

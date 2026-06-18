@@ -1,5 +1,6 @@
 import { useState } from "react";
 import './FormularioTarea.css';
+import { supabase } from '../../supabase';
 
 function FormularioTarea({ setTareas, onClose }) {
 
@@ -17,10 +18,11 @@ function FormularioTarea({ setTareas, onClose }) {
             descripcion,
             categoria,
             prioridad,
-            fechaLimite,
+            fecha_limite: fechaLimite,
             completada: false
         };
 
+        supabase.from('tareas').insert([nuevaTarea]).then(() => { });
         setTareas(prev => [...prev, nuevaTarea]);
         onClose();
     }

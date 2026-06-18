@@ -104,12 +104,12 @@ function Inicio({ transacciones, metas, suscripciones, cuentas=[]}) {
                         <p>No hay metas activas</p>
                     ) : (
                         metas.map((meta, index) => {
-                            const porcentaje = Math.min((meta.montoActual / meta.montoObjetivo) * 100, 100);
+                            const porcentaje = Math.min((meta.monto_actual / meta.monto_objetivo) * 100, 100);
                             return (
                                 <div key={index} className="meta-dashboard">
                                     <div className="meta-dashboard-header">
-                                        <span>{meta.nombreMeta}</span>
-                                        <span>${meta.montoActual} / ${meta.montoObjetivo}</span>
+                                        <span>{meta.nombre_meta}</span>
+                                        <span>${meta.monto_actual} / ${meta.monto_objetivo}</span>
                                     </div>
                                     <div className="barra-fondo">
                                         <div className="barra-progreso" style={{ width: `${porcentaje}%`, backgroundColor: meta.color }}></div>
@@ -125,7 +125,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas=[]}) {
                         <p>No hay pagos próximos</p>
                     ) : (
                         suscripciones
-                            .sort((a, b) => new Date(a.fechaRenovacion) - new Date(b.fechaRenovacion))
+                            .sort((a, b) => new Date(a.fecha_renovacion) - new Date(b.fecha_renovacion))
                             .slice(0, 3)
                             .map((sus, index) => (
                                 <div key={index} className="pago-proximo">

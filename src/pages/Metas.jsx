@@ -1,15 +1,15 @@
 import { useState } from "react";
 import './Metas.css';
 import Modal from '../components/Modal/Modal';
+import { supabase } from '../supabase';
 import FormularioMeta from '../components/FormularioMeta/FormularioMeta';
 
-function Metas({metas, setMetas}) {
+function Metas({ metas, setMetas }) {
 
-    
     const [modalVisible, setModalVisible] = useState(false);
 
-    const totalObjetivo = metas.reduce((acc, m) => acc + Number(m.montoObjetivo), 0);
-    const totalAhorrado = metas.reduce((acc, m) => acc + Number(m.montoActual), 0);
+    const totalObjetivo = metas.reduce((acc, m) => acc + Number(m.monto_objetivo), 0);
+    const totalAhorrado = metas.reduce((acc, m) => acc + Number(m.monto_actual), 0);
     const progresoGeneral = totalObjetivo > 0 ? (totalAhorrado / totalObjetivo) * 100 : 0;
 
     return (
@@ -51,15 +51,18 @@ function Metas({metas, setMetas}) {
             ) : (
                 <div className="metas-lista">
                     {metas.map((meta, index) => {
-                        const porcentaje = Math.min((Number(meta.montoActual) / Number(meta.montoObjetivo)) * 100, 100);
-                        const faltante = Number(meta.montoObjetivo) - Number(meta.montoActual);
+                        const porcentaje = Math.min((Number(meta.monto_actual) / Number(meta.monto_objetivo)) * 100, 100);
+                        const faltante = Number(meta.monto_objetivo) - Number(meta.monto_actual);
                         return (
                             <div key={index} className="meta-tarjeta" style={{ borderColor: meta.color }}>
                                 <div className="meta-tarjeta-top">
                                     <span className="meta-icono">{meta.icono}</span>
-                                    <button className="btn-eliminar-cuenta" onClick={() => setMetas(prev => prev.filter((_, i) => i !== index))}>🗑️</button>
+                                    <button className="btn-eliminar-cuenta" onClick={() => {
+                                        supabase.from('metas').delete().eq('id', meta.id).then(() => { });
+                                        setMetas(prev => prev.filter(m => m.id !== meta.id));
+                                    }}>🗑️</button>
                                 </div>
-                                <p className="meta-nombre">{meta.nombreMeta}</p>
+                                <p className="meta-nombre">{meta.nombre_meta}</p>
                                 <p className="meta-subtitulo">Meta de ahorro</p>
 
                                 <div className="meta-progreso-header">
@@ -73,11 +76,11 @@ function Metas({metas, setMetas}) {
                                 <div className="meta-detalle-grid">
                                     <div className="meta-detalle-caja">
                                         <p className="meta-detalle-label">Ahorrado</p>
-                                        <p className="meta-detalle-valor">${Number(meta.montoActual).toLocaleString('es-CO')}</p>
+                                        <p className="meta-detalle-valor">${Number(meta.monto_actual).toLocaleString('es-CO')}</p>
                                     </div>
                                     <div className="meta-detalle-caja">
                                         <p className="meta-detalle-label">Objetivo</p>
-                                        <p className="meta-detalle-valor">${Number(meta.montoObjetivo).toLocaleString('es-CO')}</p>
+                                        <p className="meta-detalle-valor">${Number(meta.monto_objetivo).toLocaleString('es-CO')}</p>
                                     </div>
                                 </div>
 

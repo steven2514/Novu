@@ -1,6 +1,7 @@
 import { useState } from "react";
 import './FormularioMeta.css';
 import { Icon, ICONOS_META } from '../Icon';
+import { supabase } from '../../supabase';
 
 
 function FormularioMeta({setMetas, onClose}) {
@@ -15,9 +16,10 @@ function FormularioMeta({setMetas, onClose}) {
     const COLORES = ['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4'];
 
     function guardar() {
-        setMetas(prev => [...prev, { nombreMeta, montoObjetivo, montoActual,fechaObjetivo, icono,color }]);
+        const nueva = { nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual, fecha_objetivo: fechaObjetivo, icono, color };
+        supabase.from('metas').insert([nueva]).then(() => { });
+        setMetas(prev => [...prev, nueva]);
         onClose();
-        
     }
 
     return (

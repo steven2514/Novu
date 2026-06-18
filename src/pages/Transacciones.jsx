@@ -74,13 +74,13 @@ function Transacciones({ transacciones, eliminar, abrirModal }) {
                                     <div className="transaccion-info">
                                         <p className="transaccion-descripcion">{t.descripcion}</p>
                                         <p className="transaccion-meta">
-                                            {t.categoria} • {t.cuenta} • {t.fecha.toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' })}
+                                            {t.categoria} • {t.cuenta} • {new Date(t.fecha).toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' })}
                                         </p>
                                     </div>
                                     <p className={t.tipo === 'ingreso' ? 'monto-ingreso' : 'monto-gasto'}>
                                         {t.tipo === 'ingreso' ? '+' : '-'}${Number(t.monto).toLocaleString('es-CO')}
                                     </p>
-                                    <button className="btn-eliminar" onClick={() => eliminar(t.index)}><Icon name="trash-2" /></button>
+                                    <button className="btn-eliminar" onClick={() => eliminar(t.id)}><Icon name="trash-2" /></button>
                                 </div>
                             ))
                     }

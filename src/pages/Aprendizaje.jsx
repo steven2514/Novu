@@ -1,11 +1,11 @@
 import { useState } from "react";
 import './Aprendizaje.css';
 import Modal from '../components/Modal/Modal';
+import { supabase } from '../supabase';
 import FormularioTarea from '../components/FormularioTarea/FormularioTarea';
 
-function Aprendizaje({tareas, setTareas}) {
+function Aprendizaje({ tareas, setTareas }) {
 
-    
     const [modalVisible, setModalVisible] = useState(false);
     const [filtro, setFiltro] = useState('Todas');
 
@@ -21,12 +21,13 @@ function Aprendizaje({tareas, setTareas}) {
         return true;
     });
 
-    function toggleCompletada(index) {
-        setTareas(prev => prev.map((t, i) => i === index ? { ...t, completada: !t.completada } : t));
+    function toggleCompletada(id) {
+        setTareas(prev => prev.map(t => t.id === id ? { ...t, completada: !t.completada } : t));
     }
 
-    function eliminarTarea(index) {
-        setTareas(prev => prev.filter((_, i) => i !== index));
+    function eliminarTarea(id) {
+        supabase.from('tareas').delete().eq('id', id).then(() => { });
+        setTareas(prev => prev.filter(t => t.id !== id));
     }
 
     return (
@@ -85,9 +86,9 @@ function Aprendizaje({tareas, setTareas}) {
                     </div>
                 ) : (
                     <div className="tareas-lista">
-                        {tareasFiltradas.map((tarea, index) => (
-                            <div key={index} className={`tarea-item ${tarea.completada ? 'tarea-completada' : ''}`}>
-                                <button className="check-tarea" onClick={() => toggleCompletada(index)}>
+                        {tareasFiltradas.map((tarea) => (
+                            <div key={tarea.id} className={`tarea-item ${tarea.completada ? 'tarea-completada' : ''}`}>
+                                <button className="check-tarea" onClick={() => toggleCompletada(tarea.id)}>
                                     {tarea.completada ? '✓' : ''}
                                 </button>
                                 <div className="tarea-info">
@@ -96,10 +97,10 @@ function Aprendizaje({tareas, setTareas}) {
                                     <div className="tarea-meta">
                                         <span className="tarea-categoria">{tarea.categoria}</span>
                                         <span className={`tarea-prioridad prioridad-${tarea.prioridad}`}>{tarea.prioridad}</span>
-                                        {tarea.fechaLimite && <span className="tarea-fecha">📅 {tarea.fechaLimite}</span>}
+                                        {tarea.fecha_limite && <span className="tarea-fecha">📅 {tarea.fecha_limite}</span>}
                                     </div>
                                 </div>
-                                <button className="btn-eliminar-tarea" onClick={() => eliminarTarea(index)}>🗑️</button>
+                                <button className="btn-eliminar-tarea" onClick={() => eliminarTarea(tarea.id)}>🗑️</button>
                             </div>
                         ))}
                     </div>

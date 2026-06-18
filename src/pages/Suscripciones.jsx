@@ -1,6 +1,7 @@
 import { useState } from "react";
 import './Suscripciones.css';
 import Modal from '../components/Modal/Modal';
+import { supabase } from '../supabase';
 import FormularioSuscripcion from "../components/FormularioSuscripcion/FormularioSuscripcion";
 
 function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas }) {
@@ -31,32 +32,33 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas })
                 </div>
             ) : (
                 <div className="suscripciones-lista">
-                        {suscripciones.map((sus, index) => {
+                    {suscripciones.map((sus, index) => {
 
-                            const hoy = new Date();
-                            const fechaRenovacion = new Date(sus.fechaRenovacion);
-                            const diferencia = fechaRenovacion - hoy;
-                            const dias = diferencia / (1000 * 60 * 60 * 24);
+                        const hoy = new Date();
+                        const fechaRenovacion = new Date(sus.fecha_renovacion);
+                        const diferencia = fechaRenovacion - hoy;
+                        const dias = diferencia / (1000 * 60 * 60 * 24);
 
-                            return(
-                                <div key={index} className="suscripcion-tarjeta" style={{ borderColor: sus.color }}>
-                                    
+                        return (
+                            <div key={index} className="suscripcion-tarjeta" style={{ borderColor: sus.color }}>
                                 <span className="suscripcion-icono">{sus.icono}</span>
                                 <p className="suscripcion-nombre">{sus.nombre}</p>
                                 <p className="suscripcion-monto">${Number(sus.monto).toLocaleString('es-CO')}</p>
                                 <p className="suscripcion-dias">Faltan {Math.round(dias)} días</p>
-                                <button className="btn-eliminar-cuenta" onClick={() => setSuscripciones(prev => prev.filter((_, i) => i !== index))}>🗑️</button>
+                                <button className="btn-eliminar-cuenta" onClick={() => {
+                                    supabase.from('suscripciones').delete().eq('id', sus.id).then(() => { });
+                                    setSuscripciones(prev => prev.filter(s => s.id !== sus.id));
+                                }}>🗑️</button>
                             </div>
-                        )})}
+                        );
+                    })}
                 </div>
             )}
 
             <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
-                <FormularioSuscripcion setSuscripciones={setSuscripciones} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas}/>
+                <FormularioSuscripcion setSuscripciones={setSuscripciones} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas} />
             </Modal>
         </div>
-
-
     );
 }
 

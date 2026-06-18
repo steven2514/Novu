@@ -8,8 +8,9 @@ import Meta from './pages/Metas';
 import Calendario from './pages/Calendario';
 import Aprendizaje from './pages/Aprendizaje';
 import Modal from './components/Modal/Modal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Formulario from './components/Formulario/Formulario';
+import { supabase } from './supabase';
 
 function App() {
 
@@ -21,13 +22,44 @@ function App() {
     const [metas, setMetas] = useState([]);
     const [suscripciones, setSuscripciones] = useState([]);
 
+    useEffect(() => {
+        supabase.from('transacciones').select('*').then(({ data }) => {
+            if (data) setTransacciones(data);
+        });
+    }, []);
+
+    useEffect(() => {
+        supabase.from('cuentas').select('*').then(({ data }) => {
+            if (data) setCuentas(data);
+        });
+    }, []);
+
+    useEffect(() => {
+        supabase.from('metas').select('*').then(({ data }) => {
+            if (data) setMetas(data);
+        });
+    }, []);
+
+    useEffect(() => {
+        supabase.from('suscripciones').select('*').then(({ data }) => {
+            if (data) setSuscripciones(data);
+        });
+    }, []);
+
+    useEffect(() => {
+        supabase.from('tareas').select('*').then(({ data }) => {
+            if (data) setTareas(data);
+        });
+    }, []);
+
     function abrirModal(tipo) {
         setModalTipo(tipo);
         setModalVisible(true);
     }
 
-    function eliminar(index) {
-        setTransacciones(prev => prev.filter((_, i) => i !== index));
+    function eliminar(id) {
+        supabase.from('transacciones').delete().eq('id', id).then(() => { });
+        setTransacciones(prev => prev.filter(t => t.id !== id));
     }
 
     return (
@@ -36,18 +68,18 @@ function App() {
                 <Sidebar />
                 <div className='contenido'>
                     <Routes>
-                        <Route path='/' element={<Inicio transacciones={transacciones} setTransacciones={setTransacciones} metas={metas} suscripciones={suscripciones } />} cuentas={cuentas}/>
+                        <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} />} />
 
                         <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} />} />
-                        
+
                         <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} />} />
-                        
+
                         <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} setCuentas={setCuentas} />} />
-                        
+
                         <Route path='/Metas' element={<Meta metas={metas} setMetas={setMetas} />} />
-                        
+
                         <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} tareas={tareas} />} />
-                        
+
                         <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} />} />
                     </Routes>
                     <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>

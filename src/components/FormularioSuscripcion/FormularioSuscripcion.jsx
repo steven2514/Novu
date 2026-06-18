@@ -1,7 +1,7 @@
 import { useState } from "react";
 import './FormularioSuscripcion.css'
 import { Icon, ICONOS_SUSCRIPCION } from '../Icon';
-
+import { supabase } from '../../supabase';
 
 function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas }) {
 
@@ -17,13 +17,14 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas 
     const COLORES = ['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4'];
 
     function guardar() {
-        setSuscripciones(prev => [...prev, { nombre, monto, cuenta, fechaRenovacion, frecuencia, icono, color }]);
+        const nueva = { nombre, monto, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color };
+        supabase.from('suscripciones').insert([nueva]).then(() => { });
+        setSuscripciones(prev => [...prev, nueva]);
         setCuentas(prev => prev.map(c => {
             if (c.nombre !== cuenta) return c;
             return { ...c, saldo: Number(c.saldo) - Number(monto) };
-        }))
+        }));
         onClose();
-        
     }
 
     return (
