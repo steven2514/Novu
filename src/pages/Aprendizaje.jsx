@@ -3,9 +3,9 @@ import './Aprendizaje.css';
 import Modal from '../components/Modal/Modal';
 import FormularioTarea from '../components/FormularioTarea/FormularioTarea';
 
-function Aprendizaje() {
+function Aprendizaje({tareas, setTareas}) {
 
-    const [tareas, setTareas] = useState([]);
+    
     const [modalVisible, setModalVisible] = useState(false);
     const [filtro, setFiltro] = useState('Todas');
 

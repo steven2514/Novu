@@ -2,7 +2,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, Pi
 import TarjetaResumen from '../components/TarjetaResumen/TarjetaResumen';
 import './Inicio.css';
 
-function Inicio({ transacciones, setTransacciones }) {
+function Inicio({ transacciones, setTransacciones, metas }) {
 
     const balance = transacciones.reduce((acc, t) => {
         if (t.tipo === 'ingreso') return acc + Number(t.monto);
@@ -50,7 +50,7 @@ function Inicio({ transacciones, setTransacciones }) {
                 <TarjetaResumen titulo="BALANCE TOTAL" valor={balance} color="principal" subtitulo="0 cuentas activas" />
                 <TarjetaResumen titulo="INGRESOS" valor={totalIngresos} color="positivo" subtitulo="Este mes" />
                 <TarjetaResumen titulo="GASTOS" valor={totalGasto} color="negativo" subtitulo="Este mes" />
-                <TarjetaResumen titulo="METAS" valor={0} color="texto" subtitulo="En progreso" />
+                <TarjetaResumen titulo="METAS" valor={metas.length} color="texto" subtitulo="En progreso" sinPeso />
             </div>
 
             <div className="dashboard-fila">
@@ -87,6 +87,24 @@ function Inicio({ transacciones, setTransacciones }) {
             <div className="dashboard-fila">
                 <div className="dashboard-caja">
                     <h3>Metas Activas</h3>
+                    {metas.length === 0 ? (
+                        <p>No hay metas activas</p>
+                    ) : (
+                        metas.map((meta, index) => {
+                            const porcentaje = Math.min((meta.montoActual / meta.montoObjetivo) * 100, 100);
+                            return (
+                                <div key={index} className="meta-dashboard">
+                                    <div className="meta-dashboard-header">
+                                        <span>{meta.nombreMeta}</span>
+                                        <span>${meta.montoActual} / ${meta.montoObjetivo}</span>
+                                    </div>
+                                    <div className="barra-fondo">
+                                        <div className="barra-progreso" style={{ width: `${porcentaje}%`, backgroundColor: meta.color }}></div>
+                                    </div>
+                                </div>
+                            );
+                        })
+                    )}
                 </div>
                 <div className="dashboard-caja">
                     <h3>Próximos Pagos</h3>

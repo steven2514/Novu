@@ -1,10 +1,10 @@
 import './TarjetaResumen.css';
 
-function TarjetaResumen({ titulo, valor, color, subtitulo }) {
+function TarjetaResumen({ titulo, valor, color, subtitulo, sinPeso }) {
     return (
         <div className="tarjeta-resumen">
             <p className='tarjeta-titulo'>{titulo}</p>
-            <h2 className={`tarjeta-valor ${color}`}>${valor}</h2>
+            <h2 className={`tarjeta-valor ${color}`}>{sinPeso ? '' : '$'}{valor}</h2>
             <p className='tarjeta-subtitulo'>{subtitulo}</p>
         </div>
     );

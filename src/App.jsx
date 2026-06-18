@@ -13,6 +13,7 @@ import Formulario from './components/Formulario/Formulario';
 
 function App() {
 
+    const [tareas, setTareas] = useState([]);
     const [transacciones, setTransacciones] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalTipo, setModalTipo] = useState('');
@@ -35,13 +36,13 @@ function App() {
                 <Sidebar />
                 <div className='contenido'>
                     <Routes>
-                        <Route path='/' element={<Inicio transacciones={transacciones} setTransacciones={setTransacciones} />} />
+                        <Route path='/' element={<Inicio transacciones={transacciones} setTransacciones={setTransacciones} metas={metas} />} />
                         <Route path='/cuentas' element={<Cuenta  cuentas={cuentas} setCuentas={setCuentas}/>} />
                         <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar}/>} />
                         <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} />} />
                         <Route path='/Metas' element={<Meta metas={metas} setMetas={setMetas } />} />
                         <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} />} />
-                        <Route path='/Aprendizaje' element={<Aprendizaje />} />
+                        <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} />} />
                     </Routes>
                     <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
                         <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas } />
