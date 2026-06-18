@@ -2,7 +2,7 @@ import { useState } from "react";
 import './Calendario.css';
 
 
-function Calendario({ metas, transacciones, suscripciones }) {
+function Calendario({ metas, transacciones, suscripciones, tareas }) {
 
     const [fechaActual, setFechaActual] = useState(new Date());
     const mes = fechaActual.getMonth();
@@ -15,23 +15,23 @@ function Calendario({ metas, transacciones, suscripciones }) {
     const nombresMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     const nombresDias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
-    // Transacciones que caen dentro del mes que se está mostrando (mes/anio de arriba)
+    
     const transaccionesDelMes = transacciones.filter((t) => {
         const fechaT = new Date(t.fecha);
         return fechaT.getMonth() === mes && fechaT.getFullYear() === anio;
     });
 
-    // De esas, solo las de tipo ingreso, sumadas con reduce
+   
     const totalIngresos = transaccionesDelMes
         .filter((t) => t.tipo === 'ingreso')
         .reduce((acc, t) => acc + Number(t.monto), 0);
 
-    // De esas, solo las de tipo gasto, sumadas con reduce
+   
     const totalGastos = transaccionesDelMes
         .filter((t) => t.tipo === 'gasto')
         .reduce((acc, t) => acc + Number(t.monto), 0);
 
-    // Cuántas suscripciones se renuevan en el mes que se está mostrando
+   
     const suscripcionesDelMes = suscripciones.filter((s) => {
         if (!s.fechaRenovacion) return false;
         const fechaS = new Date(s.fechaRenovacion);
@@ -86,11 +86,23 @@ function Calendario({ metas, transacciones, suscripciones }) {
                             return dia === fechaMeta.getDate() && mes === fechaMeta.getMonth() && anio === fechaMeta.getFullYear();
                         });
 
+                        const tareasDelDia = tareas.filter((tarea) => {
+                            if (!tarea.fechaLimite) return false;
+                            const fechaT = new Date(tarea.fechaLimite + 'T00:00:00');
+                            return dia === fechaT.getDate() && mes === fechaT.getMonth() && anio === fechaT.getFullYear();
+                            
+                        });
+                        
+
                         return (
                             <div key={index} className={`celda-dia  ${dia === null ? 'celda-vacia' : ''} ${esHoy ? 'dia-hoy' : ''}`}>
                                 {dia}
                                 {metasDelDia.map((meta, i) => (
                                     <span key={i} className="punto-meta" style={{ backgroundColor: meta.color }} title={meta.nombreMeta}></span>
+                                ))}
+                                {tareasDelDia.map((tarea, i) => (
+                                    <span key={i} className="punto-tarea" style={{ backgroundColor: '#6C63FF' }} title={tarea.titulo}></span>
+                                    
                                 ))}
                             </div>
                         )
