@@ -1,5 +1,6 @@
 import { useState } from "react"
 import './Formulario.css';
+import { Icon } from '../Icon';
 
 function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas }) {
 
@@ -30,7 +31,7 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas }) {
         <div className="formulario">
             <div className="formulario-header">
                 <h2>{tipo === 'ingreso' ? 'Nuevo Ingreso' : 'Nuevo Gasto'}</h2>
-                <button className="btn-cerrar-modal" onClick={onClose}>✕</button>
+                <button className="btn-cerrar-modal" onClick={onClose}><Icon name="x" /></button>
             </div>
             <label>Descripción</label>
             <input type="text" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} placeholder="Descripción" />

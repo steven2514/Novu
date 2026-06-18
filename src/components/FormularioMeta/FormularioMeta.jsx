@@ -1,5 +1,6 @@
 import { useState } from "react";
 import './FormularioMeta.css';
+import { Icon, ICONOS_META } from '../Icon';
 
 
 function FormularioMeta({setMetas, onClose}) {
@@ -10,7 +11,7 @@ function FormularioMeta({setMetas, onClose}) {
     const [fechaObjetivo, setFechaObjetivo] = useState('');
     const [icono, setIcono] = useState('');
     const [color, setColor] = useState('');
-    const ICONOS = ['🎯', '✈️', '🏠', '🚗', '🧮', '💻', '🎓', '💰', '🎁', '🎗️'];
+    const ICONOS = ICONOS_META;
     const COLORES = ['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4'];
 
     function guardar() {
@@ -23,7 +24,7 @@ function FormularioMeta({setMetas, onClose}) {
         <div className="formulario-meta">
             <div className="formulario-meta-header">
                 <h2>Nueva Meta</h2>
-                <button className="btn-cerrar-modal" onClick={onClose}>✕</button>
+                <button className="btn-cerrar-modal" onClick={onClose}><Icon name="x" /></button>
             </div>
 
             <label>Nombre de la Meta</label>
@@ -45,7 +46,7 @@ function FormularioMeta({setMetas, onClose}) {
                         key={ic}
                         className={`icono-opcion ${icono === ic ? 'seleccionado' : ''}`}
                         onClick={() => setIcono(ic)}
-                    >{ic}</div>
+                    ><Icon name={ic} /></div>
                 ))}
             </div>
 

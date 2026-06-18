@@ -1,5 +1,6 @@
 import { useState } from "react";
 import './FormularioSuscripcion.css'
+import { Icon, ICONOS_SUSCRIPCION } from '../Icon';
 
 
 function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas }) {
@@ -9,10 +10,10 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas 
     const [cuenta, setCuenta] = useState('');
     const [fechaRenovacion, setFechaRenovacion] = useState('');
     const [frecuencia, setFrecuencia] = useState('mensual');
-    const [icono, setIcono] = useState('💳');
+    const [icono, setIcono] = useState('credit-card');
     const [color, setColor] = useState('#6C63FF');
 
-    const ICONOS = ['💳', '📺', '🎵', '☁️', '🎮', '📱', '💻', '🎬', '🖥️', '🏋️'];
+    const ICONOS = ICONOS_SUSCRIPCION;
     const COLORES = ['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4'];
 
     function guardar() {
@@ -29,7 +30,7 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas 
         <div className="formulario-suscripcion">
             <div className="formulario-meta-header">
                 <h2>Nueva Suscripcion</h2>
-                <button className="btn-cerrar-modal" onClick={onClose}>✕</button>
+                <button className="btn-cerrar-modal" onClick={onClose}><Icon name="x" /></button>
             </div>
 
             <label>Nombre</label>
@@ -63,7 +64,7 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas 
                         key={ic}
                         className={`icono-opcion ${icono === ic ? 'seleccionado' : ''}`}
                         onClick={() => setIcono(ic)}
-                    >{ic}</div>
+                    ><Icon name={ic} /></div>
                 ))}
             </div>
 

@@ -2,7 +2,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, Pi
 import TarjetaResumen from '../components/TarjetaResumen/TarjetaResumen';
 import './Inicio.css';
 
-function Inicio({ transacciones, setTransacciones, metas, suscripciones}) {
+function Inicio({ transacciones, metas, suscripciones, cuentas=[]}) {
 
     const balance = transacciones.reduce((acc, t) => {
         if (t.tipo === 'ingreso') return acc + Number(t.monto);
@@ -17,11 +17,14 @@ function Inicio({ transacciones, setTransacciones, metas, suscripciones}) {
         .filter((t) => t.tipo === 'gasto')
         .reduce((acc, t) => acc + Number(t.monto), 0);
 
-    const datosPrueba = [
-        { categoria: 'Comida', valor: 50000 },
-        { categoria: 'Transporte', valor: 30000 },
-        { categoria: 'Entretenimiento', valor: 20000 },
-    ];
+    const gastosPorCategoria = transacciones
+        .filter(t => t.tipo === 'gasto')
+        .reduce((acc, t) => {
+            const cat = acc.find(c => c.categoria === t.categoria);
+            if (cat) cat.valor += Number(t.monto);
+            else acc.push({ categoria: t.categoria, valor: Number(t.monto) });
+            return acc;
+        }, []);
 
     const fecha = new Date().toLocaleDateString('es-CO', {
         weekday: 'long',
@@ -30,16 +33,26 @@ function Inicio({ transacciones, setTransacciones, metas, suscripciones}) {
         day: 'numeric'
     });
 
-    const datosSemanales = [
-        { dia: 'Lun', ingresos: 0, gastos: 0 },
-        { dia: 'Mar', ingresos: 0, gastos: 0 },
-        { dia: 'Mié', ingresos: 0, gastos: 0 },
-        { dia: 'Jue', ingresos: 0, gastos: 0 },
-        { dia: 'Vie', ingresos: 0, gastos: 0 },
-        { dia: 'Sáb', ingresos: 0, gastos: 0 },
-        { dia: 'Dom', ingresos: 0, gastos: 0 },
-    ];
+    const hoy = new Date();
+    const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
+    const datosSemanales = Array.from({ length: 7 }, (_, i) => {
+        const fecha = new Date(hoy);
+        fecha.setDate(hoy.getDate() - (6 - i));
+        const diaNombre = diasSemana[fecha.getDay()];
+
+        const ingresos = transacciones
+            .filter(t => t.tipo === 'ingreso' && new Date(t.fecha).toDateString() === fecha.toDateString())
+            .reduce((acc, t) => acc + Number(t.monto), 0);
+
+        const gastos = transacciones
+            .filter(t => t.tipo === 'gasto' && new Date(t.fecha).toDateString() === fecha.toDateString())
+            .reduce((acc, t) => acc + Number(t.monto), 0);
+
+        return { dia: diaNombre, ingresos, gastos };
+    });
+
+    
     const COLORES = ['#6C63FF', '#00D2A0', '#FFB347'];
 
     return (
@@ -47,7 +60,7 @@ function Inicio({ transacciones, setTransacciones, metas, suscripciones}) {
             <h1>Dashboard</h1>
             <p>{fecha}</p>
             <div className='tarjetas-grid'>
-                <TarjetaResumen titulo="BALANCE TOTAL" valor={balance} color="principal" subtitulo="0 cuentas activas" />
+                <TarjetaResumen titulo="BALANCE TOTAL" valor={balance} color="principal" subtitulo={`${cuentas.length} cuentas activas`} />
                 <TarjetaResumen titulo="INGRESOS" valor={totalIngresos} color="positivo" subtitulo="Este mes" />
                 <TarjetaResumen titulo="GASTOS" valor={totalGasto} color="negativo" subtitulo="Este mes" />
                 <TarjetaResumen titulo="METAS" valor={metas.length} color="texto" subtitulo="En progreso" sinPeso />
@@ -73,8 +86,8 @@ function Inicio({ transacciones, setTransacciones, metas, suscripciones}) {
                         <p>Sin gastos registrados este mes</p>
                     ) : (
                             <PieChart width={300} height={250}>
-                                <Pie data={datosPrueba} dataKey="valor" nameKey="categoria">
-                                    {datosPrueba.map((entry, index) => (
+                                <Pie data={gastosPorCategoria} dataKey="valor" nameKey="categoria">
+                                    {gastosPorCategoria.map((entry, index) => (
                                         <Cell key={index} fill={COLORES[index]} />
                                     ))}
                                 </Pie>

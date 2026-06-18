@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './Transacciones.css';
+import { Icon } from '../components/Icon';
 
 
 function Transacciones({ transacciones, eliminar, abrirModal }) {
@@ -67,7 +68,7 @@ function Transacciones({ transacciones, eliminar, abrirModal }) {
                                         backgroundColor: t.tipo === 'ingreso' ? '#00D2A022' : '#FF6B6B22'
                                     }}>
                                         <span style={{ color: t.tipo === 'ingreso' ? '#00D2A0' : '#FF6B6B' }}>
-                                            {t.tipo === 'ingreso' ? '↗' : '↙'}
+                                            <Icon name={t.tipo === 'ingreso' ? 'trending-up' : 'trending-down'} size={16} />
                                         </span>
                                     </div>
                                     <div className="transaccion-info">
@@ -79,7 +80,7 @@ function Transacciones({ transacciones, eliminar, abrirModal }) {
                                     <p className={t.tipo === 'ingreso' ? 'monto-ingreso' : 'monto-gasto'}>
                                         {t.tipo === 'ingreso' ? '+' : '-'}${Number(t.monto).toLocaleString('es-CO')}
                                     </p>
-                                    <button className="btn-eliminar" onClick={() => eliminar(t.index)}>🗑️</button>
+                                    <button className="btn-eliminar" onClick={() => eliminar(t.index)}><Icon name="trash-2" /></button>
                                 </div>
                             ))
                     }

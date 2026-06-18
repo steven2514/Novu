@@ -1,5 +1,6 @@
 import { useState } from "react";
-import './FormularioCuenta.css'
+import './FormularioCuenta.css';
+import { Icon } from '../Icon';
 
 function FormularioCuenta({setCuenta, onClose}) {
     const [nombre, setNombre] = useState('');
@@ -22,7 +23,7 @@ function FormularioCuenta({setCuenta, onClose}) {
         <div className="formulario-cuenta">
             <div className="formulario-meta-header">
                 <h2>Nueva Cuenta</h2>
-                <button className="btn-cerrar-modal" onClick={onClose}>✕</button>
+                <button className="btn-cerrar-modal" onClick={onClose}><Icon name="x" /></button>
             </div>
             <label>Nombre</label>
             <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Cuenta Principal" />
