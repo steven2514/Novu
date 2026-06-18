@@ -1,6 +1,11 @@
 /* === RESPONSIVE MOBILE === */
 /* Archivo separado para no modificar CSS existente */
 
+/* Ocultar hamburguesa en desktop */
+.btn-hamburguesa {
+  display: none !important;
+}
+
 /* === LAYOUT === */
 @media (max-width: 768px) {
   .layout {
