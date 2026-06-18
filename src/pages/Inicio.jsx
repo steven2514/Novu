@@ -2,7 +2,7 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, Pi
 import TarjetaResumen from '../components/TarjetaResumen/TarjetaResumen';
 import './Inicio.css';
 
-function Inicio({ transacciones, setTransacciones, metas }) {
+function Inicio({ transacciones, setTransacciones, metas, suscripciones}) {
 
     const balance = transacciones.reduce((acc, t) => {
         if (t.tipo === 'ingreso') return acc + Number(t.monto);
@@ -108,7 +108,19 @@ function Inicio({ transacciones, setTransacciones, metas }) {
                 </div>
                 <div className="dashboard-caja">
                     <h3>Próximos Pagos</h3>
-                    <p>No hay pagos próximos</p>
+                    {suscripciones.length === 0 ? (
+                        <p>No hay pagos próximos</p>
+                    ) : (
+                        suscripciones
+                            .sort((a, b) => new Date(a.fechaRenovacion) - new Date(b.fechaRenovacion))
+                            .slice(0, 3)
+                            .map((sus, index) => (
+                                <div key={index} className="pago-proximo">
+                                    <span>{sus.icono} {sus.nombre}</span>
+                                    <span>${Number(sus.monto).toLocaleString('es-CO')}</span>
+                                </div>
+                            ))
+                    )}
                 </div>
             </div>
         </div>

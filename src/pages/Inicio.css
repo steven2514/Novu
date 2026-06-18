@@ -72,3 +72,22 @@
     border-radius: 10px;
     transition: width 0.3s ease;
 }
+
+.pago-proximo{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #E5E7EB;
+    font-size: 14px;
+    color: #1A1A2E;
+}
+
+.pago-proximo:last-child{
+    border-bottom: none;
+}
+
+.dashboard-caja {
+    overflow-y: auto;
+    max-height: 350px;
+}

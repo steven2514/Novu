@@ -36,7 +36,7 @@ function App() {
                 <Sidebar />
                 <div className='contenido'>
                     <Routes>
-                        <Route path='/' element={<Inicio transacciones={transacciones} setTransacciones={setTransacciones} metas={metas} />} />
+                        <Route path='/' element={<Inicio transacciones={transacciones} setTransacciones={setTransacciones} metas={metas} suscripciones={suscripciones } />} />
 
                         <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} />} />
                         
