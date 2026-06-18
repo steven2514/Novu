@@ -2,7 +2,7 @@ import { useState } from "react";
 import './FormularioSuscripcion.css'
 
 
-function FormularioSuscripcion({ setSuscripciones, onClose, cuentas }) {
+function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas }) {
 
     const [nombre, setNombre] = useState('');
     const [monto, setMonto] = useState();
@@ -17,8 +17,12 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas }) {
 
     function guardar() {
         setSuscripciones(prev => [...prev, { nombre, monto, cuenta, fechaRenovacion, frecuencia, icono, color }]);
+        setCuentas(prev => prev.map(c => {
+            if (c.nombre !== cuenta) return c;
+            return { ...c, saldo: Number(c.saldo) - Number(monto) };
+        }))
         onClose();
-        console.log('guardando:', nombre, monto, cuenta);
+        
     }
 
     return (

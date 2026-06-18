@@ -3,7 +3,7 @@ import './Suscripciones.css';
 import Modal from '../components/Modal/Modal';
 import FormularioSuscripcion from "../components/FormularioSuscripcion/FormularioSuscripcion";
 
-function Suscripciones({ cuentas, suscripciones, setSuscripciones }) {
+function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas }) {
 
     const [modalVisible, setModalVisible] = useState(false);
     const gastoMensual = suscripciones.reduce((acc, c) => acc + Number(c.monto), 0);
@@ -52,7 +52,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones }) {
             )}
 
             <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
-                <FormularioSuscripcion setSuscripciones={setSuscripciones} onClose={() => setModalVisible(false)} cuentas={cuentas} />
+                <FormularioSuscripcion setSuscripciones={setSuscripciones} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas}/>
             </Modal>
         </div>
 

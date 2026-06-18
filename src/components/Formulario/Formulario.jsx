@@ -1,7 +1,7 @@
 import { useState } from "react"
 import './Formulario.css';
 
-function Formulario({ setTransacciones, tipo, onClose, cuentas }) {
+function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas }) {
 
     const [descripcion, setDescripcion] = useState('');
     const [monto, setMonto] = useState('');
@@ -12,6 +12,12 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas }) {
 
     function agregar() {
         setTransacciones(prev => [...prev, { descripcion, monto, tipo, categoria, cuenta, fecha, fuente }]);
+        setCuentas(prev => prev.map(c => {
+            if (c.nombre !== cuenta) return c;
+            const nuevoSaldo = tipo == 'ingreso' ? Number(c.saldo) + Number(monto)
+                : Number(c.saldo) - Number(monto);
+            return { ...c, saldo: nuevoSaldo }
+        }));
         setDescripcion('');
         setMonto('');
         setCategoria('');

@@ -37,15 +37,21 @@ function App() {
                 <div className='contenido'>
                     <Routes>
                         <Route path='/' element={<Inicio transacciones={transacciones} setTransacciones={setTransacciones} metas={metas} />} />
-                        <Route path='/cuentas' element={<Cuenta  cuentas={cuentas} setCuentas={setCuentas}/>} />
-                        <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar}/>} />
-                        <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} />} />
-                        <Route path='/Metas' element={<Meta metas={metas} setMetas={setMetas } />} />
-                        <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} tareas={tareas}/>} />
+
+                        <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} />} />
+                        
+                        <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} />} />
+                        
+                        <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} setCuentas={setCuentas} />} />
+                        
+                        <Route path='/Metas' element={<Meta metas={metas} setMetas={setMetas} />} />
+                        
+                        <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} tareas={tareas} />} />
+                        
                         <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} />} />
                     </Routes>
                     <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
-                        <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas } />
+                        <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas} />
                     </Modal>
                 </div>
             </div>
