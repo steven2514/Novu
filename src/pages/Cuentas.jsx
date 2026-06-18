@@ -24,7 +24,7 @@ function Cuentas({cuentas=[], setCuentas}) {
                 <h2>${balanceTotal.toLocaleString('es-CO')}</h2>
             </div>
 
-            <div className="cuentas-lista">
+            <div className="cuentas-grupos">
                 {cuentas.length === 0 ? (
                     <div className="cuenta-vacio">
                         <p>No hay cuentas</p>
@@ -32,21 +32,38 @@ function Cuentas({cuentas=[], setCuentas}) {
                         <button onClick={() => setModalVisible(true)}>+ Crear cuenta</button>
                     </div>
                 ) : (
-                    cuentas.map((cuenta, index) => (
-                        <div key={index} className="cuenta-tarjeta">
-                            <div className="cuenta-tarjeta-header">
-                                <div className="cuenta-icono" style={{ backgroundColor: cuenta.color + '22' }}>
-                                    <span style={{ color: cuenta.color }}>$</span>
+                    ['debito', 'credito', 'efectivo'].map(tipo => {
+                        const cuentasFiltradas = cuentas.filter(c => c.tipo === tipo);
+                        if (cuentasFiltradas.length === 0) return null;
+                        const tipoTitulo = tipo === 'credito' ? 'Cuentas de Crédito' : tipo === 'debito' ? 'Cuentas de Débito' : 'Efectivo';
+                        return (
+                            <div key={tipo}>
+                                <h3 className="cuentas-grupo-titulo">{tipoTitulo}</h3>
+                                <div className="cuentas-lista">
+                                    {cuentasFiltradas.map((cuenta, index) => {
+                                        const tipoLabel = tipo === 'credito' ? 'Crédito' : tipo === 'debito' ? 'Débito' : 'Efectivo';
+                                        const indexReal = cuentas.indexOf(cuenta);
+                                        return (
+                                            <div key={index} className="cuenta-tarjeta">
+                                                <div className="cuenta-tarjeta-header">
+                                                    <div className="cuenta-icono" style={{ backgroundColor: cuenta.color + '22' }}>
+                                                        <span style={{ color: cuenta.color }}>$</span>
+                                                    </div>
+                                                    <button className="btn-eliminar-cuenta" onClick={() => setCuentas(prev => prev.filter((_, i) => i !== indexReal))}>🗑️</button>
+                                                </div>
+                                                <p className="cuenta-nombre">{cuenta.nombre}</p>
+                                                {cuenta.banco && <p className="cuenta-banco">{cuenta.banco}</p>}
+                                                <div className="cuenta-tarjeta-footer">
+                                                    <p className="cuenta-saldo" style={{ color: cuenta.color }}>${Number(cuenta.saldo).toLocaleString('es-CO')}</p>
+                                                    <span className="cuenta-tipo-badge">{tipoLabel}</span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
-                                <button className="btn-eliminar-cuenta" onClick={() => setCuentas(prev => prev.filter((_, i) => i !== index))}>🗑️</button>
                             </div>
-                            <p className="cuenta-nombre">{cuenta.nombre}</p>
-                            <div className="cuenta-footer">
-                                <p className="cuenta-saldo" style={{ color: cuenta.color }}>${Number(cuenta.saldo).toLocaleString('es-CO')}</p>
-                                <span className="cuenta-tipo">{cuenta.tipo}</span>
-                            </div>
-                        </div>
-                    ))
+                        );
+                    })
                 )}
             </div>
 

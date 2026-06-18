@@ -3,7 +3,7 @@ import './FormularioCuenta.css'
 
 function FormularioCuenta({setCuenta, onClose}) {
     const [nombre, setNombre] = useState('');
-    const [tipo, setTipo] = useState('debido');
+    const [tipo, setTipo] = useState('debito');
     const [saldo, setSaldo] = useState('');
     const [banco, setBanco] = useState('');
     const [color, setColor] = useState('#6C63FF');
