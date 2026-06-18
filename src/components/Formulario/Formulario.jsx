@@ -22,7 +22,10 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas }) {
 
     return (
         <div className="formulario">
-            <h2>{tipo === 'ingreso' ? 'Nuevo Ingreso' : 'Nuevo Gasto'}</h2>
+            <div className="formulario-header">
+                <h2>{tipo === 'ingreso' ? 'Nuevo Ingreso' : 'Nuevo Gasto'}</h2>
+                <button className="btn-cerrar-modal" onClick={onClose}>✕</button>
+            </div>
             <label>Descripción</label>
             <input type="text" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} placeholder="Descripción" />
             <label>Monto</label>

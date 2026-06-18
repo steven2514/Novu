@@ -29,7 +29,7 @@ function FormularioTarea({ setTareas, onClose }) {
         <div className="formulario-tarea">
             <div className="formulario-tarea-header">
                 <h2>Nueva Tarea</h2>
-                <button className="btn-cerrar-modal" onClick={onClose}>✕</button>
+                <button className="btn-cerrar-modal" onClick={onClose}>X</button>
             </div>
 
             <label>Título</label>

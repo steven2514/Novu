@@ -49,3 +49,11 @@
     font-size: 15px;
     margin-top: 8px;
 }
+
+.formulario .btn-cerrar-modal {
+    width: auto;
+    background: none;
+    color: #6B7280;
+    padding: 0;
+    margin: 0;
+}

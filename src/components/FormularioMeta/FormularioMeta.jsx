@@ -21,7 +21,10 @@ function FormularioMeta({setMetas, onClose}) {
 
     return (
         <div className="formulario-meta">
-            <h2>Nueva Meta</h2>
+            <div className="formulario-meta-header">
+                <h2>Nueva Meta</h2>
+                <button className="btn-cerrar-modal" onClick={onClose}>✕</button>
+            </div>
 
             <label>Nombre de la Meta</label>
             <input type="text" value={nombreMeta} onChange={(e) => setNombreMeta(e.target.value)} placeholder="EJ: Iphone 16" />

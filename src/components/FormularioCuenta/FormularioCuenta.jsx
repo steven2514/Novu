@@ -20,7 +20,10 @@ function FormularioCuenta({setCuenta, onClose}) {
 
     return (
         <div className="formulario-cuenta">
-            <h2>Nueva Cuenta</h2>
+            <div className="formulario-meta-header">
+                <h2>Nueva Cuenta</h2>
+                <button className="btn-cerrar-modal" onClick={onClose}>✕</button>
+            </div>
             <label>Nombre</label>
             <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Cuenta Principal" />
 

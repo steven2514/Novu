@@ -9,21 +9,17 @@
   --texto-gris: #6B7280;
 }
 
-body {
-  background-color: var(--fondo);
-  color: var(--texto);
-  font-family: system-ui, sans-serif;
-}
-
-
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-
+body {
+  background-color: var(--fondo);
+  color: var(--texto);
+  font-family: system-ui, sans-serif;
+}
 
 .layout {
   display: flex;
@@ -35,3 +31,22 @@ body {
   overflow-y: auto;
 }
 
+.btn-cerrar-modal {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #6B7280;
+  padding: 0;
+  width: auto;
+  min-width: unset;
+}
+
+.formulario-header,
+.formulario-meta-header,
+.formulario-tarea-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}

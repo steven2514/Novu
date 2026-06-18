@@ -116,3 +116,11 @@
 .formulario-suscripcion button:hover {
     opacity: 0.9;
 }
+
+.formulario-suscripcion .btn-cerrar-modal {
+    width: auto;
+    background: none;
+    color: #6B7280;
+    padding: 0;
+    margin: 0;
+}

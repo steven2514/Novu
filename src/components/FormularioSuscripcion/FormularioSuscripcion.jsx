@@ -23,7 +23,10 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas }) {
 
     return (
         <div className="formulario-suscripcion">
-            <h2>Nueva Suscripción</h2>
+            <div className="formulario-meta-header">
+                <h2>Nueva Suscripcion</h2>
+                <button className="btn-cerrar-modal" onClick={onClose}>✕</button>
+            </div>
 
             <label>Nombre</label>
             <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Netflix" />
