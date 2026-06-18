@@ -8,11 +8,7 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas }) {
     const [categoria, setCategoria] = useState('');
     const [cuenta, setCuenta] = useState('');
     const [fuente, setFuente] = useState('');
-    const [fecha] = useState(new Date().toLocaleDateString('es-CO', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-    }));
+    const [fecha] = useState(new Date())
 
     function agregar() {
         setTransacciones(prev => [...prev, { descripcion, monto, tipo, categoria, cuenta, fecha, fuente }]);

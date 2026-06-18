@@ -3,9 +3,8 @@ import './Suscripciones.css';
 import Modal from '../components/Modal/Modal';
 import FormularioSuscripcion from "../components/FormularioSuscripcion/FormularioSuscripcion";
 
-function Suscripciones({ cuentas }) {
+function Suscripciones({ cuentas, suscripciones, setSuscripciones }) {
 
-    const [suscripciones, setSuscripciones] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const gastoMensual = suscripciones.reduce((acc, c) => acc + Number(c.monto), 0);
 

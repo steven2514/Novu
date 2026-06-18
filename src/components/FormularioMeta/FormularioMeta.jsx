@@ -7,13 +7,14 @@ function FormularioMeta({setMetas, onClose}) {
     const [nombreMeta, setNombreMeta] = useState('');
     const [montoObjetivo, setMontoObjetivo] = useState('');
     const [montoActual, setMontoActual] = useState();
+    const [fechaObjetivo, setFechaObjetivo] = useState('');
     const [icono, setIcono] = useState('');
     const [color, setColor] = useState('');
     const ICONOS = ['🎯', '✈️', '🏠', '🚗', '🧮', '💻', '🎓', '💰', '🎁', '🎗️'];
     const COLORES = ['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4'];
 
     function guardar() {
-        setMetas(prev => [...prev, { nombreMeta, montoObjetivo, montoActual, icono,color }]);
+        setMetas(prev => [...prev, { nombreMeta, montoObjetivo, montoActual,fechaObjetivo, icono,color }]);
         onClose();
         
     }
@@ -29,7 +30,10 @@ function FormularioMeta({setMetas, onClose}) {
             <input type="number" value={montoObjetivo} onChange={(e) => setMontoObjetivo(e.target.value)} placeholder="0"/>
             
             <label>Monto Actual</label>
-            <input type="text" value={montoActual} onChange={(e) => setMontoActual(e.target.value)} placeholder="0"/>
+            <input type="text" value={montoActual} onChange={(e) => setMontoActual(e.target.value)} placeholder="0" />
+            
+            <label>Fecha Objetivo</label>
+            <input type="date" value={fechaObjetivo} onChange={(e)=> setFechaObjetivo(e.target.value)}/>
             
             <label>Icono</label>
             <div className="iconos-opciones">

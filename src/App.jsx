@@ -17,6 +17,8 @@ function App() {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalTipo, setModalTipo] = useState('');
     const [cuentas, setCuentas] = useState([]);
+    const [metas, setMetas] = useState([]);
+    const [suscripciones, setSuscripciones] = useState([]);
 
     function abrirModal(tipo) {
         setModalTipo(tipo);
@@ -36,9 +38,9 @@ function App() {
                         <Route path='/' element={<Inicio transacciones={transacciones} setTransacciones={setTransacciones} />} />
                         <Route path='/cuentas' element={<Cuenta  cuentas={cuentas} setCuentas={setCuentas}/>} />
                         <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar}/>} />
-                        <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas } />} />
-                        <Route path='/Metas' element={<Meta />} />
-                        <Route path='/Calendario' element={<Calendario />} />
+                        <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} />} />
+                        <Route path='/Metas' element={<Meta metas={metas} setMetas={setMetas } />} />
+                        <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} />} />
                         <Route path='/Aprendizaje' element={<Aprendizaje />} />
                     </Routes>
                     <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>

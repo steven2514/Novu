@@ -7,7 +7,7 @@ function Sidebar() {
             <div className="sidebar-logo">
                 <div className="sidebar-logo-icono">N</div>
                 <div className="sidebar-logo-texto">
-                    <h2>Novu</h2>
+                    <h2>NovuApp</h2>
                     <p>Control Total</p>
                 </div>
             </div>

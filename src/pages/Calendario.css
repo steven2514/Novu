@@ -1,0 +1,211 @@
+.calendario-page {
+    padding: 24px;
+}
+
+.calendario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.calendario-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1A1A2E;
+}
+
+.calendario-header p {
+    color: #6B7280;
+    font-size: 14px;
+}
+
+.calendario-header button {
+    background: #EEF2FF;
+    color: #6C63FF;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Tarjeta principal */
+.calendario-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.calendario-mes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E5E7EB;
+    margin-bottom: 16px;
+}
+
+.calendario-mes-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1A1A2E;
+}
+
+.calendario-flechas {
+    display: flex;
+    gap: 12px;
+}
+
+.calendario-flechas button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #1A1A2E;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendario-flechas button:hover {
+    background: #F3F4F6;
+}
+
+/* Nombres de los días */
+.calendario-dias-semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 8px;
+}
+
+.dia-semana-nombre {
+    text-align: center;
+    color: #6B7280;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 0;
+}
+
+/* Grilla de días */
+.calendario-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.celda-dia {
+    aspect-ratio: 1 / 1;
+    background: #F9FAFB;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+    color: #1A1A2E;
+    border: 2px solid transparent;
+}
+
+.celda-vacia {
+    background: transparent;
+}
+
+.celda-dia.dia-hoy {
+    background: #EEF2FF;
+    border-color: #6C63FF;
+    color: #6C63FF;
+    font-weight: 700;
+}
+
+.punto-meta {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    margin-right: 4px;
+}
+
+/* Leyenda y estadisticas */
+.calendario-inferior {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.leyenda-card,
+.estadisticas-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.leyenda-card h3,
+.estadisticas-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1A1A2E;
+    margin-bottom: 14px;
+}
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1A1A2E;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.leyenda-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.leyenda-dia-actual {
+    background: #EEF2FF;
+    border: 2px solid #6C63FF;
+}
+
+.leyenda-ingreso {
+    background: #E6FBF5;
+}
+
+.leyenda-gasto {
+    background: #FFEAEA;
+}
+
+.leyenda-suscripcion {
+    background: #6C63FF;
+}
+
+.estadistica-fila {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    color: #1A1A2E;
+    font-size: 14px;
+}
+
+.estadistica-valor {
+    font-weight: 700;
+}
+
+.valor-ingreso {
+    color: #00D2A0;
+}
+
+.valor-gasto {
+    color: #FF6B6B;
+}
+
+.valor-suscripcion {
+    color: #6C63FF;
+}

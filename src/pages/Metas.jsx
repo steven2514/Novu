@@ -3,9 +3,9 @@ import './Metas.css';
 import Modal from '../components/Modal/Modal';
 import FormularioMeta from '../components/FormularioMeta/FormularioMeta';
 
-function Metas() {
+function Metas({metas, setMetas}) {
 
-    const [metas, setMetas] = useState([]);
+    
     const [modalVisible, setModalVisible] = useState(false);
 
     const totalObjetivo = metas.reduce((acc, m) => acc + Number(m.montoObjetivo), 0);

@@ -73,7 +73,7 @@ function Transacciones({ transacciones, eliminar, abrirModal }) {
                                     <div className="transaccion-info">
                                         <p className="transaccion-descripcion">{t.descripcion}</p>
                                         <p className="transaccion-meta">
-                                            {t.categoria} • {t.cuenta} • {t.fecha}
+                                            {t.categoria} • {t.cuenta} • {t.fecha.toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' })}
                                         </p>
                                     </div>
                                     <p className={t.tipo === 'ingreso' ? 'monto-ingreso' : 'monto-gasto'}>

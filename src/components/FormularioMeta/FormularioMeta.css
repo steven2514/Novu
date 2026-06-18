@@ -23,7 +23,8 @@
 }
 
 .formulario-meta input[type="text"],
-.formulario-meta input[type="number"] {
+.formulario-meta input[type="number"],
+.formulario-meta input[type="date"] {
     width: 100%;
     padding: 12px 14px;
     border: 1px solid #E5E7EB;
@@ -31,6 +32,7 @@
     font-size: 15px;
     color: #1A1A2E;
     box-sizing: border-box;
+    font-family: inherit;
 }
 
 .formulario-meta input::placeholder {
