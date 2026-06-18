@@ -92,6 +92,24 @@ function Calendario({ metas, transacciones, suscripciones, tareas }) {
                             return dia === fechaT.getDate() && mes === fechaT.getMonth() && anio === fechaT.getFullYear();
                             
                         });
+
+                        const ingresosDelDia = transacciones.filter((t) => {
+                            if (t.tipo !== 'ingreso') return false;
+                            const fechaT = new Date(t.fecha);
+                            return dia === fechaT.getDate() && mes === fechaT.getMonth() && anio === fechaT.getFullYear();
+                        });
+
+                        const gastosDelDia = transacciones.filter((t) => {
+                            if (t.tipo !== 'gasto') return false;
+                            const fechaT = new Date(t.fecha);
+                            return dia === fechaT.getDate() && mes === fechaT.getMonth() && anio === fechaT.getFullYear();
+                        });
+
+                        const suscripcionesDelDia = suscripciones.filter((s) => {
+                            if (!s.fechaRenovacion) return false;
+                            const fechaS = new Date(s.fechaRenovacion + 'T00:00:00');
+                            return dia === fechaS.getDate() && mes === fechaS.getMonth() && anio === fechaS.getFullYear();
+                        });
                         
 
                         return (
@@ -104,6 +122,9 @@ function Calendario({ metas, transacciones, suscripciones, tareas }) {
                                     <span key={i} className="punto-tarea" style={{ backgroundColor: '#6C63FF' }} title={tarea.titulo}></span>
                                     
                                 ))}
+                                {ingresosDelDia.length > 0 && <span className="punto-ingreso" title="Ingreso"></span>}
+                                {gastosDelDia.length > 0 && <span className="punto-gasto" title="Gasto"></span>}
+                                {suscripcionesDelDia.length > 0 && <span className="punto-suscripcion" title="Suscripción"></span>}
                             </div>
                         )
                     })}
