@@ -19,9 +19,7 @@ function FormularioTarea({ setTareas, onClose }) {
         onClose();
     
 
-        supabase.from('tareas').insert([nuevaTarea]).then(() => { });
-        setTareas(prev => [...prev, nuevaTarea]);
-        onClose();
+        
     }
 
     return (
