@@ -11,6 +11,7 @@ import Modal from './components/Modal/Modal';
 import { useState, useEffect } from 'react';
 import Formulario from './components/Formulario/Formulario';
 import { supabase } from './supabase';
+import Login from './pages/Login';
 
 function App() {
 
@@ -68,6 +69,8 @@ function App() {
                 <Sidebar />
                 <div className='contenido'>
                     <Routes>
+                        <Route path='/login' element={<Login />} />
+
                         <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} />} />
 
                         <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} />} />
