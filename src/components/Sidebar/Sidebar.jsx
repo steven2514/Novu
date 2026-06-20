@@ -38,6 +38,10 @@ function Sidebar() {
                 <div className="sidebar-footer">
                     <p>Autor</p>
                     <span>Steven David Alvarez Morante</span>
+                    <div className="sidebar-legal-links">
+                        <NavLink to="/terminos" onClick={() => setAbierto(false)}>Términos</NavLink>
+                        <NavLink to="/privacidad" onClick={() => setAbierto(false)}>Privacidad</NavLink>
+                    </div>
                     <button className="btn-cerrar-sesion" onClick={cerrarSesion} disabled={cargando}>
                         {cargando ? <div className="loader-spinner spinner-pequeño"></div> : <><Icon name="log-out" /> Cerrar sesión</>}
                     </button>

@@ -13,6 +13,8 @@ import Formulario from './components/Formulario/Formulario';
 import { supabase } from './supabase';
 import Login from './pages/Login';
 import Loader from './components/Loader/Loader';
+import Terminos from './pages/Terminos';
+import Privacidad from './pages/Privacidad';
 
 function App() {
 
@@ -118,6 +120,10 @@ function App() {
                             <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} tareas={tareas} />} />
 
                             <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} />} />
+
+                            <Route path='/terminos' element={<Terminos />} />
+                            <Route path='/privacidad' element={<Privacidad />} />
+
                         </Routes>
                         <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
                             <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas} />

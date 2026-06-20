@@ -104,3 +104,19 @@
     background-color: #FF6B6B11;
     border-radius: 8px;
 }
+
+.sidebar-legal-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    font-size: 12px;
+}
+
+.sidebar-legal-links a {
+    color: #6B7280;
+    text-decoration: none;
+}
+
+.sidebar-legal-links a:hover {
+    color: #6C63FF;
+}
