@@ -39,6 +39,11 @@ const ICON_MAP = {
   'layout-dashboard': Lucide.LayoutDashboard,
   'wave': Lucide.Wave,
   pizza: Lucide.Pizza,
+  eye: Lucide.Eye,
+  'eye-off': Lucide.EyeOff,
+  shield: Lucide.Shield,
+  'arrow-right': Lucide.ArrowRight,
+  'log-out': Lucide.LogOut,
 };
 
 export function Icon({ name, size = 18, className = '', style }) {
