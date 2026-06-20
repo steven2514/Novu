@@ -7,9 +7,12 @@ import { supabase } from '../../supabase';
 function Sidebar() {
 
     const [abierto, setAbierto] = useState(false);
+    const [cargando, setCargando] = useState(false);
 
-    function cerrarSesion() {
-        supabase.auth.signOut();
+    async function cerrarSesion() {
+        setCargando(true);
+        await supabase.auth.signOut();
+        setCargando(false);
     }
 
     return (
@@ -35,8 +38,8 @@ function Sidebar() {
                 <div className="sidebar-footer">
                     <p>Autor</p>
                     <span>Steven David Alvarez Morante</span>
-                    <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
-                        <Icon name="log-out" /> Cerrar sesión
+                    <button className="btn-cerrar-sesion" onClick={cerrarSesion} disabled={cargando}>
+                        {cargando ? <div className="loader-spinner spinner-pequeño"></div> : <><Icon name="log-out" /> Cerrar sesión</>}
                     </button>
                 </div>
             </div>

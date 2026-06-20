@@ -15,8 +15,9 @@ function FormularioMeta({setMetas, onClose}) {
     const ICONOS = ICONOS_META;
     const COLORES = ['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4'];
 
-    function guardar() {
-        const nueva = { nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual, fecha_objetivo: fechaObjetivo, icono, color };
+    async function guardar() {
+        const { data: { user } } = await supabase.auth.getUser();
+        const nueva = { nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual, fecha_objetivo: fechaObjetivo, icono, color, user_id: user.id };
         supabase.from('metas').insert([nueva]).then(() => { });
         setMetas(prev => [...prev, nueva]);
         onClose();

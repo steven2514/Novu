@@ -10,8 +10,10 @@ function FormularioCuenta({setCuenta, onClose}) {
     const [banco, setBanco] = useState('');
     const [color, setColor] = useState('#6C63FF');
 
-    function guardar() {
-        const nueva = { nombre, tipo, saldo, banco, color };
+    async function guardar() {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        const nueva = { nombre, tipo, saldo, banco, color, user_id: user.id };
         supabase.from('cuentas').insert([nueva]).then(() => {});
         setCuenta(prev => [...prev, nueva]);
         setNombre('');

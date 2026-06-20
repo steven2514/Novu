@@ -16,8 +16,9 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas 
     const ICONOS = ICONOS_SUSCRIPCION;
     const COLORES = ['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4'];
 
-    function guardar() {
-        const nueva = { nombre, monto, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color };
+    async function guardar() {
+        const { data: { user } } = await supabase.auth.getUser();
+        const nueva = { nombre, monto, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color, user_id: user.id };
         supabase.from('suscripciones').insert([nueva]).then(() => { });
         setSuscripciones(prev => [...prev, nueva]);
         setCuentas(prev => prev.map(c => {

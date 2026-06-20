@@ -3,6 +3,7 @@ import { supabase } from '../supabase';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '../components/Icon';
+import Loader from '../components/Loader/Loader';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -13,13 +14,16 @@ function Login() {
     const [confirmarPassword, setConfirmarPassword] = useState('');
     const [verPassword, setVerPassword] = useState(false);
     const navigate = useNavigate();
+    const [cargando, setCargando] = useState(false);
 
-    function iniciarSesion() {
+    async function iniciarSesion() {
         setError('');
-        supabase.auth.signInWithPassword({ email, password }).then(({ error }) => {
-            if (error) setError(error.message);
-            else navigate('/');
-        });
+        setCargando(true);
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        setCargando(false);
+        if (error) setError(error.message);
+        else navigate('/');
+        
     }
 
     function registrar() {
@@ -30,8 +34,12 @@ function Login() {
         }
         supabase.auth.signUp({ email, password }).then(({ error }) => {
             if (error) setError(error.message);
+            setNombre('');
+            setEmail('');
+            setPassword('');
         });
     }
+    
 
     return (
         <div className="login-page">
@@ -107,7 +115,7 @@ function Login() {
                         {modo === 'registro' && (
                             <>
                                 <label>Nombre completo</label>
-                                <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Juan Pérez" />
+                                <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="nombre" />
                             </>
                         )}
 
@@ -129,8 +137,12 @@ function Login() {
 
                         {error && <p className="login-error">{error}</p>}
 
-                        <button className="login-btn-principal" onClick={modo === 'login' ? iniciarSesion : registrar}>
-                            {modo === 'login' ? 'Iniciar sesión' : 'Crear cuenta'} <Icon name="arrow-right" size={18} />
+                        <button className="login-btn-principal" onClick={modo === 'login' ? iniciarSesion : registrar} disabled={cargando}>
+                            {cargando ? (
+                                <div className="loader-spinner spinner-pequeño"></div>
+                            ) : (
+                                <>{modo === 'login' ? 'Iniciar sesión' : 'Crear cuenta'} <Icon name="arrow-right" size={18} /></>
+                            )}
                         </button>
 
                         <p className="login-cambiar-modo">

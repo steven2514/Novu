@@ -15,8 +15,6 @@ function Transacciones({ transacciones, eliminar, abrirModal }) {
         .filter(t => t.tipo === 'gasto')
         .reduce((acc, t) => acc + Number(t.monto), 0);
 
-    const transaccionesFiltradas = transacciones
-        .filter(t => filtro === 'todos' || t.tipo === filtro);
 
     return (
         <div className="transacciones-page">
@@ -60,10 +58,9 @@ function Transacciones({ transacciones, eliminar, abrirModal }) {
                     {transacciones.length === 0
                         ? <p className="vacio">No hay transacciones para mostrar</p>
                         : transacciones
-                            .map((t, index) => ({ ...t, index }))
                             .filter(t => filtro === 'todos' || t.tipo === filtro)
                             .map((t) => (
-                                <div className="transaccion-item" key={t.index}>
+                                <div className="transaccion-item" key={t.id}>
                                     <div className="transaccion-icono" style={{
                                         backgroundColor: t.tipo === 'ingreso' ? '#00D2A022' : '#FF6B6B22'
                                     }}>

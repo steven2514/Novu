@@ -12,10 +12,17 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas }) {
     const [fuente, setFuente] = useState('');
     const [fecha] = useState(new Date())
 
-    function agregar() {
-        const nueva = { descripcion, monto, tipo, categoria, cuenta, fecha, fuente };
-        supabase.from('transacciones').insert([nueva]).then(() => {});
-        setTransacciones(prev => [...prev, nueva]);
+    async function agregar() {
+
+        
+        const { data: { user } } = await supabase.auth.getUser();
+        const nueva = { descripcion, monto, tipo, categoria, cuenta, fecha, fuente, user_id: user.id };
+        const { data } = await supabase.from('transacciones').insert([nueva]).select().single();
+        
+        
+        
+        setTransacciones(prev => [...prev, data]);
+        
         setCuentas(prev => prev.map(c => {
             if (c.nombre !== cuenta) return c;
             const nuevoSaldo = tipo == 'ingreso' ? Number(c.saldo) + Number(monto)
@@ -29,6 +36,7 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas }) {
         setFuente('');
         onClose();
     }
+
 
     return (
         <div className="formulario">

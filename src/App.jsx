@@ -27,34 +27,39 @@ function App() {
     const [cargando, setCargando] = useState(true);
 
     useEffect(() => {
-        supabase.from('transacciones').select('*').then(({ data }) => {
+        if (!sesion) return;
+        supabase.from('transacciones').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
             if (data) setTransacciones(data);
         });
-    }, []);
+    }, [sesion]);
 
     useEffect(() => {
-        supabase.from('cuentas').select('*').then(({ data }) => {
+        if (!sesion) return;
+        supabase.from('cuentas').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
             if (data) setCuentas(data);
         });
-    }, []);
+    }, [sesion]);
 
     useEffect(() => {
-        supabase.from('metas').select('*').then(({ data }) => {
+        if (!sesion) return;
+        supabase.from('metas').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
             if (data) setMetas(data);
         });
-    }, []);
+    }, [sesion]);
 
     useEffect(() => {
-        supabase.from('suscripciones').select('*').then(({ data }) => {
+        if (!sesion) return;
+        supabase.from('suscripciones').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
             if (data) setSuscripciones(data);
         });
-    }, []);
+    }, [sesion]);
 
     useEffect(() => {
-        supabase.from('tareas').select('*').then(({ data }) => {
+        if (!sesion) return;
+        supabase.from('tareas').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
             if (data) setTareas(data);
         });
-    }, []);
+    }, [sesion]);
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data }) => {
@@ -73,8 +78,16 @@ function App() {
     }
 
     function eliminar(id) {
+        const transaccion = transacciones.find(t => t.id === id);
         supabase.from('transacciones').delete().eq('id', id).then(() => { });
         setTransacciones(prev => prev.filter(t => t.id !== id));
+        setCuentas(prev => prev.map(c => {
+            if (c.nombre !== transaccion.cuenta) return c;
+            const nuevoSaldo = transaccion.tipo === 'ingreso'
+                ? Number(c.saldo) - Number(transaccion.monto)
+                : Number(c.saldo) + Number(transaccion.monto);
+            return { ...c, saldo: nuevoSaldo };
+        }));
     }
 
     if (cargando) {

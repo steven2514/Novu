@@ -10,7 +10,8 @@ function FormularioTarea({ setTareas, onClose }) {
     const [prioridad, setPrioridad] = useState('media');
     const [fechaLimite, setFechaLimite] = useState('');
 
-    function guardar() {
+    async function guardar() {
+        const { data: { user } } = await supabase.auth.getUser();
         if (titulo.trim() === '') return;
 
         const nuevaTarea = {
@@ -19,7 +20,8 @@ function FormularioTarea({ setTareas, onClose }) {
             categoria,
             prioridad,
             fecha_limite: fechaLimite,
-            completada: false
+            completada: false,
+            user_id: user.id
         };
 
         supabase.from('tareas').insert([nuevaTarea]).then(() => { });
