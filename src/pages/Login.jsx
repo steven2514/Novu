@@ -3,7 +3,7 @@ import { supabase } from '../supabase';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '../components/Icon';
-import Loader from '../components/Loader/Loader';
+;
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -26,18 +26,24 @@ function Login() {
         
     }
 
-    function registrar() {
+    async function registrar() {
         setError('');
         if (password !== confirmarPassword) {
             setError('Las contraseñas no coinciden');
             return;
         }
-        supabase.auth.signUp({ email, password }).then(({ error }) => {
-            if (error) setError(error.message);
+        setCargando(true);
+        const { error } = await supabase.auth.signUp({ email, password });
+        setCargando(false);
+        if (error) {
+            setError(error.message);
+        } else {
             setNombre('');
             setEmail('');
             setPassword('');
-        });
+            setConfirmarPassword('');
+            setModo('login');
+        }
     }
     
 
