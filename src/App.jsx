@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import Formulario from './components/Formulario/Formulario';
 import { supabase } from './supabase';
 import Login from './pages/Login';
+import Loader from './components/Loader/Loader';
 
 function App() {
 
@@ -22,6 +23,8 @@ function App() {
     const [cuentas, setCuentas] = useState([]);
     const [metas, setMetas] = useState([]);
     const [suscripciones, setSuscripciones] = useState([]);
+    const [sesion, setSesion] = useState(null);
+    const [cargando, setCargando] = useState(true);
 
     useEffect(() => {
         supabase.from('transacciones').select('*').then(({ data }) => {
@@ -53,6 +56,17 @@ function App() {
         });
     }, []);
 
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data }) => {
+            setSesion(data.session);
+            setCargando(false);
+        });
+
+        supabase.auth.onAuthStateChange((_event, session) => {
+            setSesion(session);
+        });
+    }, []);
+
     function abrirModal(tipo) {
         setModalTipo(tipo);
         setModalVisible(true);
@@ -63,33 +77,41 @@ function App() {
         setTransacciones(prev => prev.filter(t => t.id !== id));
     }
 
+    if (cargando) {
+        return <Loader />;
+    }
+
     return (
         <BrowserRouter>
-            <div className='layout'>
-                <Sidebar />
-                <div className='contenido'>
-                    <Routes>
-                        <Route path='/login' element={<Login />} />
+            {!sesion ? (
+                <Routes>
+                    <Route path='*' element={<Login />} />
+                </Routes>
+            ) : (
+                <div className='layout'>
+                    <Sidebar />
+                    <div className='contenido'>
+                        <Routes>
+                            <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} />} />
 
-                        <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} />} />
+                            <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} />} />
 
-                        <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} />} />
+                            <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} />} />
 
-                        <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} />} />
+                            <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} setCuentas={setCuentas} />} />
 
-                        <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} setCuentas={setCuentas} />} />
+                            <Route path='/Metas' element={<Meta metas={metas} setMetas={setMetas} />} />
 
-                        <Route path='/Metas' element={<Meta metas={metas} setMetas={setMetas} />} />
+                            <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} tareas={tareas} />} />
 
-                        <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} tareas={tareas} />} />
-
-                        <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} />} />
-                    </Routes>
-                    <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
-                        <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas} />
-                    </Modal>
+                            <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} />} />
+                        </Routes>
+                        <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
+                            <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas} />
+                        </Modal>
+                    </div>
                 </div>
-            </div>
+            )}
         </BrowserRouter>
     );
 }

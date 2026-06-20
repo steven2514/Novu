@@ -1,0 +1,23 @@
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background-color: #F3F4F6;
+}
+
+.loader-spinner {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #E5E7EB;
+    border-top: 5px solid #6C63FF;
+    border-radius: 50%;
+    animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+    to {
+        transform: rotate(360deg);
+    }
+}

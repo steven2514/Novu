@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from '../supabase';
 import './Login.css';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -9,11 +10,13 @@ function Login() {
     const [modo, setModo] = useState('login');
     const [nombre, setNombre] = useState('');
     const [confirmarPassword, setConfirmarPassword] = useState('');
+    const navigate = useNavigate();
 
     function iniciarSesion() {
         setError('');
         supabase.auth.signInWithPassword({ email, password }).then(({ error }) => {
             if (error) setError(error.message);
+            else navigate('/');
         });
     }
 
@@ -37,7 +40,7 @@ function Login() {
                 
                 <button
                     className={modo === 'registro' ? 'tab-activo' : ''}
-                onClick={()=> setModo('resgistro')}>Crear Cuenta</button>
+                onClick={()=> setModo('registro')}>Crear Cuenta</button>
             </div>
 
             <div className="iniciar-sesion">

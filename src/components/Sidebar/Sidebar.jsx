@@ -2,10 +2,15 @@ import { NavLink } from "react-router-dom";
 import './Sidebar.css';
 import { useState } from 'react';
 import { Icon } from '../Icon';
+import { supabase } from '../../supabase';
 
 function Sidebar() {
 
     const [abierto, setAbierto] = useState(false);
+
+    function cerrarSesion() {
+        supabase.auth.signOut();
+    }
 
     return (
         <>
@@ -30,6 +35,9 @@ function Sidebar() {
                 <div className="sidebar-footer">
                     <p>Autor</p>
                     <span>Steven David Alvarez Morante</span>
+                    <button className="btn-cerrar-sesion" onClick={cerrarSesion}>
+                        <Icon name="log-out" /> Cerrar sesión
+                    </button>
                 </div>
             </div>
         </>

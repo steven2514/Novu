@@ -86,3 +86,21 @@
     font-size: 11px;
     color: #6B7280;
 }
+
+.btn-cerrar-sesion {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #FF6B6B;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 12px;
+    padding: 8px;
+}
+
+.btn-cerrar-sesion:hover {
+    background-color: #FF6B6B11;
+    border-radius: 8px;
+}
