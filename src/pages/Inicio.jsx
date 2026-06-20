@@ -1,8 +1,12 @@
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell } from 'recharts';
 import TarjetaResumen from '../components/TarjetaResumen/TarjetaResumen';
 import './Inicio.css';
+import { useTour } from '../hooks/useTour';
+import Tour from '../components/Tour/Tour';
 
-function Inicio({ transacciones, metas, suscripciones, cuentas=[]}) {
+function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion }) {
+    
+    const { mostrarTour, cerrarTour } = useTour('dashboard', sesion);
 
     const balance = transacciones.reduce((acc, t) => {
         if (t.tipo === 'ingreso') return acc + Number(t.monto);
@@ -136,7 +140,12 @@ function Inicio({ transacciones, metas, suscripciones, cuentas=[]}) {
                     )}
                 </div>
             </div>
+            {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
+                { titulo: '¡Bienvenido a NOVU!', texto: 'Aquí ves tu balance, ingresos, gastos y metas de un vistazo.' },
+                { titulo: 'Tus gráficas', texto: 'Visualiza tu actividad semanal y en qué categorías gastas más.' }
+            ]} />}
         </div>
+        
     );
 }
 

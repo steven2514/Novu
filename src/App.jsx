@@ -16,6 +16,7 @@ import Loader from './components/Loader/Loader';
 import Terminos from './pages/Terminos';
 import Privacidad from './pages/Privacidad';
 
+
 function App() {
 
     const [tareas, setTareas] = useState([]);
@@ -74,6 +75,17 @@ function App() {
         });
     }, []);
 
+    useEffect(() => {
+        if (!sesion) return;
+        supabase.from('perfiles').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
+            if (!data || data.length === 0) {
+                supabase.from('perfiles').insert([{ user_id: sesion.user.id, tours_vistos: '' }]).then(() => { });
+            }
+        });
+    }, [sesion]);
+
+    
+
     function abrirModal(tipo) {
         setModalTipo(tipo);
         setModalVisible(true);
@@ -107,9 +119,9 @@ function App() {
                     <Sidebar />
                     <div className='contenido'>
                         <Routes>
-                            <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} />} />
+                                <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} sesion={sesion } />} />
 
-                            <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} />} />
+                                <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} />} />
 
                             <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} />} />
 
@@ -127,7 +139,8 @@ function App() {
                         </Routes>
                         <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
                             <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas} />
-                        </Modal>
+                            </Modal>
+                        
                     </div>
                 </div>
             )}

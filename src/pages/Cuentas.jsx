@@ -3,9 +3,12 @@ import Modal from '../components/Modal/Modal';
 import './Cuentas.css';
 import { supabase } from '../supabase';
 import FormularioCuenta from "../components/FormularioCuenta/FormularioCuenta";
+import { useTour } from '../hooks/useTour';
+import Tour from '../components/Tour/Tour';
 
-function Cuentas({cuentas=[], setCuentas}) {
+function Cuentas({cuentas=[], setCuentas, sesion}) {
 
+    const { mostrarTour, cerrarTour } = useTour('cuentas', sesion);
     
     const [modalVisible, setModalVisible] = useState(false);
     const balanceTotal = cuentas.reduce((acc, c) => acc + Number(c.saldo), 0);
@@ -74,7 +77,14 @@ function Cuentas({cuentas=[], setCuentas}) {
             <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
                 <FormularioCuenta setCuenta={setCuentas} onClose={() => setModalVisible(false)} />
             </Modal>
+          
+
+            {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
+                { titulo: 'Tus cuentas', texto: 'Aquí creas y administras tus cuentas: débito, crédito o efectivo.' },
+                { titulo: 'Balance total', texto: 'Suma automática de los saldos de todas tus cuentas.' }
+            ]} />}
         </div>
+        
     );
 }
 

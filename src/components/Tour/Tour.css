@@ -1,0 +1,59 @@
+.tour-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(26, 26, 46, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.tour-tarjeta {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    padding: 28px;
+    max-width: 360px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.tour-tarjeta h3 {
+    margin: 0 0 8px 0;
+    color: #1A1A2E;
+}
+
+.tour-tarjeta p {
+    margin: 0 0 20px 0;
+    color: #6B7280;
+    line-height: 1.5;
+}
+
+.tour-acciones {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.tour-acciones span {
+    font-size: 13px;
+    color: #6B7280;
+}
+
+.tour-btn-saltar {
+    background: none;
+    border: none;
+    color: #6B7280;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.tour-btn-siguiente {
+    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
