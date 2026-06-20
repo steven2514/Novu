@@ -11,18 +11,13 @@ function FormularioTarea({ setTareas, onClose }) {
     const [fechaLimite, setFechaLimite] = useState('');
 
     async function guardar() {
-        const { data: { user } } = await supabase.auth.getUser();
         if (titulo.trim() === '') return;
-
-        const nuevaTarea = {
-            titulo,
-            descripcion,
-            categoria,
-            prioridad,
-            fecha_limite: fechaLimite,
-            completada: false,
-            user_id: user.id
-        };
+        const { data: { user } } = await supabase.auth.getUser();
+        const nueva = { titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite, completada: false, user_id: user.id };
+        const { data } = await supabase.from('tareas').insert([nueva]).select().single();
+        setTareas(prev => [...prev, data]);
+        onClose();
+    
 
         supabase.from('tareas').insert([nuevaTarea]).then(() => { });
         setTareas(prev => [...prev, nuevaTarea]);

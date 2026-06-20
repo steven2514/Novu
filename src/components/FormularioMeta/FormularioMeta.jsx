@@ -18,8 +18,8 @@ function FormularioMeta({setMetas, onClose}) {
     async function guardar() {
         const { data: { user } } = await supabase.auth.getUser();
         const nueva = { nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual, fecha_objetivo: fechaObjetivo, icono, color, user_id: user.id };
-        supabase.from('metas').insert([nueva]).then(() => { });
-        setMetas(prev => [...prev, nueva]);
+        const { data } = await supabase.from('metas').insert([nueva]).select().single();
+        setMetas(prev => [...prev, data]);
         onClose();
     }
 

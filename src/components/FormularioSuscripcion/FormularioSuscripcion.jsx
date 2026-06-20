@@ -19,8 +19,8 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas 
     async function guardar() {
         const { data: { user } } = await supabase.auth.getUser();
         const nueva = { nombre, monto, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color, user_id: user.id };
-        supabase.from('suscripciones').insert([nueva]).then(() => { });
-        setSuscripciones(prev => [...prev, nueva]);
+        const { data } = await supabase.from('suscripciones').insert([nueva]).select().single();
+        setSuscripciones(prev => [...prev, data]);
         setCuentas(prev => prev.map(c => {
             if (c.nombre !== cuenta) return c;
             return { ...c, saldo: Number(c.saldo) - Number(monto) };

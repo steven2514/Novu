@@ -12,10 +12,9 @@ function FormularioCuenta({setCuenta, onClose}) {
 
     async function guardar() {
         const { data: { user } } = await supabase.auth.getUser();
-
         const nueva = { nombre, tipo, saldo, banco, color, user_id: user.id };
-        supabase.from('cuentas').insert([nueva]).then(() => {});
-        setCuenta(prev => [...prev, nueva]);
+        const { data } = await supabase.from('cuentas').insert([nueva]).select().single();
+        setCuenta(prev => [...prev, data]);
         setNombre('');
         setTipo('');
         setSaldo('');
