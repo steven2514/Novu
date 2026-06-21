@@ -1,5 +1,5 @@
 .formulario-tarea {
-    background: #FFFFFF;
+    background: var(--tarjeta);
     border-radius: 16px;
     padding: 24px;
     display: flex;
@@ -18,7 +18,7 @@
 
 .formulario-tarea-header h2 {
     font-size: 20px;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .btn-cerrar-modal {
@@ -26,12 +26,12 @@
     border: none;
     cursor: pointer;
     font-size: 18px;
-    color: #6B7280;
+    color: var(--texto-gris);
 }
 
 .formulario-tarea label {
     font-size: 13px;
-    color: #1A1A2E;
+    color: var(--texto);
     font-weight: 600;
     margin-top: 10px;
 }
@@ -39,11 +39,11 @@
 .formulario-tarea input,
 .formulario-tarea textarea,
 .formulario-tarea select {
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--borde);
     border-radius: 10px;
     padding: 10px 12px;
     font-size: 14px;
-    color: #1A1A2E;
+    color: var(--texto);
     outline: none;
     font-family: inherit;
 }
@@ -51,7 +51,7 @@
 .formulario-tarea input:focus,
 .formulario-tarea textarea:focus,
 .formulario-tarea select:focus {
-    border-color: #6C63FF;
+    border-color: var(--principal);
 }
 
 .formulario-tarea textarea {
@@ -61,7 +61,7 @@
 
 .btn-crear-tarea {
     margin-top: 18px;
-    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
     color: #FFFFFF;
     border: none;
     border-radius: 10px;

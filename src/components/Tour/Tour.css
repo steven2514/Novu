@@ -9,7 +9,7 @@
 }
 
 .tour-tarjeta {
-    background-color: #FFFFFF;
+    background-color: var(--tarjeta);
     border-radius: 16px;
     padding: 28px;
     max-width: 360px;
@@ -19,12 +19,12 @@
 
 .tour-tarjeta h3 {
     margin: 0 0 8px 0;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .tour-tarjeta p {
     margin: 0 0 20px 0;
-    color: #6B7280;
+    color: var(--texto-gris);
     line-height: 1.5;
 }
 
@@ -37,19 +37,19 @@
 
 .tour-acciones span {
     font-size: 13px;
-    color: #6B7280;
+    color: var(--texto-gris);
 }
 
 .tour-btn-saltar {
     background: none;
     border: none;
-    color: #6B7280;
+    color: var(--texto-gris);
     cursor: pointer;
     font-size: 14px;
 }
 
 .tour-btn-siguiente {
-    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
     color: white;
     border: none;
     padding: 10px 20px;

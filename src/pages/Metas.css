@@ -12,16 +12,16 @@
 .metas-header h1 {
     font-size: 26px;
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .metas-header p {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 14px;
 }
 
 .metas-header button {
-    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
     color: #FFFFFF;
     border: none;
     border-radius: 10px;
@@ -32,7 +32,7 @@
 
 /* Resumen superior */
 .resumen-metas {
-    background-color: #FFFFFF;
+    background-color: var(--tarjeta);
     border-radius: 16px;
     padding: 24px;
     margin-bottom: 24px;
@@ -42,7 +42,7 @@
 }
 
 .resumen-item p {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 14px;
     margin-bottom: 6px;
 }
@@ -50,20 +50,20 @@
 .resumen-item h2 {
     font-size: 24px;
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .resumen-ahorrado {
-    color: #6C63FF;
+    color: var(--principal);
 }
 
 .resumen-progreso {
-    color: #00D2A0;
+    color: var(--positivo);
 }
 
 .resumen-barra-fondo {
     grid-column: 1 / -1;
-    background-color: #E5E7EB;
+    background-color: var(--borde);
     border-radius: 8px;
     height: 10px;
     overflow: hidden;
@@ -73,12 +73,12 @@
 .resumen-barra-relleno {
     height: 100%;
     border-radius: 8px;
-    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
     transition: width 0.3s ease;
 }
 
 .seccion-vacia {
-    background-color: #FFFFFF;
+    background-color: var(--tarjeta);
     border-radius: 16px;
     padding: 60px 24px;
     text-align: center;
@@ -86,18 +86,18 @@
 
 .seccion-vacia p:first-of-type {
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
     font-size: 18px;
     margin-bottom: 6px;
 }
 
 .seccion-vacia p:last-of-type {
-    color: #6B7280;
+    color: var(--texto-gris);
     margin-bottom: 20px;
 }
 
 .seccion-vacia button {
-    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
     color: #FFFFFF;
     border: none;
     border-radius: 10px;
@@ -113,10 +113,10 @@
 }
 
 .meta-tarjeta {
-    background-color: #FFFFFF;
+    background-color: var(--tarjeta);
     border-radius: 16px;
     padding: 20px;
-    border: 2px solid #E5E7EB;
+    border: 2px solid var(--borde);
     position: relative;
 }
 
@@ -134,13 +134,13 @@
 
 .meta-nombre {
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
     font-size: 16px;
     margin-bottom: 2px;
 }
 
 .meta-subtitulo {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 13px;
     margin-bottom: 16px;
 }
@@ -150,7 +150,7 @@
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
-    color: #1A1A2E;
+    color: var(--texto);
     margin-bottom: 6px;
 }
 
@@ -167,7 +167,7 @@
 }
 
 .meta-barra-fondo {
-    background-color: #E5E7EB;
+    background-color: var(--borde);
     border-radius: 8px;
     height: 8px;
     overflow: hidden;
@@ -188,25 +188,25 @@
 }
 
 .meta-detalle-caja {
-    background-color: #F3F4F6;
+    background-color: var(--fondo-hover);
     border-radius: 10px;
     padding: 10px 12px;
 }
 
 .meta-detalle-label {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 12px;
     margin-bottom: 4px;
 }
 
 .meta-detalle-valor {
-    color: #1A1A2E;
+    color: var(--texto);
     font-weight: 700;
     font-size: 14px;
 }
 
 .meta-faltante {
-    background-color: #EEF2FF;
+    background-color: var(--principal-muy-claro);
     border-radius: 10px;
     padding: 12px;
     display: flex;
@@ -215,12 +215,12 @@
 }
 
 .meta-faltante-titulo {
-    color: #4338CA;
+    color: var(--principal-oscuro);
     font-weight: 700;
     font-size: 13px;
 }
 
 .meta-faltante-subtitulo {
-    color: #6C63FF;
+    color: var(--principal);
     font-size: 12px;
 }

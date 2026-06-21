@@ -8,12 +8,12 @@
 .dashboard h1 {
     font-size: 28px;
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .dashboard>p {
     font-size: 14px;
-    color: #6B7280;
+    color: var(--texto-gris);
     margin-top: -16px;
 }
 
@@ -58,11 +58,11 @@
     justify-content: space-between;
     font-size: 14px;
     margin-bottom: 6px;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .barra-fondo {
-    background-color: #E5E7EB;
+    background-color: var(--borde);
     border-radius: 10px;
     height: 8px;
 }
@@ -78,9 +78,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 1px solid var(--borde);
     font-size: 14px;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .pago-proximo:last-child{

@@ -8,14 +8,14 @@
 .formulario h2 {
     font-size: 20px;
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
     margin-bottom: 8px;
 }
 
 .formulario label {
     font-size: 13px;
     font-weight: 600;
-    color: #6B7280;
+    color: var(--texto-gris);
     margin-bottom: 4px;
     display: block;
 }
@@ -24,11 +24,11 @@
 .formulario select {
     width: 100%;
     padding: 12px 14px;
-    border: 1.5px solid #E5E7EB;
+    border: 1.5px solid var(--borde);
     border-radius: 8px;
     font-size: 14px;
-    color: #1A1A2E;
-    background-color: #FFFFFF;
+    color: var(--texto);
+    background-color: var(--tarjeta);
     outline: none;
 }
 
@@ -53,7 +53,7 @@
 .formulario .btn-cerrar-modal {
     width: auto;
     background: none;
-    color: #6B7280;
+    color: var(--texto-gris);
     padding: 0;
     margin: 0;
 }

@@ -44,6 +44,8 @@ const ICON_MAP = {
   shield: Lucide.Shield,
   'arrow-right': Lucide.ArrowRight,
   'log-out': Lucide.LogOut,
+  sun: Lucide.Sun,
+  moon: Lucide.Moon,
 };
 
 export function Icon({ name, size = 18, className = '', style }) {

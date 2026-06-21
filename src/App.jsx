@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import Loader from './components/Loader/Loader';
 import Terminos from './pages/Terminos';
 import Privacidad from './pages/Privacidad';
+import Splash from './components/Splash/Splash';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
     const [suscripciones, setSuscripciones] = useState([]);
     const [sesion, setSesion] = useState(null);
     const [cargando, setCargando] = useState(true);
+    const [mostrarSplash, setMostrarSplash] = useState(true);
 
     useEffect(() => {
         if (!sesion) return;
@@ -106,6 +108,14 @@ function App() {
 
     if (cargando) {
         return <Loader />;
+    }
+
+    if (mostrarSplash) {
+        return <Splash onTerminar={cerrarSplash} />;
+    }
+
+    function cerrarSplash() {
+        setMostrarSplash(false);
     }
 
     return (

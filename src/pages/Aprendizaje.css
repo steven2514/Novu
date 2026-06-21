@@ -12,16 +12,16 @@
 .aprendizaje-header h1 {
     font-size: 26px;
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .aprendizaje-header p {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 14px;
 }
 
 .aprendizaje-header button {
-    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
     color: #FFFFFF;
     border: none;
     border-radius: 10px;
@@ -39,13 +39,13 @@
 }
 
 .resumen-caja {
-    background: #FFFFFF;
+    background: var(--tarjeta);
     border-radius: 16px;
     padding: 20px;
     display: flex;
     align-items: center;
     gap: 14px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px var(--sombra-suave);
 }
 
 .icono-circulo {
@@ -60,19 +60,19 @@
 }
 
 .icono-circulo.morado {
-    color: #6C63FF;
+    color: var(--principal);
 }
 
 .icono-circulo.verde {
-    color: #00D2A0;
+    color: var(--positivo);
 }
 
 .icono-circulo.naranja {
-    color: #FFB347;
+    color: var(--ahorro);
 }
 
 .resumen-caja p {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 13px;
     margin-bottom: 2px;
 }
@@ -80,43 +80,43 @@
 .resumen-caja h2 {
     font-size: 22px;
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .texto-verde {
-    color: #00D2A0;
+    color: var(--positivo);
 }
 
 /* Tarjeta principal de lista */
 .aprendizaje-lista-card {
-    background: #FFFFFF;
+    background: var(--tarjeta);
     border-radius: 16px;
     padding: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px var(--sombra-suave);
 }
 
 .filtros-tabs {
     display: flex;
     gap: 8px;
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 1px solid var(--borde);
     padding-bottom: 16px;
     margin-bottom: 16px;
 }
 
 .filtros-tabs button {
-    background: #F3F4F6;
+    background: var(--fondo-hover);
     border: none;
     border-radius: 8px;
     padding: 8px 16px;
     font-size: 14px;
     font-weight: 600;
-    color: #6B7280;
+    color: var(--texto-gris);
     cursor: pointer;
 }
 
 .filtros-tabs .tab-activo {
-    background: #EEF2FF;
-    color: #6C63FF;
+    background: var(--principal-muy-claro);
+    color: var(--principal);
 }
 
 /* Estado vacío */
@@ -132,30 +132,30 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    border: 2px solid #E5E7EB;
+    border: 2px solid var(--borde);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    color: #9CA3AF;
+    color: var(--texto-muted);
     margin-bottom: 16px;
 }
 
 .vacio-titulo {
     font-weight: 700;
     font-size: 17px;
-    color: #1A1A2E;
+    color: var(--texto);
     margin-bottom: 4px;
 }
 
 .vacio-subtitulo {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 14px;
     margin-bottom: 20px;
 }
 
 .tareas-vacio button {
-    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
     color: #FFFFFF;
     border: none;
     border-radius: 10px;
@@ -175,7 +175,7 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    background: #F9FAFB;
+    background: var(--fondo-alt);
     border-radius: 12px;
     padding: 14px;
 }
@@ -188,7 +188,7 @@
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    border: 2px solid #6C63FF;
+    border: 2px solid var(--principal);
     background: transparent;
     color: #FFFFFF;
     display: flex;
@@ -201,7 +201,7 @@
 }
 
 .tarea-completada .check-tarea {
-    background: #6C63FF;
+    background: var(--principal);
 }
 
 .tarea-info {
@@ -210,7 +210,7 @@
 
 .tarea-titulo {
     font-weight: 600;
-    color: #1A1A2E;
+    color: var(--texto);
     font-size: 15px;
 }
 
@@ -219,7 +219,7 @@
 }
 
 .tarea-descripcion {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 13px;
     margin-top: 2px;
 }
@@ -231,8 +231,8 @@
 }
 
 .tarea-categoria {
-    background: #EEF2FF;
-    color: #6C63FF;
+    background: var(--principal-muy-claro);
+    color: var(--principal);
     font-size: 12px;
     font-weight: 600;
     padding: 3px 10px;
@@ -248,22 +248,22 @@
 }
 
 .prioridad-alta {
-    background: #FFEAEA;
-    color: #FF6B6B;
+    background: var(--negativo-claro);
+    color: var(--peligro);
 }
 
 .prioridad-media {
-    background: #FFF4E5;
-    color: #FFB347;
+    background: var(--ahorro-claro);
+    color: var(--ahorro);
 }
 
 .prioridad-baja {
-    background: #E6FBF5;
-    color: #00D2A0;
+    background: var(--positivo-claro);
+    color: var(--positivo);
 }
 
 .tarea-fecha {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 12px;
 }
 

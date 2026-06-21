@@ -2,7 +2,7 @@
     max-width: 700px;
     margin: 0 auto;
     padding: 40px 24px;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .legal-page h1 {
@@ -11,7 +11,7 @@
 }
 
 .legal-fecha {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 13px;
     margin-bottom: 32px;
 }
@@ -20,12 +20,12 @@
     font-size: 18px;
     margin-top: 28px;
     margin-bottom: 8px;
-    color: #6C63FF;
+    color: var(--principal);
 }
 
 .legal-page p {
     line-height: 1.6;
-    color: #1A1A2E;
+    color: var(--texto);
     margin-bottom: 12px;
 }
 
@@ -40,6 +40,6 @@
 }
 
 .legal-page a {
-    color: #6C63FF;
+    color: var(--principal);
     font-weight: 600;
 }

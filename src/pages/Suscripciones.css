@@ -13,16 +13,16 @@
 
 .suscripciones-header h1 {
     font-size: 1.8rem;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .suscripciones-header p {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 1rem;
 }
 
 .suscripciones-header button {
-    background-color: #6C63FF;
+    background-color: var(--principal);
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -33,25 +33,25 @@
 }
 
 .tarjeta-gasto {
-    background: #FFFFFF;
+    background: var(--tarjeta);
     border-radius: 12px;
     padding: 2rem;
     text-align: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 3px var(--sombra);
 }
 
 .tarjeta-gasto p {
-    color: #6B7280;
+    color: var(--texto-gris);
     margin-bottom: 0.5rem;
 }
 
 .tarjeta-gasto h2 {
     font-size: 2.5rem;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .seccion-vacia {
-    background: #FFFFFF;
+    background: var(--tarjeta);
     border-radius: 12px;
     padding: 3rem;
     text-align: center;
@@ -59,21 +59,21 @@
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 3px var(--sombra);
 }
 
 .seccion-vacia p:first-child {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .seccion-vacia p:last-of-type {
-    color: #6B7280;
+    color: var(--texto-gris);
 }
 
 .seccion-vacia button {
-    background-color: #6C63FF;
+    background-color: var(--principal);
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -83,7 +83,7 @@
 }
 
 .suscripcion-tarjeta {
-    background: #FFFFFF;
+    background: var(--tarjeta);
     border-radius: 16px;
     border: 2px solid;
     padding: 1.5rem;
@@ -91,7 +91,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 3px var(--sombra);
 }
 
 .suscripcion-icono {
@@ -100,18 +100,18 @@
 
 .suscripcion-nombre {
     font-weight: 600;
-    color: #1A1A2E;
+    color: var(--texto);
     font-size: 1.1rem;
 }
 
 .suscripcion-monto {
-    color: #1A1A2E;
+    color: var(--texto);
     font-size: 1.3rem;
     font-weight: 700;
 }
 
 .suscripcion-dias {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 0.9rem;
 }
 

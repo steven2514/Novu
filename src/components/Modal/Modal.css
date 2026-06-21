@@ -27,5 +27,5 @@
     border: none;
     font-size: 18px;
     cursor: pointer;
-    color: #6B7280;
+    color: var(--texto-gris);
 }

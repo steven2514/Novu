@@ -12,17 +12,17 @@
 .calendario-header h1 {
     font-size: 26px;
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .calendario-header p {
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 14px;
 }
 
 .calendario-header button {
-    background: #EEF2FF;
-    color: #6C63FF;
+    background: var(--principal-muy-claro);
+    color: var(--principal);
     border: none;
     border-radius: 10px;
     padding: 10px 20px;
@@ -32,10 +32,10 @@
 
 /* Tarjeta principal */
 .calendario-card {
-    background: #FFFFFF;
+    background: var(--tarjeta);
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px var(--sombra-suave);
 }
 
 .calendario-mes-header {
@@ -43,14 +43,14 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 20px;
-    border-bottom: 1px solid #E5E7EB;
+    border-bottom: 1px solid var(--borde);
     margin-bottom: 16px;
 }
 
 .calendario-mes-header h2 {
     font-size: 22px;
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
 }
 
 .calendario-flechas {
@@ -63,7 +63,7 @@
     border: none;
     cursor: pointer;
     font-size: 20px;
-    color: #1A1A2E;
+    color: var(--texto);
     width: 32px;
     height: 32px;
     border-radius: 8px;
@@ -73,7 +73,7 @@
 }
 
 .calendario-flechas button:hover {
-    background: #F3F4F6;
+    background: var(--fondo-hover);
 }
 
 /* Nombres de los días */
@@ -85,7 +85,7 @@
 
 .dia-semana-nombre {
     text-align: center;
-    color: #6B7280;
+    color: var(--texto-gris);
     font-size: 14px;
     font-weight: 600;
     padding: 8px 0;
@@ -100,11 +100,11 @@
 
 .celda-dia {
     aspect-ratio: 1 / 1;
-    background: #F9FAFB;
+    background: var(--fondo-alt);
     border-radius: 10px;
     padding: 10px;
     font-size: 14px;
-    color: #1A1A2E;
+    color: var(--texto);
     border: 2px solid transparent;
 }
 
@@ -113,9 +113,9 @@
 }
 
 .celda-dia.dia-hoy {
-    background: #EEF2FF;
-    border-color: #6C63FF;
-    color: #6C63FF;
+    background: var(--principal-muy-claro);
+    border-color: var(--principal);
+    color: var(--principal);
     font-weight: 700;
 }
 
@@ -138,17 +138,17 @@
 
 .leyenda-card,
 .estadisticas-card {
-    background: #FFFFFF;
+    background: var(--tarjeta);
     border-radius: 16px;
     padding: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px var(--sombra-suave);
 }
 
 .leyenda-card h3,
 .estadisticas-card h3 {
     font-size: 16px;
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
     margin-bottom: 14px;
 }
 
@@ -156,7 +156,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #1A1A2E;
+    color: var(--texto);
     font-size: 14px;
     margin-bottom: 10px;
 }
@@ -169,20 +169,20 @@
 }
 
 .leyenda-dia-actual {
-    background: #EEF2FF;
-    border: 2px solid #6C63FF;
+    background: var(--principal-muy-claro);
+    border: 2px solid var(--principal);
 }
 
 .leyenda-ingreso {
-    background: #E6FBF5;
+    background: var(--positivo-claro);
 }
 
 .leyenda-gasto {
-    background: #FFEAEA;
+    background: var(--negativo-claro);
 }
 
 .leyenda-suscripcion {
-    background: #6C63FF;
+    background: var(--principal);
 }
 
 .estadistica-fila {
@@ -190,7 +190,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 8px 0;
-    color: #1A1A2E;
+    color: var(--texto);
     font-size: 14px;
 }
 
@@ -199,15 +199,15 @@
 }
 
 .valor-ingreso {
-    color: #00D2A0;
+    color: var(--positivo);
 }
 
 .valor-gasto {
-    color: #FF6B6B;
+    color: var(--peligro);
 }
 
 .valor-suscripcion {
-    color: #6C63FF;
+    color: var(--principal);
 }
 
 .punto-tarea {

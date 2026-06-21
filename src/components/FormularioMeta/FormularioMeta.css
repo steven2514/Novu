@@ -1,5 +1,5 @@
 .formulario-meta {
-    background-color: #FFFFFF;
+    background-color: var(--tarjeta);
     border-radius: 16px;
     padding: 24px;
     width: 100%;
@@ -9,7 +9,7 @@
 .formulario-meta h2 {
     font-size: 22px;
     font-weight: 700;
-    color: #1A1A2E;
+    color: var(--texto);
     margin-bottom: 20px;
 }
 
@@ -17,7 +17,7 @@
     display: block;
     font-size: 14px;
     font-weight: 600;
-    color: #1A1A2E;
+    color: var(--texto);
     margin-top: 16px;
     margin-bottom: 6px;
 }
@@ -27,21 +27,21 @@
 .formulario-meta input[type="date"] {
     width: 100%;
     padding: 12px 14px;
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--borde);
     border-radius: 10px;
     font-size: 15px;
-    color: #1A1A2E;
+    color: var(--texto);
     box-sizing: border-box;
     font-family: inherit;
 }
 
 .formulario-meta input::placeholder {
-    color: #9CA3AF;
+    color: var(--texto-muted);
 }
 
 .formulario-meta input:focus {
     outline: none;
-    border-color: #6C63FF;
+    border-color: var(--principal);
 }
 
 .formulario-meta .iconos-opciones {
@@ -55,15 +55,15 @@
     align-items: center;
     justify-content: center;
     aspect-ratio: 1 / 1;
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--borde);
     border-radius: 10px;
     font-size: 18px;
     cursor: pointer;
-    background-color: #FFFFFF;
+    background-color: var(--tarjeta);
 }
 
 .formulario-meta .icono-opcion.seleccionado {
-    border-color: #6C63FF;
+    border-color: var(--principal);
     background-color: #6C63FF11;
 }
 
@@ -81,8 +81,8 @@
 }
 
 .formulario-meta .color-circulo.seleccionado {
-    border-color: #6C63FF;
-    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #6C63FF;
+    border-color: var(--principal);
+    box-shadow: 0 0 0 2px var(--tarjeta), 0 0 0 4px var(--principal);
 }
 
 .formulario-meta button {
@@ -95,7 +95,7 @@
     font-weight: 600;
     color: #FFFFFF;
     cursor: pointer;
-    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
 }
 
 .formulario-meta button:hover {
@@ -105,7 +105,7 @@
 .formulario-meta .btn-cerrar-modal {
     width: auto;
     background: none;
-    color: #6B7280;
+    color: var(--texto-gris);
     padding: 0;
     margin: 0;
 }

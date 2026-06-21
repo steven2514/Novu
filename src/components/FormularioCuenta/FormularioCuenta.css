@@ -7,33 +7,33 @@
 }
 
 .formulario-cuenta h2 {
-    color: #1A1A2E;
+    color: var(--texto);
     font-size: 1.3rem;
 }
 
 .formulario-cuenta label {
     font-size: 0.9rem;
-    color: #6B7280;
+    color: var(--texto-gris);
     margin-bottom: -0.5rem;
 }
 
 .formulario-cuenta input,
 .formulario-cuenta select {
     padding: 0.75rem;
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--borde);
     border-radius: 8px;
     font-size: 1rem;
-    color: #1A1A2E;
+    color: var(--texto);
     outline: none;
 }
 
 .formulario-cuenta input:focus,
 .formulario-cuenta select:focus {
-    border-color: #6C63FF;
+    border-color: var(--principal);
 }
 
 .formulario-cuenta button {
-    background-color: #6C63FF;
+    background-color: var(--principal);
     color: white;
     border: none;
     width: 100%;
@@ -60,13 +60,13 @@
 }
 
 .color-circulo.seleccionado {
-    border-color: #1A1A2E;
+    border-color: var(--texto);
 }
 
 .formulario-cuenta .btn-cerrar-modal {
     width: auto;
     background: none;
-    color: #6B7280;
+    color: var(--texto-gris);
     padding: 0;
     margin: 0;
 }

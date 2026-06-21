@@ -1,9 +1,3 @@
-:root{
-    --fondo: #1E2330;
-    --texto: #FFFFFF;
-    --principal: #6C63FF;
-}
-
 .tarjetas{
     background-color: var(--fondo);
     padding: 20px;
@@ -14,7 +8,7 @@
     color: var(--texto);
     padding: 20px;
     align-items: center;
-    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
 }
 
 .tarjeta2{
