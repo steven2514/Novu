@@ -20,6 +20,7 @@ import FormularioTransferencia from './components/FormularioTransferencia/Formul
 import './flotante.css';
 import FormularioCuenta from './components/FormularioCuenta/FormularioCuenta';
 import FormularioMeta from './components/FormularioMeta/FormularioMeta';
+import NotFound from './pages/NotFound';
 
 
 function App() {
@@ -156,7 +157,9 @@ function App() {
                             <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} sesion={sesion} />} />
 
                             <Route path='/terminos' element={<Terminos />} />
-                            <Route path='/privacidad' element={<Privacidad />} />
+                                <Route path='/privacidad' element={<Privacidad />} />
+                                
+                            <Route path='*' element={<NotFound />} />
 
                         </Routes>
                             <Modal visible={modalVisible} onClose={() => { setModalVisible(false); setTransaccionEditar(null); }}>

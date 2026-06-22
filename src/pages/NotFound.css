@@ -1,0 +1,46 @@
+.notfound-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--fondo);
+}
+
+.notfound-contenido {
+    text-align: center;
+    padding: 40px;
+}
+
+.notfound-numero {
+    font-size: 120px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #8B7FFF, #4338CA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+    margin-bottom: 16px;
+}
+
+.notfound-titulo {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--texto);
+    margin-bottom: 8px;
+}
+
+.notfound-subtitulo {
+    color: var(--texto-gris);
+    font-size: 15px;
+    margin-bottom: 32px;
+}
+
+.notfound-contenido button {
+    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
