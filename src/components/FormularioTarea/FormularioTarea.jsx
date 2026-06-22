@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import './FormularioTarea.css';
 import { supabase } from '../../supabase';
-import { useToast } from '../../context/ToastContext';
+import { useToast } from '../../Context/ToastContext';
 
 function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
     const [titulo, setTitulo] = useState('');

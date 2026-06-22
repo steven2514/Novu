@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import './FormularioCuenta.css';
 import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
-import { useToast } from '../../context/ToastContext';
+import { useToast } from '../../Context/ToastContext';
 
 function FormularioCuenta({ setCuenta, onClose, cuentaEditar }) {
     const [nombre, setNombre] = useState('');

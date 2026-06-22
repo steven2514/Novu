@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import './FormularioMeta.css';
 import { Icon, ICONOS_META } from '../Icon';
 import { supabase } from '../../supabase';
-import { useToast } from '../../context/ToastContext';
+import { useToast } from '../../Context/ToastContext';
 
 function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
     const [nombreMeta, setNombreMeta] = useState('');

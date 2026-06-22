@@ -1,7 +1,7 @@
 import { useState } from "react";
 import './FormularioTransferencia.css';
 import { supabase } from '../../supabase';
-import { useToast } from '../../context/ToastContext';
+import { useToast } from '../../Context/ToastContext';
 
 function FormularioTransferencia({ cuentas, metas, setCuentas, setMetas, onClose, sesion }) {
     const [origen, setOrigen] = useState('');

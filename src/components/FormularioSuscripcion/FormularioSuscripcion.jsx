@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import './FormularioSuscripcion.css'
 import { Icon, ICONOS_SUSCRIPCION } from '../Icon';
 import { supabase } from '../../supabase';
-import { useToast } from '../../context/ToastContext';
+import { useToast } from '../../Context/ToastContext';
 
 function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas, sesion, suscripcionEditar }) {
     const [nombre, setNombre] = useState('');

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import './Formulario.css';
 import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
-import { useToast } from '../../context/ToastContext';
+import { useToast } from '../../Context/ToastContext';
 
 function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas, sesion, transaccionEditar }) {
 
