@@ -8,6 +8,7 @@ import Tour from '../components/Tour/Tour';
 
 function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, sesion }) {
 
+    const [suscripcionEditar, setSuscripcionEditar] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const gastoMensual = suscripciones.reduce((acc, c) => acc + Number(c.monto), 0);
     const { mostrarTour, cerrarTour } = useTour('suscripciones', sesion);
@@ -53,6 +54,10 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                                 <p className="suscripcion-nombre">{sus.nombre}</p>
                                 <p className="suscripcion-monto">${Number(sus.monto).toLocaleString('es-CO')}</p>
                                 <p className="suscripcion-dias">Faltan {Math.round(dias)} días</p>
+                                <button className="btn-editar-cuenta" onClick={() => {
+                                    setSuscripcionEditar(sus);
+                                    setModalVisible(true);
+                                }}>✏️</button>
                                 <button className="btn-eliminar-cuenta" onClick={() => {
                                     supabase.from('suscripciones').delete().eq('id', sus.id).then(() => { });
                                     setSuscripciones(prev => prev.filter(s => s.id !== sus.id));
@@ -63,8 +68,15 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                 </div>
             )}
 
-            <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
-                <FormularioSuscripcion setSuscripciones={setSuscripciones} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas} />
+            <Modal visible={modalVisible} onClose={() => { setModalVisible(false); setSuscripcionEditar(null); }}>
+                <FormularioSuscripcion
+                    setSuscripciones={setSuscripciones}
+                    onClose={() => { setModalVisible(false); setSuscripcionEditar(null); }}
+                    cuentas={cuentas}
+                    setCuentas={setCuentas}
+                    sesion={sesion}
+                    suscripcionEditar={suscripcionEditar}
+                />
             </Modal>
         </div>
     );

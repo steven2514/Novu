@@ -8,6 +8,7 @@ import Tour from '../components/Tour/Tour';
 
 function Aprendizaje({ tareas, setTareas, sesion }) {
 
+    const [tareaEditar, setTareaEditar] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [filtro, setFiltro] = useState('Todas');
     const { mostrarTour, cerrarTour } = useTour('aprendizaje', sesion);
@@ -107,6 +108,7 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
                                         {tarea.fecha_limite && <span className="tarea-fecha">📅 {tarea.fecha_limite}</span>}
                                     </div>
                                 </div>
+                                <button className="btn-editar-tarea" onClick={() => { setTareaEditar(tarea); setModalVisible(true); }}>✏️</button>
                                 <button className="btn-eliminar-tarea" onClick={() => eliminarTarea(tarea.id)}>🗑️</button>
                             </div>
                         ))}
@@ -114,8 +116,13 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
                 )}
             </div>
 
-            <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
-                <FormularioTarea setTareas={setTareas} onClose={() => setModalVisible(false)} />
+            <Modal visible={modalVisible} onClose={() => { setModalVisible(false); setTareaEditar(null); }}>
+                <FormularioTarea
+                    setTareas={setTareas}
+                    onClose={() => { setModalVisible(false); setTareaEditar(null); }}
+                    sesion={sesion}
+                    tareaEditar={tareaEditar}
+                />
             </Modal>
         </div>
     );

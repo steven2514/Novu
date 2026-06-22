@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import './Formulario.css';
 import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
 import { useToast } from '../../context/ToastContext';
 
-function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas, sesion }) {
+function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas, sesion, transaccionEditar }) {
 
     const [descripcion, setDescripcion] = useState('');
     const [monto, setMonto] = useState('');
@@ -14,29 +14,38 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas, sesi
     const [fecha] = useState(new Date())
     const { mostrarToast } = useToast();
 
-    function agregar() {
-        const nueva = { descripcion, monto, tipo, categoria, cuenta, fecha, fuente, user_id: sesion.user.id };
-        supabase.from('transacciones').insert([nueva]).then(({ error }) => {
-            if (error) {
-                mostrarToast('No se pudo guardar la transacción', 'error');
-                return;
-            }
-            mostrarToast(tipo === 'ingreso' ? 'Ingreso agregado' : 'Gasto agregado', 'exito');
-        });
-        setTransacciones(prev => [...prev, nueva]);
-        setCuentas(prev => prev.map(c => {
-            if (c.nombre !== cuenta) return c;
-            const nuevoSaldo = tipo == 'ingreso' ? Number(c.saldo) + Number(monto)
-                : Number(c.saldo) - Number(monto);
-            return { ...c, saldo: nuevoSaldo }
-        }));
-        setDescripcion('');
-        setMonto('');
-        setCategoria('');
-        setCuenta('');
-        setFuente('');
+    function guardar() {
+        if (transaccionEditar) {
+            supabase.from('transacciones').update({ descripcion, monto, categoria, cuenta, fuente }).eq('id', transaccionEditar.id).then(({ error }) => {
+                if (error) { mostrarToast('No se pudo actualizar', 'error'); return; }
+                mostrarToast('Transacción actualizada', 'exito');
+            });
+            setTransacciones(prev => prev.map(t => t.id === transaccionEditar.id ? { ...t, descripcion, monto, categoria, cuenta, fuente } : t));
+        } else {
+            const nueva = { descripcion, monto, tipo, categoria, cuenta, fecha, fuente, user_id: sesion.user.id };
+            supabase.from('transacciones').insert([nueva]).then(({ error }) => {
+                if (error) { mostrarToast('No se pudo guardar la transacción', 'error'); return; }
+                mostrarToast(tipo === 'ingreso' ? 'Ingreso agregado' : 'Gasto agregado', 'exito');
+            });
+            setTransacciones(prev => [...prev, nueva]);
+            setCuentas(prev => prev.map(c => {
+                if (c.nombre !== cuenta) return c;
+                const nuevoSaldo = tipo === 'ingreso' ? Number(c.saldo) + Number(monto) : Number(c.saldo) - Number(monto);
+                return { ...c, saldo: nuevoSaldo };
+            }));
+        }
         onClose();
     }
+
+    useEffect(() => {
+    if (transaccionEditar) {
+        setDescripcion(transaccionEditar.descripcion);
+        setMonto(transaccionEditar.monto);
+        setCategoria(transaccionEditar.categoria);
+        setCuenta(transaccionEditar.cuenta);
+        setFuente(transaccionEditar.fuente || '');
+    }
+}, [transaccionEditar]);
 
     return (
         <div className="formulario">
@@ -85,8 +94,8 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas, sesi
             {tipo === 'ingreso' && (
                 <input type="text" value={fuente} onChange={(e) => setFuente(e.target.value)} placeholder="Fuente (opcional)" />
             )}
-            <button onClick={agregar}>
-                {tipo === 'ingreso' ? 'Agregar Ingreso' : 'Agregar Gasto'}
+            <button onClick={guardar}>
+                {transaccionEditar ? 'Guardar Cambios' : tipo === 'ingreso' ? 'Agregar Ingreso' : 'Agregar Gasto'}
             </button>
         </div>
     );

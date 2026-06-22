@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import './FormularioTarea.css';
 import { supabase } from '../../supabase';
 import { useToast } from '../../context/ToastContext';
 
-function FormularioTarea({ setTareas, onClose, sesion }) {
+function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
 
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDescripcion] = useState('');
@@ -15,26 +15,32 @@ function FormularioTarea({ setTareas, onClose, sesion }) {
     function guardar() {
         if (titulo.trim() === '') return;
 
-        const nuevaTarea = {
-            titulo,
-            descripcion,
-            categoria,
-            prioridad,
-            fecha_limite: fechaLimite,
-            completada: false,
-            user_id: sesion.user.id
-        };
-
-        supabase.from('tareas').insert([nuevaTarea]).then(({ error }) => {
-            if (error) {
-                mostrarToast('No se pudo crear la tarea', 'error');
-                return;
-            }
-            mostrarToast('Tarea creada correctamente', 'exito');
-        });
-        setTareas(prev => [...prev, nuevaTarea]);
+        if (tareaEditar) {
+            supabase.from('tareas').update({ titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite }).eq('id', tareaEditar.id).then(({ error }) => {
+                if (error) { mostrarToast('No se pudo actualizar la tarea', 'error'); return; }
+                mostrarToast('Tarea actualizada correctamente', 'exito');
+            });
+            setTareas(prev => prev.map(t => t.id === tareaEditar.id ? { ...t, titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite } : t));
+        } else {
+            const nuevaTarea = { titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite, completada: false, user_id: sesion.user.id };
+            supabase.from('tareas').insert([nuevaTarea]).then(({ error }) => {
+                if (error) { mostrarToast('No se pudo crear la tarea', 'error'); return; }
+                mostrarToast('Tarea creada correctamente', 'exito');
+            });
+            setTareas(prev => [...prev, nuevaTarea]);
+        }
         onClose();
     }
+
+    useEffect(() => {
+        if (tareaEditar) {
+            setTitulo(tareaEditar.titulo);
+            setDescripcion(tareaEditar.descripcion || '');
+            setCategoria(tareaEditar.categoria);
+            setPrioridad(tareaEditar.prioridad);
+            setFechaLimite(tareaEditar.fecha_limite || '');
+        }
+    }, [tareaEditar]);
 
     return (
         <div className="formulario-tarea">
@@ -79,7 +85,9 @@ function FormularioTarea({ setTareas, onClose, sesion }) {
                 onChange={(e) => setFechaLimite(e.target.value)}
             />
 
-            <button className="btn-crear-tarea" onClick={guardar}>Crear Tarea</button>
+            <button className="btn-crear-tarea" onClick={guardar}>
+                {tareaEditar ? 'Guardar Cambios' : 'Crear Tarea'}
+            </button>
         </div>
     );
 }

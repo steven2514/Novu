@@ -84,6 +84,7 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
                                     <p className={t.tipo === 'ingreso' ? 'monto-ingreso' : 'monto-gasto'}>
                                         {t.tipo === 'ingreso' ? '+' : '-'}${Number(t.monto).toLocaleString('es-CO')}
                                     </p>
+                                    <button className="btn-editar-cuenta" onClick={() => abrirModal(t.tipo, t)}>✏️</button>
                                     <button className="btn-eliminar" onClick={() => eliminar(t.id)}><Icon name="trash-2" /></button>
                                 </div>
                             ))
