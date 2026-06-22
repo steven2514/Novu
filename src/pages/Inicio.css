@@ -91,3 +91,29 @@
     overflow-y: auto;
     max-height: 350px;
 }
+
+.dashboard-mes-selector {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.dashboard-mes-selector button {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #6C63FF;
+}
+
+.dashboard-mes-selector span {
+    font-weight: 600;
+    color: #1A1A2E;
+    text-transform: capitalize;
+    min-width: 160px;
+    text-align: center;
+}

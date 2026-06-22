@@ -3,25 +3,33 @@ import TarjetaResumen from '../components/TarjetaResumen/TarjetaResumen';
 import './Inicio.css';
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
+import { useState } from 'react';
 
 function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion }) {
     
     const { mostrarTour, cerrarTour } = useTour('dashboard', sesion);
 
-    const balance = transacciones.reduce((acc, t) => {
+    const [mesSeleccionado, setMesSeleccionado] = useState(new Date());
+
+    const transaccionesDelMes = transacciones.filter(t => {
+        const fecha = new Date(t.fecha);
+        return fecha.getMonth() === mesSeleccionado.getMonth() && fecha.getFullYear() === mesSeleccionado.getFullYear();
+    });
+
+    const balance = transaccionesDelMes.reduce((acc, t) => {
         if (t.tipo === 'ingreso') return acc + Number(t.monto);
         return acc - Number(t.monto);
     }, 0);
 
-    const totalIngresos = transacciones
+    const totalIngresos = transaccionesDelMes
         .filter((t) => t.tipo === 'ingreso')
         .reduce((acc, t) => acc + Number(t.monto), 0);
 
-    const totalGasto = transacciones
+    const totalGasto = transaccionesDelMes
         .filter((t) => t.tipo === 'gasto')
         .reduce((acc, t) => acc + Number(t.monto), 0);
 
-    const gastosPorCategoria = transacciones
+    const gastosPorCategoria = transaccionesDelMes
         .filter(t => t.tipo === 'gasto')
         .reduce((acc, t) => {
             const cat = acc.find(c => c.categoria === t.categoria);
@@ -30,7 +38,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion }) {
             return acc;
         }, []);
     
-    const ingresosPorCategoria = transacciones
+    const ingresosPorCategoria = transaccionesDelMes
         .filter(t => t.tipo === 'ingreso')
         .reduce((acc, t) => {
             const cat = acc.find(c => c.categoria === t.categoria);
@@ -48,6 +56,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion }) {
 
     const hoy = new Date();
     const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    
 
     const datosSemanales = Array.from({ length: 7 }, (_, i) => {
         const fecha = new Date(hoy);
@@ -72,6 +81,11 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion }) {
         <div className='dashboard'>
             <h1>Dashboard</h1>
             <p>{fecha}</p>
+            <div className='dashboard-mes-selector'>
+                <button onClick={() => setMesSeleccionado(new Date(mesSeleccionado.getFullYear(), mesSeleccionado.getMonth() - 1))}>‹</button>
+                <span>{mesSeleccionado.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' })}</span>
+                <button onClick={() => setMesSeleccionado(new Date(mesSeleccionado.getFullYear(), mesSeleccionado.getMonth() + 1))}>›</button>
+            </div>
             <div className='tarjetas-grid'>
                 <TarjetaResumen titulo="BALANCE TOTAL" valor={balance} color="principal" subtitulo={`${cuentas.length} cuentas activas`} />
                 <TarjetaResumen titulo="INGRESOS" valor={totalIngresos} color="positivo" subtitulo="Este mes" />
@@ -110,7 +124,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion }) {
                     )}
                     
                 </div>
-                
+
                 <div className="dashboard-caja">
                     <h3>Ingresos por Categoría</h3>
                     {totalIngresos === 0 ? (
