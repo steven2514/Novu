@@ -13,20 +13,20 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas, sesi
     const [fuente, setFuente] = useState('');
     const [fecha] = useState(new Date())
     const { mostrarToast } = useToast();
+    const [guardando, setGuardando] = useState(false);
 
-    function guardar() {
+    async function guardar() {
+        setGuardando(true);
         if (transaccionEditar) {
-            supabase.from('transacciones').update({ descripcion, monto, categoria, cuenta, fuente }).eq('id', transaccionEditar.id).then(({ error }) => {
-                if (error) { mostrarToast('No se pudo actualizar', 'error'); return; }
-                mostrarToast('Transacción actualizada', 'exito');
-            });
+            const { error } = await supabase.from('transacciones').update({ descripcion, monto, categoria, cuenta, fuente }).eq('id', transaccionEditar.id);
+            if (error) { mostrarToast('No se pudo actualizar', 'error'); setGuardando(false); return; }
+            mostrarToast('Transacción actualizada', 'exito');
             setTransacciones(prev => prev.map(t => t.id === transaccionEditar.id ? { ...t, descripcion, monto, categoria, cuenta, fuente } : t));
         } else {
             const nueva = { descripcion, monto, tipo, categoria, cuenta, fecha, fuente, user_id: sesion.user.id };
-            supabase.from('transacciones').insert([nueva]).then(({ error }) => {
-                if (error) { mostrarToast('No se pudo guardar la transacción', 'error'); return; }
-                mostrarToast(tipo === 'ingreso' ? 'Ingreso agregado' : 'Gasto agregado', 'exito');
-            });
+            const { error } = await supabase.from('transacciones').insert([nueva]);
+            if (error) { mostrarToast('No se pudo guardar la transacción', 'error'); setGuardando(false); return; }
+            mostrarToast(tipo === 'ingreso' ? 'Ingreso agregado' : 'Gasto agregado', 'exito');
             setTransacciones(prev => [...prev, nueva]);
             setCuentas(prev => prev.map(c => {
                 if (c.nombre !== cuenta) return c;
@@ -34,6 +34,7 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas, sesi
                 return { ...c, saldo: nuevoSaldo };
             }));
         }
+        setGuardando(false);
         onClose();
     }
 
@@ -94,8 +95,8 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas, sesi
             {tipo === 'ingreso' && (
                 <input type="text" value={fuente} onChange={(e) => setFuente(e.target.value)} placeholder="Fuente (opcional)" />
             )}
-            <button onClick={guardar}>
-                {transaccionEditar ? 'Guardar Cambios' : tipo === 'ingreso' ? 'Agregar Ingreso' : 'Agregar Gasto'}
+            <button onClick={guardar} disabled={guardando}>
+                {guardando ? 'Guardando...' : transaccionEditar ? 'Guardar Cambios' : tipo === 'ingreso' ? 'Agregar Ingreso' : 'Agregar Gasto'}
             </button>
         </div>
     );

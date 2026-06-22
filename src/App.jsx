@@ -184,9 +184,6 @@ function App() {
 
                             
                             <div className="flotante-container">
-                                <button className="flotante-btn" onClick={() => setMenuFlotanteVisible(prev => !prev)}>
-                                    {menuFlotanteVisible ? '✕' : '+'}
-                                </button>
                                 {menuFlotanteVisible && (
                                     <div className="flotante-menu">
                                         <button onClick={() => { abrirModal('ingreso'); setMenuFlotanteVisible(false); }}>
@@ -206,6 +203,9 @@ function App() {
                                         </button>
                                     </div>
                                 )}
+                                <button className="flotante-btn" onClick={() => setMenuFlotanteVisible(prev => !prev)}>
+                                    {menuFlotanteVisible ? '✕' : '+'}
+                                </button>
                                 
                             </div>
                     </div>
