@@ -88,7 +88,7 @@ function App() {
         });
     }, [sesion]);
 
-    
+
 
     function abrirModal(tipo) {
         setModalTipo(tipo);
@@ -131,19 +131,21 @@ function App() {
                     <Sidebar />
                     <div className='contenido'>
                         <Routes>
-                            <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} sesion={sesion } />} />
+
+                            <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} sesion={sesion} />} /> 
+                                
+                            <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} sesion={sesion} />} />
 
                             <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} abrirModalTransferencia={() => setModalTransferenciaVisible(true)} />} />
 
-                            <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} />} />
+                            <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} setCuentas={setCuentas} sesion={sesion} />} />
 
-                            <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} setCuentas={setCuentas} />} />
 
-                            <Route path='/Metas' element={<Meta metas={metas} setMetas={setMetas} />} />
+                            <Route path='/Metas' element={<Meta metas={metas} setMetas={setMetas} sesion={sesion} />} />
 
-                            <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} tareas={tareas} />} />
+                            <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} tareas={tareas} sesion={sesion} />} />
 
-                            <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} />} />
+                            <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} sesion={sesion} />} />
 
                             <Route path='/terminos' element={<Terminos />} />
                             <Route path='/privacidad' element={<Privacidad />} />
@@ -151,12 +153,12 @@ function App() {
                         </Routes>
                         <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
                             <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas} />
-                            </Modal>
+                        </Modal>
 
-                            <Modal visible={modalTransferenciaVisible} onClose={() => setModalTransferenciaVisible(false)}>
-                                <FormularioTransferencia cuentas={cuentas} metas={metas} setCuentas={setCuentas} setMetas={setMetas} onClose={() => setModalTransferenciaVisible(false)} sesion={sesion} />
-                            </Modal>
-                        
+                        <Modal visible={modalTransferenciaVisible} onClose={() => setModalTransferenciaVisible(false)}>
+                            <FormularioTransferencia cuentas={cuentas} metas={metas} setCuentas={setCuentas} setMetas={setMetas} onClose={() => setModalTransferenciaVisible(false)} sesion={sesion} />
+                        </Modal>
+
                     </div>
                 </div>
             )}

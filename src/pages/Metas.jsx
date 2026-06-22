@@ -3,10 +3,13 @@ import './Metas.css';
 import Modal from '../components/Modal/Modal';
 import { supabase } from '../supabase';
 import FormularioMeta from '../components/FormularioMeta/FormularioMeta';
+import { useTour } from '../hooks/useTour';
+import Tour from '../components/Tour/Tour';
 
-function Metas({ metas, setMetas }) {
+function Metas({ metas, setMetas, sesion}) {
 
     const [modalVisible, setModalVisible] = useState(false);
+    const { mostrarTour, cerrarTour } = useTour('metas', sesion);
 
     const totalObjetivo = metas.reduce((acc, m) => acc + Number(m.monto_objetivo), 0);
     const totalAhorrado = metas.reduce((acc, m) => acc + Number(m.monto_actual), 0);
@@ -14,6 +17,10 @@ function Metas({ metas, setMetas }) {
 
     return (
         <div className="metas-page">
+            {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
+                { titulo: 'Tus metas de ahorro', texto: 'Crea objetivos como "Viaje" o "iPhone 16" y ahorra hacia ellos.' },
+                { titulo: 'Transfiere dinero', texto: 'Usa la opción de Transferir en Cuentas para abonar a tus metas.' }
+            ]} />}
             <div className="metas-header">
                 <div>
                     <h1>Metas Inteligentes</h1>

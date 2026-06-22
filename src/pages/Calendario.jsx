@@ -1,8 +1,10 @@
 import { useState } from "react";
 import './Calendario.css';
+import { useTour } from '../hooks/useTour';
+import Tour from '../components/Tour/Tour';
 
 
-function Calendario({ metas, transacciones, suscripciones, tareas }) {
+function Calendario({ metas, transacciones, suscripciones, tareas, sesion }) {
 
     const [fechaActual, setFechaActual] = useState(new Date());
     const mes = fechaActual.getMonth();
@@ -14,6 +16,7 @@ function Calendario({ metas, transacciones, suscripciones, tareas }) {
     const celdas = [...celdasVacias, ...diasDelMes];
     const nombresMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     const nombresDias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const { mostrarTour, cerrarTour } = useTour('calendario', sesion);
 
     
     const transaccionesDelMes = transacciones.filter((t) => {
@@ -51,6 +54,10 @@ function Calendario({ metas, transacciones, suscripciones, tareas }) {
 
     return (
         <div className="calendario-page">
+            {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
+                { titulo: 'Tu calendario financiero', texto: 'Visualiza todos tus pagos, metas y movimientos en una sola vista.' },
+                { titulo: 'Leyenda de colores', texto: 'Cada color representa un tipo distinto: ingreso, gasto, meta o suscripción.' }
+            ]} />}
             <div className="calendario-header">
                 <div>
                     <h1>Calendario de Pagos</h1>

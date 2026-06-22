@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import './Transacciones.css';
 import { Icon } from '../components/Icon';
+import { useTour } from '../hooks/useTour';
+import Tour from '../components/Tour/Tour';
 
 
-function Transacciones({ transacciones, eliminar, abrirModal }) {
+function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
 
     const [filtro, setFiltro] = useState('todos');
+    const { mostrarTour, cerrarTour } = useTour('transacciones', sesion);
 
     const totalIngresos = transacciones
         .filter(t => t.tipo === 'ingreso')
@@ -18,6 +21,10 @@ function Transacciones({ transacciones, eliminar, abrirModal }) {
 
     return (
         <div className="transacciones-page">
+            {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
+                { titulo: 'Tus transacciones', texto: 'Aquí ves todo tu historial de ingresos y gastos.' },
+                { titulo: 'Filtros', texto: 'Filtra por ingresos, gastos o ve todas las transacciones.' }
+            ]} />}
 
             <div className="trans-header">
                 <div>
@@ -85,6 +92,7 @@ function Transacciones({ transacciones, eliminar, abrirModal }) {
             </div>
 
         </div>
+        
     );
 }
 

@@ -3,11 +3,14 @@ import './Aprendizaje.css';
 import Modal from '../components/Modal/Modal';
 import { supabase } from '../supabase';
 import FormularioTarea from '../components/FormularioTarea/FormularioTarea';
+import { useTour } from '../hooks/useTour';
+import Tour from '../components/Tour/Tour';
 
-function Aprendizaje({ tareas, setTareas }) {
+function Aprendizaje({ tareas, setTareas, sesion }) {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [filtro, setFiltro] = useState('Todas');
+    const { mostrarTour, cerrarTour } = useTour('aprendizaje', sesion);
 
     const pendientes = tareas.filter(t => !t.completada).length;
     const completadas = tareas.filter(t => t.completada).length;
@@ -32,6 +35,10 @@ function Aprendizaje({ tareas, setTareas }) {
 
     return (
         <div className="aprendizaje-page">
+            {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
+                { titulo: 'Aprendizaje y Tareas', texto: 'Organiza tus tareas, actividades diarias y compromisos.' },
+                { titulo: 'Filtros y prioridad', texto: 'Marca tareas como completadas y filtra por categoría.' }
+            ]} />}
             <div className="aprendizaje-header">
                 <div>
                     <h1>Aprendizaje y Tareas</h1>
