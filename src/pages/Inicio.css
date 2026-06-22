@@ -117,3 +117,7 @@
     min-width: 160px;
     text-align: center;
 }
+
+.dashboard-mes-selector span {
+    color: var(--texto);
+}

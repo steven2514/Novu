@@ -5,6 +5,7 @@ import { supabase } from '../supabase';
 import FormularioSuscripcion from "../components/FormularioSuscripcion/FormularioSuscripcion";
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
+import exportarCSV from '../utils/exportarCSV';
 
 function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, sesion }) {
 
@@ -25,7 +26,10 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                     <h1>Suscripciones</h1>
                     <p>Control de pagos recurrentes</p>
                 </div>
-                <button onClick={() => setModalVisible(true)}>+ Nueva Suscripción</button>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <button className="btn-exportar" onClick={() => exportarCSV(suscripciones, 'suscripciones')}>⬇ Exportar</button>
+                    <button onClick={() => setModalVisible(true)}>+ Nueva Suscripción</button>
+                </div>
             </div>
 
             <div className="tarjeta-gasto">

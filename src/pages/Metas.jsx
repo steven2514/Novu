@@ -6,6 +6,7 @@ import FormularioMeta from '../components/FormularioMeta/FormularioMeta';
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
+import exportarCSV from '../utils/exportarCSV';
 
 function Metas({ metas, setMetas, sesion }) {
 
@@ -38,7 +39,10 @@ function Metas({ metas, setMetas, sesion }) {
                     <h1>Metas Inteligentes</h1>
                     <p>Alcanza tus objetivos de ahorro</p>
                 </div>
-                <button onClick={() => setModalVisible(true)}>+ Nueva Meta</button>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <button className="btn-exportar" onClick={() => exportarCSV(metas, 'metas')}>⬇ Exportar</button>
+                    <button onClick={() => setModalVisible(true)}>+ Nueva Meta</button>
+                </div>
             </div>
 
             {metas.length > 0 && (

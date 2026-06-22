@@ -3,6 +3,7 @@ import './Transacciones.css';
 import { Icon } from '../components/Icon';
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
+import exportarCSV from '../utils/exportarCSV';
 
 
 function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
@@ -34,6 +35,7 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
                 <div className="trans-botones-header">
                     <button className="btn-ingreso" onClick={() => abrirModal('ingreso')}>+ Ingreso</button>
                     <button className="btn-gasto" onClick={() => abrirModal('gasto')}>+ Gasto</button>
+                    <button className="btn-exportar" onClick={() => exportarCSV(transacciones, 'transacciones')}>⬇ Exportar</button>
                 </div>
             </div>
 

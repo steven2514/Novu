@@ -6,6 +6,7 @@ import FormularioCuenta from "../components/FormularioCuenta/FormularioCuenta";
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
+import exportarCSV from '../utils/exportarCSV';
 
 function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) {
 
@@ -38,6 +39,7 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) 
                 </div>
                 <div className="cuentas-header-botones">
                     <button onClick={abrirModalTransferencia}>↔ Transferir</button>
+                    <button className="btn-exportar" onClick={() => exportarCSV(cuentas, 'cuentas')}>⬇ Exportar</button>
                     <button onClick={() => setModalVisible(true)}>+ Nueva Cuenta</button>
                 </div>
             </div>

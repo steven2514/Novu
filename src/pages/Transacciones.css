@@ -170,3 +170,19 @@
     font-weight: 700;
     color: var(--gasto);
 }
+
+.btn-exportar {
+    background: none;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--texto-gris);
+    cursor: pointer;
+}
+
+.btn-exportar:hover {
+    background: var(--fondo-hover);
+    color: var(--texto);
+}
