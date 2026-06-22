@@ -2,8 +2,9 @@ import { useState } from "react"
 import './Formulario.css';
 import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
+import { useToast } from '../../context/ToastContext';
 
-function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas }) {
+function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas, sesion }) {
 
     const [descripcion, setDescripcion] = useState('');
     const [monto, setMonto] = useState('');
@@ -11,18 +12,18 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas }) {
     const [cuenta, setCuenta] = useState('');
     const [fuente, setFuente] = useState('');
     const [fecha] = useState(new Date())
+    const { mostrarToast } = useToast();
 
-    async function agregar() {
-
-        
-        const { data: { user } } = await supabase.auth.getUser();
-        const nueva = { descripcion, monto, tipo, categoria, cuenta, fecha, fuente, user_id: user.id };
-        const { data } = await supabase.from('transacciones').insert([nueva]).select().single();
-        
-        
-        
-        setTransacciones(prev => [...prev, data]);
-        
+    function agregar() {
+        const nueva = { descripcion, monto, tipo, categoria, cuenta, fecha, fuente, user_id: sesion.user.id };
+        supabase.from('transacciones').insert([nueva]).then(({ error }) => {
+            if (error) {
+                mostrarToast('No se pudo guardar la transacción', 'error');
+                return;
+            }
+            mostrarToast(tipo === 'ingreso' ? 'Ingreso agregado' : 'Gasto agregado', 'exito');
+        });
+        setTransacciones(prev => [...prev, nueva]);
         setCuentas(prev => prev.map(c => {
             if (c.nombre !== cuenta) return c;
             const nuevoSaldo = tipo == 'ingreso' ? Number(c.saldo) + Number(monto)
@@ -36,7 +37,6 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas }) {
         setFuente('');
         onClose();
     }
-
 
     return (
         <div className="formulario">

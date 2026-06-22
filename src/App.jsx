@@ -152,7 +152,7 @@ function App() {
 
                         </Routes>
                         <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
-                            <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas} />
+                            <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} />
                         </Modal>
 
                         <Modal visible={modalTransferenciaVisible} onClose={() => setModalTransferenciaVisible(false)}>

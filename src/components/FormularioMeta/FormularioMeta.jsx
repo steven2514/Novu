@@ -2,9 +2,9 @@ import { useState } from "react";
 import './FormularioMeta.css';
 import { Icon, ICONOS_META } from '../Icon';
 import { supabase } from '../../supabase';
+import { useToast } from '../../context/ToastContext';
 
-
-function FormularioMeta({setMetas, onClose}) {
+function FormularioMeta({ setMetas, onClose, sesion }) {
 
     const [nombreMeta, setNombreMeta] = useState('');
     const [montoObjetivo, setMontoObjetivo] = useState('');
@@ -12,14 +12,20 @@ function FormularioMeta({setMetas, onClose}) {
     const [fechaObjetivo, setFechaObjetivo] = useState('');
     const [icono, setIcono] = useState('');
     const [color, setColor] = useState('');
+    const { mostrarToast } = useToast();
     const ICONOS = ICONOS_META;
     const COLORES = ['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4'];
 
-    async function guardar() {
-        const { data: { user } } = await supabase.auth.getUser();
-        const nueva = { nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual, fecha_objetivo: fechaObjetivo, icono, color, user_id: user.id };
-        const { data } = await supabase.from('metas').insert([nueva]).select().single();
-        setMetas(prev => [...prev, data]);
+    function guardar() {
+        const nueva = { nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual || 0, fecha_objetivo: fechaObjetivo, icono, color, user_id: sesion.user.id };
+        supabase.from('metas').insert([nueva]).then(({ error }) => {
+            if (error) {
+                mostrarToast('No se pudo crear la meta', 'error');
+                return;
+            }
+            mostrarToast('Meta creada correctamente', 'exito');
+        });
+        setMetas(prev => [...prev, nueva]);
         onClose();
     }
 
@@ -32,16 +38,16 @@ function FormularioMeta({setMetas, onClose}) {
 
             <label>Nombre de la Meta</label>
             <input type="text" value={nombreMeta} onChange={(e) => setNombreMeta(e.target.value)} placeholder="EJ: Iphone 16" />
-            
+
             <label>Monto objetivo</label>
-            <input type="number" value={montoObjetivo} onChange={(e) => setMontoObjetivo(e.target.value)} placeholder="0"/>
-            
+            <input type="number" value={montoObjetivo} onChange={(e) => setMontoObjetivo(e.target.value)} placeholder="0" />
+
             <label>Monto Actual</label>
             <input type="text" value={montoActual} onChange={(e) => setMontoActual(e.target.value)} placeholder="0" />
-            
+
             <label>Fecha Objetivo</label>
-            <input type="date" value={fechaObjetivo} onChange={(e)=> setFechaObjetivo(e.target.value)}/>
-            
+            <input type="date" value={fechaObjetivo} onChange={(e) => setFechaObjetivo(e.target.value)} />
+
             <label>Icono</label>
             <div className="iconos-opciones">
                 {ICONOS.map((ic) => (

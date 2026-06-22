@@ -2,24 +2,26 @@ import { useState } from "react";
 import './FormularioCuenta.css';
 import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
+import { useToast } from '../../context/ToastContext';
 
-function FormularioCuenta({setCuenta, onClose}) {
+function FormularioCuenta({ setCuenta, onClose }) {
     const [nombre, setNombre] = useState('');
     const [tipo, setTipo] = useState('debito');
     const [saldo, setSaldo] = useState('');
     const [banco, setBanco] = useState('');
     const [color, setColor] = useState('#6C63FF');
-    
+    const { mostrarToast } = useToast();
 
     async function guardar() {
         const { data: { user } } = await supabase.auth.getUser();
         const nueva = { nombre, tipo, saldo: saldo === '' ? 0 : Number(saldo), banco, color, user_id: user.id };
         const { data, error } = await supabase.from('cuentas').insert([nueva]).select().single();
         if (error) {
-            console.log('Error al crear cuenta:', error);
+            mostrarToast('No se pudo crear la cuenta, intenta de nuevo', 'error');
             return;
         }
         setCuenta(prev => [...prev, data]);
+        mostrarToast('Cuenta creada correctamente', 'exito');
         setNombre('');
         setTipo('');
         setSaldo('');

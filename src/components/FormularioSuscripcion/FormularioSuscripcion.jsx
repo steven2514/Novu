@@ -2,8 +2,9 @@ import { useState } from "react";
 import './FormularioSuscripcion.css'
 import { Icon, ICONOS_SUSCRIPCION } from '../Icon';
 import { supabase } from '../../supabase';
+import { useToast } from '../../context/ToastContext';
 
-function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas }) {
+function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas, sesion }) {
 
     const [nombre, setNombre] = useState('');
     const [monto, setMonto] = useState();
@@ -12,15 +13,21 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas 
     const [frecuencia, setFrecuencia] = useState('mensual');
     const [icono, setIcono] = useState('credit-card');
     const [color, setColor] = useState('#6C63FF');
+    const { mostrarToast } = useToast();
 
     const ICONOS = ICONOS_SUSCRIPCION;
     const COLORES = ['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4'];
 
-    async function guardar() {
-        const { data: { user } } = await supabase.auth.getUser();
-        const nueva = { nombre, monto, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color, user_id: user.id };
-        const { data } = await supabase.from('suscripciones').insert([nueva]).select().single();
-        setSuscripciones(prev => [...prev, data]);
+    function guardar() {
+        const nueva = { nombre, monto, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color, user_id: sesion.user.id };
+        supabase.from('suscripciones').insert([nueva]).then(({ error }) => {
+            if (error) {
+                mostrarToast('No se pudo crear la suscripción', 'error');
+                return;
+            }
+            mostrarToast('Suscripción creada correctamente', 'exito');
+        });
+        setSuscripciones(prev => [...prev, nueva]);
         setCuentas(prev => prev.map(c => {
             if (c.nombre !== cuenta) return c;
             return { ...c, saldo: Number(c.saldo) - Number(monto) };

@@ -1,0 +1,33 @@
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 14px 20px;
+    border-radius: 10px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: aparecer 0.3s ease;
+}
+
+.toast-exito {
+    background-color: #00D2A0;
+}
+
+.toast-error {
+    background-color: #FF6B6B;
+}
+
+@keyframes aparecer {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

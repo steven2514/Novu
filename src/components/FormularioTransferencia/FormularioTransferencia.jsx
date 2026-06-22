@@ -1,6 +1,7 @@
 import { useState } from "react";
 import './FormularioTransferencia.css';
 import { supabase } from '../../supabase';
+import { useToast } from '../../context/ToastContext';
 
 function FormularioTransferencia({ cuentas, metas, setCuentas, setMetas, onClose, sesion }) {
 
@@ -8,13 +9,17 @@ function FormularioTransferencia({ cuentas, metas, setCuentas, setMetas, onClose
     const [destino, setDestino] = useState('');
     const [tipoDestino, setTipoDestino] = useState('cuenta');
     const [monto, setMonto] = useState('');
+    const { mostrarToast } = useToast();
 
     function transferir() {
-        if (!origen || !destino || !monto) return;
+        if (!origen || !destino || !monto) {
+            mostrarToast('Completa todos los campos', 'error');
+            return;
+        }
 
         const cuentaOrigen = cuentas.find(c => c.nombre === origen);
         if (!cuentaOrigen || Number(cuentaOrigen.saldo) < Number(monto)) {
-            alert('Saldo insuficiente en la cuenta de origen');
+            mostrarToast('Saldo insuficiente en la cuenta de origen', 'error');
             return;
         }
 
@@ -43,6 +48,7 @@ function FormularioTransferencia({ cuentas, metas, setCuentas, setMetas, onClose
             setMetas(prev => prev.map(m => m.id === meta.id ? { ...m, monto_actual: nuevoMontoActual } : m));
         }
 
+        mostrarToast('Transferencia realizada con éxito', 'exito');
         onClose();
     }
 

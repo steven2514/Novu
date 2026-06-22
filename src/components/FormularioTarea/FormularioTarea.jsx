@@ -1,25 +1,39 @@
 import { useState } from "react";
 import './FormularioTarea.css';
 import { supabase } from '../../supabase';
+import { useToast } from '../../context/ToastContext';
 
-function FormularioTarea({ setTareas, onClose }) {
+function FormularioTarea({ setTareas, onClose, sesion }) {
 
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [categoria, setCategoria] = useState('Tarea');
     const [prioridad, setPrioridad] = useState('media');
     const [fechaLimite, setFechaLimite] = useState('');
+    const { mostrarToast } = useToast();
 
-    async function guardar() {
+    function guardar() {
         if (titulo.trim() === '') return;
-        const { data: { user } } = await supabase.auth.getUser();
-        const nueva = { titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite, completada: false, user_id: user.id };
-        const { data } = await supabase.from('tareas').insert([nueva]).select().single();
-        setTareas(prev => [...prev, data]);
-        onClose();
-    
 
-        
+        const nuevaTarea = {
+            titulo,
+            descripcion,
+            categoria,
+            prioridad,
+            fecha_limite: fechaLimite,
+            completada: false,
+            user_id: sesion.user.id
+        };
+
+        supabase.from('tareas').insert([nuevaTarea]).then(({ error }) => {
+            if (error) {
+                mostrarToast('No se pudo crear la tarea', 'error');
+                return;
+            }
+            mostrarToast('Tarea creada correctamente', 'exito');
+        });
+        setTareas(prev => [...prev, nuevaTarea]);
+        onClose();
     }
 
     return (
