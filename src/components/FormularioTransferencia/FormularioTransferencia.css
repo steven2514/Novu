@@ -1,0 +1,31 @@
+.formulario-transferencia {
+    display: flex;
+    flex-direction: column;
+}
+
+.formulario-transferencia label {
+    margin-top: 16px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1A1A2E;
+}
+
+.formulario-transferencia select,
+.formulario-transferencia input {
+    padding: 12px 14px;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.formulario-transferencia button {
+    margin-top: 24px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #6C63FF, #4338CA);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}

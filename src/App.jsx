@@ -16,6 +16,7 @@ import Loader from './components/Loader/Loader';
 import Terminos from './pages/Terminos';
 import Privacidad from './pages/Privacidad';
 import Splash from './components/Splash/Splash';
+import FormularioTransferencia from './components/FormularioTransferencia/FormularioTransferencia';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
     const [sesion, setSesion] = useState(null);
     const [cargando, setCargando] = useState(true);
     const [mostrarSplash, setMostrarSplash] = useState(true);
+    const [modalTransferenciaVisible, setModalTransferenciaVisible] = useState(false);
 
     useEffect(() => {
         if (!sesion) return;
@@ -129,9 +131,9 @@ function App() {
                     <Sidebar />
                     <div className='contenido'>
                         <Routes>
-                                <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} sesion={sesion } />} />
+                            <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} sesion={sesion } />} />
 
-                                <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} />} />
+                            <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} abrirModalTransferencia={() => setModalTransferenciaVisible(true)} />} />
 
                             <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} />} />
 
@@ -149,6 +151,10 @@ function App() {
                         </Routes>
                         <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
                             <Formulario setTransacciones={setTransacciones} tipo={modalTipo} onClose={() => setModalVisible(false)} cuentas={cuentas} setCuentas={setCuentas} />
+                            </Modal>
+
+                            <Modal visible={modalTransferenciaVisible} onClose={() => setModalTransferenciaVisible(false)}>
+                                <FormularioTransferencia cuentas={cuentas} metas={metas} setCuentas={setCuentas} setMetas={setMetas} onClose={() => setModalTransferenciaVisible(false)} sesion={sesion} />
                             </Modal>
                         
                     </div>

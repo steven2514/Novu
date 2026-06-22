@@ -232,3 +232,8 @@
     margin: 1px;
     background-color: var(--principal);
 }
+
+.cuentas-header-botones {
+    display: flex;
+    gap: 12px;
+}

@@ -9,11 +9,16 @@ function FormularioCuenta({setCuenta, onClose}) {
     const [saldo, setSaldo] = useState('');
     const [banco, setBanco] = useState('');
     const [color, setColor] = useState('#6C63FF');
+    
 
     async function guardar() {
         const { data: { user } } = await supabase.auth.getUser();
-        const nueva = { nombre, tipo, saldo, banco, color, user_id: user.id };
-        const { data } = await supabase.from('cuentas').insert([nueva]).select().single();
+        const nueva = { nombre, tipo, saldo: saldo === '' ? 0 : Number(saldo), banco, color, user_id: user.id };
+        const { data, error } = await supabase.from('cuentas').insert([nueva]).select().single();
+        if (error) {
+            console.log('Error al crear cuenta:', error);
+            return;
+        }
         setCuenta(prev => [...prev, data]);
         setNombre('');
         setTipo('');

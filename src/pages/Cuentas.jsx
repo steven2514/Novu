@@ -6,7 +6,7 @@ import FormularioCuenta from "../components/FormularioCuenta/FormularioCuenta";
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 
-function Cuentas({cuentas=[], setCuentas, sesion}) {
+function Cuentas({cuentas=[], setCuentas, sesion, abrirModalTransferencia}) {
 
     const { mostrarTour, cerrarTour } = useTour('cuentas', sesion);
     
@@ -20,6 +20,7 @@ function Cuentas({cuentas=[], setCuentas, sesion}) {
                     <h1>Gestor de Cuentas</h1>
                     <p>Controla los saldos de tus cuentas</p>
                 </div>
+                <button onClick={() => { console.log('click transferir'); abrirModalTransferencia(); }}>↔ Transferir</button>
                 <button onClick={() => setModalVisible(true)}>+ Nueva Cuenta</button>
             </div>
 
