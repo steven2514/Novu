@@ -224,3 +224,8 @@
     color: var(--principal);
     font-size: 12px;
 }
+
+.meta-tarjeta-acciones {
+    display: flex;
+    gap: 8px;
+}

@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './FormularioMeta.css';
 import { Icon, ICONOS_META } from '../Icon';
 import { supabase } from '../../supabase';
 import { useToast } from '../../context/ToastContext';
 
-function FormularioMeta({ setMetas, onClose, sesion }) {
+function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
 
     const [nombreMeta, setNombreMeta] = useState('');
     const [montoObjetivo, setMontoObjetivo] = useState('');
@@ -16,23 +16,45 @@ function FormularioMeta({ setMetas, onClose, sesion }) {
     const ICONOS = ICONOS_META;
     const COLORES = ['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4'];
 
+    useEffect(() => {
+        if (metaEditar) {
+            setNombreMeta(metaEditar.nombre_meta);
+            setMontoObjetivo(metaEditar.monto_objetivo);
+            setMontoActual(metaEditar.monto_actual);
+            setFechaObjetivo(metaEditar.fecha_objetivo);
+            setIcono(metaEditar.icono);
+            setColor(metaEditar.color);
+        }
+    }, [metaEditar]);
+
     function guardar() {
-        const nueva = { nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual || 0, fecha_objetivo: fechaObjetivo, icono, color, user_id: sesion.user.id };
-        supabase.from('metas').insert([nueva]).then(({ error }) => {
-            if (error) {
-                mostrarToast('No se pudo crear la meta', 'error');
-                return;
-            }
-            mostrarToast('Meta creada correctamente', 'exito');
-        });
-        setMetas(prev => [...prev, nueva]);
+        if (metaEditar) {
+            supabase.from('metas').update({ nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual, fecha_objetivo: fechaObjetivo, icono, color }).eq('id', metaEditar.id).then(({ error }) => {
+                if (error) {
+                    mostrarToast('No se pudo actualizar la meta', 'error');
+                    return;
+                }
+                mostrarToast('Meta actualizada correctamente', 'exito');
+            });
+            setMetas(prev => prev.map(m => m.id === metaEditar.id ? { ...m, nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual, fecha_objetivo: fechaObjetivo, icono, color } : m));
+        } else {
+            const nueva = { nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual || 0, fecha_objetivo: fechaObjetivo, icono, color, user_id: sesion.user.id };
+            supabase.from('metas').insert([nueva]).then(({ error }) => {
+                if (error) {
+                    mostrarToast('No se pudo crear la meta', 'error');
+                    return;
+                }
+                mostrarToast('Meta creada correctamente', 'exito');
+            });
+            setMetas(prev => [...prev, nueva]);
+        }
         onClose();
     }
 
     return (
         <div className="formulario-meta">
             <div className="formulario-meta-header">
-                <h2>Nueva Meta</h2>
+                <h2>{metaEditar ? 'Editar Meta' : 'Nueva Meta'}</h2>
                 <button className="btn-cerrar-modal" onClick={onClose}><Icon name="x" /></button>
             </div>
 
@@ -70,7 +92,7 @@ function FormularioMeta({ setMetas, onClose, sesion }) {
                     />
                 ))}
             </div>
-            <button onClick={guardar}>Crear Meta</button>
+            <button onClick={guardar}>{metaEditar ? 'Guardar Cambios' : 'Crear Meta'}</button>
         </div>
     );
 }

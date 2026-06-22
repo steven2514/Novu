@@ -46,6 +46,7 @@ const ICON_MAP = {
   'log-out': Lucide.LogOut,
   sun: Lucide.Sun,
   moon: Lucide.Moon,
+  pencil: Lucide.Pencil,
 };
 
 export function Icon({ name, size = 18, className = '', style }) {

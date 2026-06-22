@@ -5,15 +5,27 @@ import { supabase } from '../supabase';
 import FormularioMeta from '../components/FormularioMeta/FormularioMeta';
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
+import { Icon } from '../components/Icon';
 
-function Metas({ metas, setMetas, sesion}) {
+function Metas({ metas, setMetas, sesion }) {
 
-    const [modalVisible, setModalVisible] = useState(false);
     const { mostrarTour, cerrarTour } = useTour('metas', sesion);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [metaEditar, setMetaEditar] = useState(null);
 
     const totalObjetivo = metas.reduce((acc, m) => acc + Number(m.monto_objetivo), 0);
     const totalAhorrado = metas.reduce((acc, m) => acc + Number(m.monto_actual), 0);
     const progresoGeneral = totalObjetivo > 0 ? (totalAhorrado / totalObjetivo) * 100 : 0;
+
+    function abrirEdicion(meta) {
+        setMetaEditar(meta);
+        setModalVisible(true);
+    }
+
+    function cerrarModal() {
+        setModalVisible(false);
+        setMetaEditar(null);
+    }
 
     return (
         <div className="metas-page">
@@ -64,10 +76,13 @@ function Metas({ metas, setMetas, sesion}) {
                             <div key={index} className="meta-tarjeta" style={{ borderColor: meta.color }}>
                                 <div className="meta-tarjeta-top">
                                     <span className="meta-icono">{meta.icono}</span>
-                                    <button className="btn-eliminar-cuenta" onClick={() => {
-                                        supabase.from('metas').delete().eq('id', meta.id).then(() => { });
-                                        setMetas(prev => prev.filter(m => m.id !== meta.id));
-                                    }}>🗑️</button>
+                                    <div className="meta-tarjeta-acciones">
+                                        <button className="btn-editar-cuenta" onClick={() => abrirEdicion(meta)}><Icon name="pencil" size={16} /></button>
+                                        <button className="btn-eliminar-cuenta" onClick={() => {
+                                            supabase.from('metas').delete().eq('id', meta.id).then(() => { });
+                                            setMetas(prev => prev.filter(m => m.id !== meta.id));
+                                        }}>🗑️</button>
+                                    </div>
                                 </div>
                                 <p className="meta-nombre">{meta.nombre_meta}</p>
                                 <p className="meta-subtitulo">Meta de ahorro</p>
@@ -106,8 +121,8 @@ function Metas({ metas, setMetas, sesion}) {
                 </div>
             )}
 
-            <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
-                <FormularioMeta setMetas={setMetas} onClose={() => setModalVisible(false)} />
+            <Modal visible={modalVisible} onClose={cerrarModal}>
+                <FormularioMeta setMetas={setMetas} onClose={cerrarModal} sesion={sesion} metaEditar={metaEditar} />
             </Modal>
         </div>
     );

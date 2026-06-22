@@ -237,3 +237,19 @@
     display: flex;
     gap: 12px;
 }
+
+.cuenta-tarjeta-acciones {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-editar-cuenta {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6B7280;
+}
+
+.btn-editar-cuenta:hover {
+    color: #6C63FF;
+}

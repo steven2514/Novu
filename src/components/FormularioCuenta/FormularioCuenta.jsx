@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './FormularioCuenta.css';
 import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
 import { useToast } from '../../context/ToastContext';
 
-function FormularioCuenta({ setCuenta, onClose }) {
+function FormularioCuenta({ setCuenta, onClose, cuentaEditar }) {
     const [nombre, setNombre] = useState('');
     const [tipo, setTipo] = useState('debito');
     const [saldo, setSaldo] = useState('');
@@ -12,16 +12,39 @@ function FormularioCuenta({ setCuenta, onClose }) {
     const [color, setColor] = useState('#6C63FF');
     const { mostrarToast } = useToast();
 
-    async function guardar() {
-        const { data: { user } } = await supabase.auth.getUser();
-        const nueva = { nombre, tipo, saldo: saldo === '' ? 0 : Number(saldo), banco, color, user_id: user.id };
-        const { data, error } = await supabase.from('cuentas').insert([nueva]).select().single();
-        if (error) {
-            mostrarToast('No se pudo crear la cuenta, intenta de nuevo', 'error');
-            return;
+    useEffect(() => {
+        if (cuentaEditar) {
+            setNombre(cuentaEditar.nombre);
+            setTipo(cuentaEditar.tipo);
+            setSaldo(cuentaEditar.saldo);
+            setBanco(cuentaEditar.banco || '');
+            setColor(cuentaEditar.color);
         }
-        setCuenta(prev => [...prev, data]);
-        mostrarToast('Cuenta creada correctamente', 'exito');
+    }, [cuentaEditar]);
+
+    async function guardar() {
+        const saldoFinal = saldo === '' ? 0 : Number(saldo);
+
+        if (cuentaEditar) {
+            const { error } = await supabase.from('cuentas').update({ nombre, tipo, saldo: saldoFinal, banco, color }).eq('id', cuentaEditar.id);
+            if (error) {
+                mostrarToast('No se pudo actualizar la cuenta', 'error');
+                return;
+            }
+            setCuenta(prev => prev.map(c => c.id === cuentaEditar.id ? { ...c, nombre, tipo, saldo: saldoFinal, banco, color } : c));
+            mostrarToast('Cuenta actualizada correctamente', 'exito');
+        } else {
+            const { data: { user } } = await supabase.auth.getUser();
+            const nueva = { nombre, tipo, saldo: saldoFinal, banco, color, user_id: user.id };
+            const { data, error } = await supabase.from('cuentas').insert([nueva]).select().single();
+            if (error) {
+                mostrarToast('No se pudo crear la cuenta, intenta de nuevo', 'error');
+                return;
+            }
+            setCuenta(prev => [...prev, data]);
+            mostrarToast('Cuenta creada correctamente', 'exito');
+        }
+
         setNombre('');
         setTipo('');
         setSaldo('');
@@ -33,7 +56,7 @@ function FormularioCuenta({ setCuenta, onClose }) {
     return (
         <div className="formulario-cuenta">
             <div className="formulario-meta-header">
-                <h2>Nueva Cuenta</h2>
+                <h2>{cuentaEditar ? 'Editar Cuenta' : 'Nueva Cuenta'}</h2>
                 <button className="btn-cerrar-modal" onClick={onClose}><Icon name="x" /></button>
             </div>
             <label>Nombre</label>
@@ -46,7 +69,7 @@ function FormularioCuenta({ setCuenta, onClose }) {
                 <option value="credito">Crédito</option>
             </select>
 
-            <label>Saldo Inicial</label>
+            <label>Saldo {cuentaEditar ? '' : 'Inicial'}</label>
             <input type="number" value={saldo} onChange={(e) => setSaldo(e.target.value)} placeholder="0.00" />
 
             <label>Banco (opcional)</label>
@@ -64,7 +87,7 @@ function FormularioCuenta({ setCuenta, onClose }) {
                 ))}
             </div>
 
-            <button onClick={guardar}>Crear Cuenta</button>
+            <button onClick={guardar}>{cuentaEditar ? 'Guardar Cambios' : 'Crear Cuenta'}</button>
         </div>
     );
 }

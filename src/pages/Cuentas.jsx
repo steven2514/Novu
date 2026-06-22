@@ -5,23 +5,41 @@ import { supabase } from '../supabase';
 import FormularioCuenta from "../components/FormularioCuenta/FormularioCuenta";
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
+import { Icon } from '../components/Icon';
 
-function Cuentas({cuentas=[], setCuentas, sesion, abrirModalTransferencia}) {
+function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) {
 
     const { mostrarTour, cerrarTour } = useTour('cuentas', sesion);
-    
+
     const [modalVisible, setModalVisible] = useState(false);
+    const [cuentaEditar, setCuentaEditar] = useState(null);
     const balanceTotal = cuentas.reduce((acc, c) => acc + Number(c.saldo), 0);
+
+    function abrirEdicion(cuenta) {
+        setCuentaEditar(cuenta);
+        setModalVisible(true);
+    }
+
+    function cerrarModal() {
+        setModalVisible(false);
+        setCuentaEditar(null);
+    }
 
     return (
         <div className="cuentas-page">
+            {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
+                { titulo: 'Tus cuentas', texto: 'Aquí creas y administras tus cuentas: débito, crédito o efectivo.' },
+                { titulo: 'Balance total', texto: 'Suma automática de los saldos de todas tus cuentas.' }
+            ]} />}
             <div className="cuentas-header">
                 <div>
                     <h1>Gestor de Cuentas</h1>
                     <p>Controla los saldos de tus cuentas</p>
                 </div>
-                <button onClick={() => { console.log('click transferir'); abrirModalTransferencia(); }}>↔ Transferir</button>
-                <button onClick={() => setModalVisible(true)}>+ Nueva Cuenta</button>
+                <div className="cuentas-header-botones">
+                    <button onClick={abrirModalTransferencia}>↔ Transferir</button>
+                    <button onClick={() => setModalVisible(true)}>+ Nueva Cuenta</button>
+                </div>
             </div>
 
             <div className="cuentas-balance">
@@ -47,17 +65,19 @@ function Cuentas({cuentas=[], setCuentas, sesion, abrirModalTransferencia}) {
                                 <div className="cuentas-lista">
                                     {cuentasFiltradas.map((cuenta, index) => {
                                         const tipoLabel = tipo === 'credito' ? 'Crédito' : tipo === 'debito' ? 'Débito' : 'Efectivo';
-                                      
                                         return (
                                             <div key={index} className="cuenta-tarjeta">
                                                 <div className="cuenta-tarjeta-header">
                                                     <div className="cuenta-icono" style={{ backgroundColor: cuenta.color + '22' }}>
                                                         <span style={{ color: cuenta.color }}>$</span>
                                                     </div>
-                                                    <button className="btn-eliminar-cuenta" onClick={() => {
-                                                        supabase.from('cuentas').delete().eq('id', cuenta.id).then(() => { });
-                                                        setCuentas(prev => prev.filter(c => c.id !== cuenta.id));
-                                                    }}>🗑️</button>
+                                                    <div className="cuenta-tarjeta-acciones">
+                                                        <button className="btn-editar-cuenta" onClick={() => abrirEdicion(cuenta)}><Icon name="pencil" size={16} /></button>
+                                                        <button className="btn-eliminar-cuenta" onClick={() => {
+                                                            supabase.from('cuentas').delete().eq('id', cuenta.id).then(() => { });
+                                                            setCuentas(prev => prev.filter(c => c.id !== cuenta.id));
+                                                        }}>🗑️</button>
+                                                    </div>
                                                 </div>
                                                 <p className="cuenta-nombre">{cuenta.nombre}</p>
                                                 {cuenta.banco && <p className="cuenta-banco">{cuenta.banco}</p>}
@@ -75,17 +95,10 @@ function Cuentas({cuentas=[], setCuentas, sesion, abrirModalTransferencia}) {
                 )}
             </div>
 
-            <Modal visible={modalVisible} onClose={() => setModalVisible(false)}>
-                <FormularioCuenta setCuenta={setCuentas} onClose={() => setModalVisible(false)} />
+            <Modal visible={modalVisible} onClose={cerrarModal}>
+                <FormularioCuenta setCuenta={setCuentas} onClose={cerrarModal} cuentaEditar={cuentaEditar} />
             </Modal>
-          
-
-            {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
-                { titulo: 'Tus cuentas', texto: 'Aquí creas y administras tus cuentas: débito, crédito o efectivo.' },
-                { titulo: 'Balance total', texto: 'Suma automática de los saldos de todas tus cuentas.' }
-            ]} />}
         </div>
-        
     );
 }
 
