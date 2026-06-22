@@ -29,6 +29,15 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion }) {
             else acc.push({ categoria: t.categoria, valor: Number(t.monto) });
             return acc;
         }, []);
+    
+    const ingresosPorCategoria = transacciones
+        .filter(t => t.tipo === 'ingreso')
+        .reduce((acc, t) => {
+            const cat = acc.find(c => c.categoria === t.categoria);
+            if (cat) cat.valor += Number(t.monto);
+            else acc.push({ categoria: t.categoria, valor: Number(t.monto) });
+            return acc;
+        }, []);
 
     const fecha = new Date().toLocaleDateString('es-CO', {
         weekday: 'long',
@@ -94,9 +103,27 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion }) {
                                     {gastosPorCategoria.map((entry, index) => (
                                         <Cell key={index} fill={COLORES[index]} />
                                     ))}
+                                    
                                 </Pie>
                                 <Tooltip />
                             </PieChart>
+                    )}
+                    
+                </div>
+                
+                <div className="dashboard-caja">
+                    <h3>Ingresos por Categoría</h3>
+                    {totalIngresos === 0 ? (
+                        <p>Sin ingresos registrados este mes</p>
+                    ) : (
+                        <PieChart width={300} height={250}>
+                            <Pie data={ingresosPorCategoria} dataKey="valor" nameKey="categoria">
+                                {ingresosPorCategoria.map((entry, index) => (
+                                    <Cell key={index} fill={COLORES[index]} />
+                                ))}
+                            </Pie>
+                            <Tooltip />
+                        </PieChart>
                     )}
                 </div>
             </div>
