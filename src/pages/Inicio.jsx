@@ -16,10 +16,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion }) {
         return fecha.getMonth() === mesSeleccionado.getMonth() && fecha.getFullYear() === mesSeleccionado.getFullYear();
     });
 
-    const balance = transaccionesDelMes.reduce((acc, t) => {
-        if (t.tipo === 'ingreso') return acc + Number(t.monto);
-        return acc - Number(t.monto);
-    }, 0);
+    const balance = cuentas.reduce((acc, c) => acc + Number(c.saldo), 0);
 
     const totalIngresos = transaccionesDelMes
         .filter((t) => t.tipo === 'ingreso')
