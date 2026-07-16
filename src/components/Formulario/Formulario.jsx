@@ -28,11 +28,12 @@ function Formulario({ setTransacciones, tipo, onClose, cuentas, setCuentas, sesi
             if (error) { mostrarToast('No se pudo guardar la transacción', 'error'); setGuardando(false); return; }
             mostrarToast(tipo === 'ingreso' ? 'Ingreso agregado' : 'Gasto agregado', 'exito');
             setTransacciones(prev => [...prev, nueva]);
-            setCuentas(prev => prev.map(c => {
-                if (c.nombre !== cuenta) return c;
-                const nuevoSaldo = tipo === 'ingreso' ? Number(c.saldo) + Number(monto) : Number(c.saldo) - Number(monto);
-                return { ...c, saldo: nuevoSaldo };
-            }));
+            const cuentaObj = cuentas.find(c => c.nombre === cuenta);
+            if (cuentaObj) {
+                const nuevoSaldo = tipo === 'ingreso' ? Number(cuentaObj.saldo) + Number(monto) : Number(cuentaObj.saldo) - Number(monto);
+                await supabase.from('cuentas').update({ saldo: nuevoSaldo }).eq('id', cuentaObj.id);
+                setCuentas(prev => prev.map(c => c.id === cuentaObj.id ? { ...c, saldo: nuevoSaldo } : c));
+            }
         }
         setGuardando(false);
         onClose();

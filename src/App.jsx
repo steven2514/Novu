@@ -104,17 +104,18 @@ function App() {
         setModalVisible(true);
     }
 
-    function eliminar(id) {
+    async function eliminar(id) {
         const transaccion = transacciones.find(t => t.id === id);
-        supabase.from('transacciones').delete().eq('id', id).then(() => { });
+        await supabase.from('transacciones').delete().eq('id', id);
         setTransacciones(prev => prev.filter(t => t.id !== id));
-        setCuentas(prev => prev.map(c => {
-            if (c.nombre !== transaccion.cuenta) return c;
+        const cuentaActual = cuentas.find(c => c.nombre === transaccion.cuenta);
+        if (cuentaActual) {
             const nuevoSaldo = transaccion.tipo === 'ingreso'
-                ? Number(c.saldo) - Number(transaccion.monto)
-                : Number(c.saldo) + Number(transaccion.monto);
-            return { ...c, saldo: nuevoSaldo };
-        }));
+                ? Number(cuentaActual.saldo) - Number(transaccion.monto)
+                : Number(cuentaActual.saldo) + Number(transaccion.monto);
+            await supabase.from('cuentas').update({ saldo: nuevoSaldo }).eq('id', cuentaActual.id);
+            setCuentas(prev => prev.map(c => c.id === cuentaActual.id ? { ...c, saldo: nuevoSaldo } : c));
+        }
     }
 
     if (cargando) {
