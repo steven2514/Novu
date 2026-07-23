@@ -134,7 +134,11 @@ function App() {
         <BrowserRouter>
             {!sesion ? (
                 <Routes>
-                    <Route path='*' element={<Login />} />
+                    <Route path='*' element={<Login onLoginSuccess={() => {
+                        supabase.auth.getSession().then(({ data }) => {
+                            setSesion(data.session);
+                        });
+                    }} />} />
                 </Routes>
             ) : (
                 <div className='layout'>

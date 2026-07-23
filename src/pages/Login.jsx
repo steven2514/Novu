@@ -3,7 +3,7 @@ import { supabase } from '../supabase';
 import './Login.css';
 import { Icon } from '../components/Icon';
 
-function Login() {
+function Login({ onLoginSuccess }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -19,6 +19,7 @@ function Login() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         setCargando(false);
         if (error) setError(error.message);
+        else if (onLoginSuccess) onLoginSuccess();
     }
 
     async function registrar() {
