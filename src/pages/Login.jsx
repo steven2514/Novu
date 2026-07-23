@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { supabase } from '../supabase';
 import './Login.css';
-import { useNavigate } from 'react-router-dom';
 import { Icon } from '../components/Icon';
-;
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -13,7 +11,6 @@ function Login() {
     const [nombre, setNombre] = useState('');
     const [confirmarPassword, setConfirmarPassword] = useState('');
     const [verPassword, setVerPassword] = useState(false);
-    const navigate = useNavigate();
     const [cargando, setCargando] = useState(false);
 
     async function iniciarSesion() {
@@ -22,8 +19,6 @@ function Login() {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         setCargando(false);
         if (error) setError(error.message);
-        else navigate('/');
-        
     }
 
     async function registrar() {
