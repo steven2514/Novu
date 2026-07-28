@@ -7,6 +7,8 @@ import Cuenta from './pages/Cuentas';
 import Meta from './pages/Metas';
 import Calendario from './pages/Calendario';
 import Aprendizaje from './pages/Aprendizaje';
+import Perfil from './pages/Perfil';
+import Admin from './pages/Admin';
 import Modal from './components/Modal/Modal';
 import { useState, useEffect } from 'react';
 import Formulario from './components/Formulario/Formulario';
@@ -160,6 +162,10 @@ function App() {
                             <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} tareas={tareas} sesion={sesion} />} />
 
                             <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} sesion={sesion} />} />
+
+                            <Route path='/perfil' element={<Perfil sesion={sesion} setSesion={setSesion} />} />
+
+                            <Route path='/admin' element={<Admin sesion={sesion} />} />
 
                             <Route path='/terminos' element={<Terminos />} />
                                 <Route path='/privacidad' element={<Privacidad />} />

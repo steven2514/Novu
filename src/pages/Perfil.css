@@ -1,0 +1,371 @@
+.perfil-page {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.perfil-loading {
+  text-align: center;
+  color: var(--texto-gris);
+  padding: 4rem;
+  font-size: 1.1rem;
+}
+
+.perfil-header {
+  margin-bottom: 2rem;
+}
+
+.perfil-header h1 {
+  font-size: 1.8rem;
+  color: var(--texto);
+}
+
+.perfil-header p {
+  color: var(--texto-gris);
+  font-size: 1rem;
+  margin-top: 0.25rem;
+}
+
+.perfil-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.perfil-card {
+  background: var(--tarjeta);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px var(--sombra);
+  border: 1px solid var(--borde);
+}
+
+.perfil-card-peligro {
+  border-color: var(--peligro-claro);
+}
+
+.perfil-card-titulo {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--texto);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.perfil-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.perfil-card-body label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto-gris);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.perfil-card-body input,
+.perfil-card-body select {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background-color: var(--fondo);
+  color: var(--texto);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.perfil-card-body input:focus,
+.perfil-card-body select:focus {
+  border-color: var(--principal);
+}
+
+.perfil-input-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.perfil-btn {
+  padding: 0.65rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.2s, background 0.2s;
+  align-self: flex-start;
+}
+
+.perfil-btn.primario {
+  background-color: var(--principal);
+  color: white;
+}
+
+.perfil-btn.primario:hover {
+  filter: brightness(1.1);
+}
+
+.perfil-btn.primario:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.perfil-btn.secundario {
+  background-color: var(--fondo-hover);
+  color: var(--texto-gris);
+}
+
+.perfil-btn.secundario:hover {
+  background-color: var(--borde);
+}
+
+.perfil-btn.peligro {
+  background: none;
+  color: var(--peligro);
+  border: 1px solid var(--peligro);
+}
+
+.perfil-btn.peligro:hover {
+  background-color: var(--peligro-claro);
+}
+
+/* ─── Toggle theme ─── */
+.perfil-toggle-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.perfil-toggle-btn {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: var(--fondo);
+  color: var(--texto-gris);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all 0.2s;
+}
+
+.perfil-toggle-btn.activo {
+  background-color: var(--principal-claro);
+  color: var(--principal);
+  border-color: var(--principal);
+  font-weight: 600;
+}
+
+/* ─── Color picker ─── */
+.perfil-colores {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.perfil-color-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.perfil-color-btn:hover {
+  transform: scale(1.2);
+}
+
+.perfil-color-activo {
+  border-color: var(--texto);
+  transform: scale(1.15);
+  box-shadow: 0 0 0 2px var(--tarjeta), 0 0 0 4px var(--texto);
+}
+
+/* ─── Switches toggles ─── */
+.perfil-switch-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.perfil-switch-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--texto);
+}
+
+.perfil-switch-desc {
+  font-size: 0.8rem;
+  color: var(--texto-gris);
+  margin-top: 0.15rem;
+}
+
+.perfil-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.perfil-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.perfil-switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--borde);
+  border-radius: 24px;
+  transition: 0.2s;
+}
+
+.perfil-switch-slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.perfil-switch input:checked + .perfil-switch-slider {
+  background-color: var(--principal);
+}
+
+.perfil-switch input:checked + .perfil-switch-slider::before {
+  transform: translateX(20px);
+}
+
+/* ─── Categorías ─── */
+.perfil-cat-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--borde);
+}
+
+.perfil-cat-form input[type="color"] {
+  width: 100%;
+  height: 38px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.perfil-cat-form-botones {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.perfil-cat-form-botones .perfil-btn {
+  width: 100%;
+}
+
+.perfil-vacio,
+.perfil-cargando {
+  text-align: center;
+  color: var(--texto-gris);
+  font-size: 0.9rem;
+  padding: 1rem;
+}
+
+.perfil-cat-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.perfil-cat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  background-color: var(--fondo-alt);
+}
+
+.perfil-cat-icono {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.perfil-cat-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.perfil-cat-nombre {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--texto);
+}
+
+.perfil-cat-tipo {
+  font-size: 0.75rem;
+  color: var(--texto-gris);
+  text-transform: capitalize;
+}
+
+.perfil-cat-color-muestra {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.perfil-cat-accion {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--texto-gris);
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.perfil-cat-accion:hover {
+  background-color: var(--fondo-hover);
+  color: var(--texto);
+}
+
+.perfil-cat-accion.eliminar:hover {
+  color: var(--peligro);
+  background-color: var(--peligro-claro);
+}
+
+.perfil-error {
+  font-size: 0.85rem;
+  color: var(--peligro);
+}
+
+.perfil-card-desc {
+  font-size: 0.9rem;
+  color: var(--texto-gris);
+}

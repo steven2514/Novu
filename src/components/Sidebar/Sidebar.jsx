@@ -1,27 +1,11 @@
 import { NavLink } from "react-router-dom";
 import './Sidebar.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Icon } from '../Icon';
-import { supabase } from '../../supabase';
 
 function Sidebar() {
 
     const [abierto, setAbierto] = useState(false);
-    const [cargando, setCargando] = useState(false);
-    const [temaOscuro, setTemaOscuro] = useState(() => {
-        return localStorage.getItem('tema') === 'oscuro';
-    });
-
-    useEffect(() => {
-        document.documentElement.setAttribute('data-theme', temaOscuro ? 'dark' : 'light');
-        localStorage.setItem('tema', temaOscuro ? 'oscuro' : 'claro');
-    }, [temaOscuro]);
-
-    async function cerrarSesion() {
-        setCargando(true);
-        await supabase.auth.signOut();
-        setCargando(false);
-    }
 
     return (
         <>
@@ -31,8 +15,8 @@ function Sidebar() {
                     <svg width="40" height="40" viewBox="0 0 140 140" className="sidebar-logo-svg">
                         <defs>
                             <linearGradient id="sidebarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor="#8B7FFF" />
-                                <stop offset="100%" stopColor="#4338CA" />
+                                <stop offset="0%" stopColor="var(--principal)" />
+                                <stop offset="100%" stopColor="var(--principal-oscuro)" />
                             </linearGradient>
                         </defs>
                         <rect width="140" height="140" rx="28" fill="url(#sidebarGrad)" />
@@ -54,6 +38,8 @@ function Sidebar() {
                 <NavLink to="/metas" onClick={() => setAbierto(false)}><Icon name="target" /> Metas</NavLink>
                 <NavLink to="/calendario" onClick={() => setAbierto(false)}><Icon name="calendar-days" /> Calendario</NavLink>
                 <NavLink to="/aprendizaje" onClick={() => setAbierto(false)}><Icon name="book-open" /> Aprendizaje</NavLink>
+                <NavLink to="/perfil" onClick={() => setAbierto(false)}><Icon name="circle" /> Perfil</NavLink>
+                <NavLink to="/admin" onClick={() => setAbierto(false)}><Icon name="shield" /> Admin</NavLink>
 
                 <div className="sidebar-footer">
                     <p>Autor</p>
@@ -62,18 +48,6 @@ function Sidebar() {
                         <NavLink to="/terminos" onClick={() => setAbierto(false)}>Términos</NavLink>
                         <NavLink to="/privacidad" onClick={() => setAbierto(false)}>Privacidad</NavLink>
                     </div>
-                    <button className="btn-tema" onClick={() => setTemaOscuro(!temaOscuro)}>
-                        <span className="btn-tema-label">
-                            <span className="btn-tema-icono">
-                                <Icon name={temaOscuro ? 'sun' : 'moon'} size={14} />
-                            </span>
-                            {temaOscuro ? 'Modo Claro' : 'Modo Oscuro'}
-                        </span>
-                        <span>{temaOscuro ? '☀️' : '🌙'}</span>
-                    </button>
-                    <button className="btn-cerrar-sesion" onClick={cerrarSesion} disabled={cargando}>
-                        {cargando ? <div className="loader-spinner spinner-pequeño"></div> : <><Icon name="log-out" /> Cerrar sesión</>}
-                    </button>
                 </div>
             </div>
         </>
