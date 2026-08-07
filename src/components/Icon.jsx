@@ -37,7 +37,7 @@ const ICON_MAP = {
   'chart-no-axes-column-increasing': Lucide.ChartNoAxesColumnIncreasing,
   'arrow-left-right': Lucide.ArrowLeftRight,
   'layout-dashboard': Lucide.LayoutDashboard,
-  'wave': Lucide.Wave,
+  "wave": Lucide.Hand,ñ
   pizza: Lucide.Pizza,
   eye: Lucide.Eye,
   'eye-off': Lucide.EyeOff,
