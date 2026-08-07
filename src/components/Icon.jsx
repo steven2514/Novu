@@ -6,7 +6,7 @@ const ICON_MAP = {
   music: Lucide.Music,
   cloud: Lucide.Cloud,
   'gamepad-2': Lucide.Gamepad2,
-  'smartphone': Lucide.Smartphone,
+  smartphone: Lucide.Smartphone,
   laptop: Lucide.Laptop,
   clapperboard: Lucide.Clapperboard,
   monitor: Lucide.Monitor,
@@ -37,7 +37,7 @@ const ICON_MAP = {
   'chart-no-axes-column-increasing': Lucide.ChartNoAxesColumnIncreasing,
   'arrow-left-right': Lucide.ArrowLeftRight,
   'layout-dashboard': Lucide.LayoutDashboard,
-  "wave": Lucide.Hand,ñ
+  wave: Lucide.Hand,
   pizza: Lucide.Pizza,
   eye: Lucide.Eye,
   'eye-off': Lucide.EyeOff,
@@ -50,12 +50,49 @@ const ICON_MAP = {
   settings: Lucide.Settings,
 };
 
-export function Icon({ name, size = 18, className = '', style }) {
+export function Icon({
+  name,
+  size = 18,
+  className = '',
+  style,
+}) {
   const Component = ICON_MAP[name];
-  if (!Component) return <span>{name}</span>;
-  return <Component size={size} className={className} style={style} />;
+
+  if (!Component) {
+    return <span>{name}</span>;
+  }
+
+  return (
+    <Component
+      size={size}
+      className={className}
+      style={style}
+    />
+  );
 }
 
-export const ICONOS_SUSCRIPCION = ['credit-card', 'tv', 'music', 'cloud', 'gamepad-2', 'smartphone', 'laptop', 'clapperboard', 'monitor', 'dumbbell'];
+export const ICONOS_SUSCRIPCION = [
+  'credit-card',
+  'tv',
+  'music',
+  'cloud',
+  'gamepad-2',
+  'smartphone',
+  'laptop',
+  'clapperboard',
+  'monitor',
+  'dumbbell',
+];
 
-export const ICONOS_META = ['target', 'plane', 'home', 'car', 'calculator', 'laptop', 'graduation-cap', 'wallet', 'gift', 'ribbon'];
+export const ICONOS_META = [
+  'target',
+  'plane',
+  'home',
+  'car',
+  'calculator',
+  'laptop',
+  'graduation-cap',
+  'wallet',
+  'gift',
+  'ribbon',
+];
