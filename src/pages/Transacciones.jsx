@@ -21,7 +21,7 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
 
 
     return (
-        <div className="transacciones-page">
+        <div className="transacciones-page contenido-pagina">
             {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
                 { titulo: 'Tus transacciones', texto: 'Aquí ves todo tu historial de ingresos y gastos.' },
                 { titulo: 'Filtros', texto: 'Filtra por ingresos, gastos o ve todas las transacciones.' }
@@ -95,7 +95,7 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
             </div>
 
         </div>
-        
+
     );
 }
 

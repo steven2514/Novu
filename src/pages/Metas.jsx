@@ -14,10 +14,6 @@ function Metas({ metas, setMetas, sesion }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [metaEditar, setMetaEditar] = useState(null);
 
-    const totalObjetivo = metas.reduce((acc, m) => acc + Number(m.monto_objetivo), 0);
-    const totalAhorrado = metas.reduce((acc, m) => acc + Number(m.monto_actual), 0);
-    const progresoGeneral = totalObjetivo > 0 ? (totalAhorrado / totalObjetivo) * 100 : 0;
-
     function abrirEdicion(meta) {
         setMetaEditar(meta);
         setModalVisible(true);
@@ -29,96 +25,59 @@ function Metas({ metas, setMetas, sesion }) {
     }
 
     return (
-        <div className="metas-page">
+        <div className="metas-page contenido-pagina">
             {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
                 { titulo: 'Tus metas de ahorro', texto: 'Crea objetivos como "Viaje" o "iPhone 16" y ahorra hacia ellos.' },
                 { titulo: 'Transfiere dinero', texto: 'Usa la opción de Transferir en Cuentas para abonar a tus metas.' }
             ]} />}
             <div className="metas-header">
                 <div>
-                    <h1>Metas Inteligentes</h1>
+                    <h1>Metas de ahorro</h1>
                     <p>Alcanza tus objetivos de ahorro</p>
                 </div>
                 <div style={{ display: 'flex', gap: '10px' }}>
-                    <button className="btn-exportar" onClick={() => exportarCSV(metas, 'metas')}>⬇ Exportar</button>
-                    <button onClick={() => setModalVisible(true)}>+ Nueva Meta</button>
+                    <button className="btn-pildora-secundario" onClick={() => exportarCSV(metas, 'metas')}>⬇ Exportar</button>
+                    <button className="btn-pildora-acento" onClick={() => setModalVisible(true)}>+ Nueva meta</button>
                 </div>
             </div>
-
-            {metas.length > 0 && (
-                <div className="resumen-metas">
-                    <div className="resumen-item">
-                        <p>Total Objetivo</p>
-                        <h2>${totalObjetivo.toLocaleString('es-CO')}</h2>
-                    </div>
-                    <div className="resumen-item">
-                        <p>Total Ahorrado</p>
-                        <h2 className="resumen-ahorrado">${totalAhorrado.toLocaleString('es-CO')}</h2>
-                    </div>
-                    <div className="resumen-item">
-                        <p>Progreso General</p>
-                        <h2 className="resumen-progreso">{progresoGeneral.toFixed(1)}%</h2>
-                    </div>
-                    <div className="resumen-barra-fondo">
-                        <div className="resumen-barra-relleno" style={{ width: `${progresoGeneral}%` }}></div>
-                    </div>
-                </div>
-            )}
 
             {metas.length === 0 ? (
                 <div className="seccion-vacia">
                     <p>No hay metas configuradas</p>
                     <p>Crea tu primera meta de ahorro</p>
-                    <button onClick={() => setModalVisible(true)}>+ Crear Meta</button>
+                    <button className="btn-pildora-acento" onClick={() => setModalVisible(true)}>+ Crear meta</button>
                 </div>
             ) : (
                 <div className="metas-lista">
                     {metas.map((meta, index) => {
                         const porcentaje = Math.min((Number(meta.monto_actual) / Number(meta.monto_objetivo)) * 100, 100);
-                        const faltante = Number(meta.monto_objetivo) - Number(meta.monto_actual);
                         return (
-                            <div key={index} className="meta-tarjeta" style={{ borderColor: meta.color }}>
+                            <div key={index} className="meta-tarjeta">
                                 <div className="meta-tarjeta-top">
-                                    <span className="meta-icono">{meta.icono}</span>
-                                    <div className="meta-tarjeta-acciones">
-                                        <button className="btn-editar-cuenta" onClick={() => abrirEdicion(meta)}><Icon name="pencil" size={16} /></button>
-                                        <button className="btn-eliminar-cuenta" onClick={() => {
-                                            supabase.from('metas').delete().eq('id', meta.id).then(() => { });
-                                            setMetas(prev => prev.filter(m => m.id !== meta.id));
-                                        }}>🗑️</button>
+                                    <div className="icono-circulo" style={{ backgroundColor: (meta.color || '#6C63FF') + '22' }}>
+                                        <Icon name={meta.icono} size={20} style={{ color: meta.color || '#6C63FF' }} />
                                     </div>
+                                    <div className="meta-titulo-bloque">
+                                        <p className="meta-nombre">{meta.nombre_meta}</p>
+                                        <p className="meta-fecha">Fecha límite: {meta.fecha_objetivo}</p>
+                                    </div>
+                                    <button className="btn-fila-eliminar" title="Eliminar" onClick={() => {
+                                        supabase.from('metas').delete().eq('id', meta.id).then(() => { });
+                                        setMetas(prev => prev.filter(m => m.id !== meta.id));
+                                    }}>
+                                        <Icon name="trash-2" size={16} />
+                                    </button>
                                 </div>
-                                <p className="meta-nombre">{meta.nombre_meta}</p>
-                                <p className="meta-subtitulo">Meta de ahorro</p>
 
-                                <div className="meta-progreso-header">
-                                    <span>Progreso</span>
-                                    <span className="meta-porcentaje" style={{ color: meta.color }}>{porcentaje.toFixed(1)}%</span>
-                                </div>
                                 <div className="meta-barra-fondo">
-                                    <div className="meta-barra-relleno" style={{ width: `${porcentaje}%`, backgroundColor: meta.color }}></div>
+                                    <div className="meta-barra-relleno" style={{ width: `${porcentaje}%`, backgroundColor: meta.color || '#6C63FF' }}></div>
                                 </div>
 
-                                <div className="meta-detalle-grid">
-                                    <div className="meta-detalle-caja">
-                                        <p className="meta-detalle-label">Ahorrado</p>
-                                        <p className="meta-detalle-valor">${Number(meta.monto_actual).toLocaleString('es-CO')}</p>
-                                    </div>
-                                    <div className="meta-detalle-caja">
-                                        <p className="meta-detalle-label">Objetivo</p>
-                                        <p className="meta-detalle-valor">${Number(meta.monto_objetivo).toLocaleString('es-CO')}</p>
-                                    </div>
-                                </div>
+                                <p className="meta-monto-texto">
+                                    <strong>${Number(meta.monto_actual).toLocaleString('es-CO')}</strong> de ${Number(meta.monto_objetivo).toLocaleString('es-CO')}
+                                </p>
 
-                                {faltante > 0 && (
-                                    <div className="meta-faltante">
-                                        <span>📈</span>
-                                        <div>
-                                            <p className="meta-faltante-titulo">Faltan ${faltante.toLocaleString('es-CO')}</p>
-                                            <p className="meta-faltante-subtitulo">para alcanzar tu meta</p>
-                                        </div>
-                                    </div>
-                                )}
+                                <button className="btn-agregar-dinero" onClick={() => abrirEdicion(meta)}>Agregar dinero</button>
                             </div>
                         );
                     })}

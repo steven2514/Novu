@@ -14,6 +14,7 @@ import { useState, useEffect } from 'react';
 import Formulario from './components/Formulario/Formulario';
 import { supabase } from './supabase';
 import Login from './pages/Login';
+import Landing from './pages/Landing';
 import Loader from './components/Loader/Loader';
 import Terminos from './pages/Terminos';
 import Privacidad from './pages/Privacidad';
@@ -136,20 +137,22 @@ function App() {
         <BrowserRouter>
             {!sesion ? (
                 <Routes>
-                    <Route path='*' element={<Login onLoginSuccess={() => {
+                    <Route path='/' element={<Landing />} />
+                    <Route path='/login' element={<Login onLoginSuccess={() => {
                         supabase.auth.getSession().then(({ data }) => {
                             setSesion(data.session);
                         });
                     }} />} />
+                    <Route path='*' element={<Landing />} />
                 </Routes>
             ) : (
                 <div className='layout'>
-                    <Sidebar />
+                    <Sidebar onAgregar={() => setMenuFlotanteVisible(v => !v)} />
                     <div className='contenido'>
                         <Routes>
 
-                            <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} sesion={sesion} />} /> 
-                                
+                            <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} sesion={sesion} />} />
+
                             <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} sesion={sesion} />} />
 
                             <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} abrirModalTransferencia={() => setModalTransferenciaVisible(true)} />} />
@@ -168,60 +171,60 @@ function App() {
                             <Route path='/admin' element={<Admin sesion={sesion} />} />
 
                             <Route path='/terminos' element={<Terminos />} />
-                                <Route path='/privacidad' element={<Privacidad />} />
-                                
+                            <Route path='/privacidad' element={<Privacidad />} />
+
                             <Route path='*' element={<NotFound />} />
 
                         </Routes>
-                            <Modal visible={modalVisible} onClose={() => { setModalVisible(false); setTransaccionEditar(null); }}>
-                                <Formulario
-                                    setTransacciones={setTransacciones}
-                                    tipo={modalTipo}
-                                    onClose={() => { setModalVisible(false); setTransaccionEditar(null); }}
-                                    cuentas={cuentas}
-                                    setCuentas={setCuentas}
-                                    sesion={sesion}
-                                    transaccionEditar={transaccionEditar}
-                                />
-                            </Modal>
+                        <Modal visible={modalVisible} onClose={() => { setModalVisible(false); setTransaccionEditar(null); }}>
+                            <Formulario
+                                setTransacciones={setTransacciones}
+                                tipo={modalTipo}
+                                onClose={() => { setModalVisible(false); setTransaccionEditar(null); }}
+                                cuentas={cuentas}
+                                setCuentas={setCuentas}
+                                sesion={sesion}
+                                transaccionEditar={transaccionEditar}
+                            />
+                        </Modal>
 
                         <Modal visible={modalTransferenciaVisible} onClose={() => setModalTransferenciaVisible(false)}>
                             <FormularioTransferencia cuentas={cuentas} metas={metas} setCuentas={setCuentas} setMetas={setMetas} onClose={() => setModalTransferenciaVisible(false)} sesion={sesion} />
-                            </Modal>
-                            <Modal visible={modalCuentaVisible} onClose={() => setModalCuentaVisible(false)}>
-                                <FormularioCuenta setCuenta={setCuentas} onClose={() => setModalCuentaVisible(false)} />
-                            </Modal>
+                        </Modal>
+                        <Modal visible={modalCuentaVisible} onClose={() => setModalCuentaVisible(false)}>
+                            <FormularioCuenta setCuenta={setCuentas} onClose={() => setModalCuentaVisible(false)} />
+                        </Modal>
 
-                            <Modal visible={modalMetaVisible} onClose={() => setModalMetaVisible(false)}>
-                                <FormularioMeta setMetas={setMetas} onClose={() => setModalMetaVisible(false)} sesion={sesion} />
-                            </Modal>
+                        <Modal visible={modalMetaVisible} onClose={() => setModalMetaVisible(false)}>
+                            <FormularioMeta setMetas={setMetas} onClose={() => setModalMetaVisible(false)} sesion={sesion} />
+                        </Modal>
 
-                            
-                            <div className="flotante-container">
-                                {menuFlotanteVisible && (
-                                    <div className="flotante-menu">
-                                        <button onClick={() => { abrirModal('ingreso'); setMenuFlotanteVisible(false); }}>
-                                            <span className="flotante-icono verde">↙</span> Ingreso
-                                        </button>
-                                        <button onClick={() => { abrirModal('gasto'); setMenuFlotanteVisible(false); }}>
-                                            <span className="flotante-icono rojo">↗</span> Gasto
-                                        </button>
-                                        <button onClick={() => { setModalCuentaVisible(true); setMenuFlotanteVisible(false); }}>
-                                            <span className="flotante-icono morado">💳</span> Cuenta
-                                        </button>
-                                        <button onClick={() => { setModalMetaVisible(true); setMenuFlotanteVisible(false); }}>
-                                            <span className="flotante-icono azul">🎯</span> Meta
-                                        </button>
-                                        <button onClick={() => { setModalTransferenciaVisible(true); setMenuFlotanteVisible(false); }}>
-                                            <span className="flotante-icono naranja">⇄</span> Transferir
-                                        </button>
-                                    </div>
-                                )}
-                                <button className="flotante-btn" onClick={() => setMenuFlotanteVisible(prev => !prev)}>
-                                    {menuFlotanteVisible ? '✕' : '+'}
-                                </button>
-                                
-                            </div>
+
+                        <div className="flotante-container">
+                            {menuFlotanteVisible && (
+                                <div className="flotante-menu">
+                                    <button onClick={() => { abrirModal('ingreso'); setMenuFlotanteVisible(false); }}>
+                                        <span className="flotante-icono verde">↙</span> Ingreso
+                                    </button>
+                                    <button onClick={() => { abrirModal('gasto'); setMenuFlotanteVisible(false); }}>
+                                        <span className="flotante-icono rojo">↗</span> Gasto
+                                    </button>
+                                    <button onClick={() => { setModalCuentaVisible(true); setMenuFlotanteVisible(false); }}>
+                                        <span className="flotante-icono morado">💳</span> Cuenta
+                                    </button>
+                                    <button onClick={() => { setModalMetaVisible(true); setMenuFlotanteVisible(false); }}>
+                                        <span className="flotante-icono azul">🎯</span> Meta
+                                    </button>
+                                    <button onClick={() => { setModalTransferenciaVisible(true); setMenuFlotanteVisible(false); }}>
+                                        <span className="flotante-icono naranja">⇄</span> Transferir
+                                    </button>
+                                </div>
+                            )}
+                            <button className="flotante-btn" onClick={() => setMenuFlotanteVisible(prev => !prev)}>
+                                {menuFlotanteVisible ? '✕' : '+'}
+                            </button>
+
+                        </div>
                     </div>
                 </div>
             )}

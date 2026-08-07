@@ -47,6 +47,7 @@ const ICON_MAP = {
   sun: Lucide.Sun,
   moon: Lucide.Moon,
   pencil: Lucide.Pencil,
+  settings: Lucide.Settings,
 };
 
 export function Icon({ name, size = 18, className = '', style }) {

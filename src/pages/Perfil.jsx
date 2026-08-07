@@ -5,12 +5,11 @@ import { useToast } from '../Context/ToastContext';
 import { Icon } from '../components/Icon';
 
 const COLORES_ACENTO = [
-  { name: 'Púrpura', hex: '#6C63FF', oscuro: '#4338CA' },
-  { name: 'Azul', hex: '#3B82F6', oscuro: '#1D4ED8' },
-  { name: 'Verde', hex: '#10B981', oscuro: '#047857' },
-  { name: 'Rojo', hex: '#EF4444', oscuro: '#B91C1C' },
-  { name: 'Naranja', hex: '#F59E0B', oscuro: '#B45309' },
-  { name: 'Rosa', hex: '#EC4899', oscuro: '#BE185D' },
+  { name: 'Amarillo', hex: '#E8CB3D', oscuro: '#B89A1E', gradienteFin: '#A9C95A' },
+  { name: 'Verde', hex: '#00EFA4', oscuro: '#059B6C', gradienteFin: '#21B3CC' },
+  { name: 'Azul', hex: '#1BC3F3', oscuro: '#108CAF', gradienteFin: '#3B6BD1' },
+  { name: 'Morado', hex: '#B688FE', oscuro: '#8740F7', gradienteFin: '#E097ED' },
+  { name: 'Coral', hex: '#FF8064', oscuro: '#F7441D', gradienteFin: '#E9C078' },
 ];
 
 const ICONOS_DISPONIBLES = [
@@ -33,7 +32,7 @@ function Perfil({ sesion, setSesion }) {
 
   // ─── Apariencia ───
   const [temaOscuro, setTemaOscuro] = useState(() => localStorage.getItem('tema') === 'oscuro');
-  const [colorAcento, setColorAcento] = useState(() => localStorage.getItem('color-acento') || '#6C63FF');
+  const [colorAcento, setColorAcento] = useState(() => localStorage.getItem('color-acento') || '#E8CB3D');
 
   // ─── Cambiar contraseña ───
   const [passNueva, setPassNueva] = useState('');
@@ -47,7 +46,7 @@ function Perfil({ sesion, setSesion }) {
   const [editandoCat, setEditandoCat] = useState(null);
   const [catNombre, setCatNombre] = useState('');
   const [catTipo, setCatTipo] = useState('gasto');
-  const [catColor, setCatColor] = useState('#6C63FF');
+  const [catColor, setCatColor] = useState('#E8CB3D');
   const [catIcono, setCatIcono] = useState('target');
   const [guardandoCat, setGuardandoCat] = useState(false);
 
@@ -98,9 +97,10 @@ function Perfil({ sesion, setSesion }) {
     setColorAcento(hex);
     const obj = COLORES_ACENTO.find(c => c.hex === hex);
     document.documentElement.style.setProperty('--principal', hex);
-    document.documentElement.style.setProperty('--principal-oscuro', obj?.oscuro || '#4338CA');
+    document.documentElement.style.setProperty('--principal-oscuro', obj?.oscuro || '#B89A1E');
     document.documentElement.style.setProperty('--principal-claro', hex + '22');
     document.documentElement.style.setProperty('--principal-muy-claro', hex + '11');
+    document.documentElement.style.setProperty('--gradiente-balance', `linear-gradient(135deg, ${hex} 0%, ${obj?.gradienteFin || '#A9C95A'} 100%)`);
     localStorage.setItem('color-acento', hex);
   }
 
@@ -192,7 +192,7 @@ function Perfil({ sesion, setSesion }) {
     setEditandoCat(cat);
     setCatNombre(cat.nombre);
     setCatTipo(cat.tipo);
-    setCatColor(cat.color || '#6C63FF');
+    setCatColor(cat.color || '#E8CB3D');
     setCatIcono(cat.icono || 'target');
   }
 
@@ -200,7 +200,7 @@ function Perfil({ sesion, setSesion }) {
     setEditandoCat(null);
     setCatNombre('');
     setCatTipo('gasto');
-    setCatColor('#6C63FF');
+    setCatColor('#E8CB3D');
     setCatIcono('target');
   }
 

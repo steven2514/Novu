@@ -24,6 +24,11 @@
   --sombra: rgba(0, 0, 0, 0.08);
   --sombra-suave: rgba(0, 0, 0, 0.06);
   --sombra-fuerte: rgba(0, 0, 0, 0.12);
+  --acento: #DCE05A;
+  --acento-oscuro: #B9C93E;
+  --acento-texto: #22240A;
+  --banner-inicio: #DDE159;
+  --banner-fin: #8FC24A;
 }
 
 [data-theme="dark"] {
@@ -52,6 +57,11 @@
   --sombra: rgba(0, 0, 0, 0.3);
   --sombra-suave: rgba(0, 0, 0, 0.2);
   --sombra-fuerte: rgba(0, 0, 0, 0.4);
+  --acento: #DCE05A;
+  --acento-oscuro: #C7CC49;
+  --acento-texto: #1A1A2E;
+  --banner-inicio: #DDE159;
+  --banner-fin: #7CB143;
 }
 
 * {
@@ -94,4 +104,115 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+}
+
+/* Estilo Kaipo: compartido entre Suscripciones, Metas y Cuentas */
+.btn-pildora-acento {
+  background-color: var(--acento);
+  color: var(--acento-texto);
+  border: none;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: filter 0.15s;
+}
+
+.btn-pildora-acento:hover {
+  filter: brightness(0.95);
+}
+
+.btn-pildora-secundario {
+  background-color: var(--tarjeta);
+  color: var(--texto);
+  border: 1px solid var(--borde);
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-pildora-secundario:hover {
+  background-color: var(--fondo-hover);
+}
+
+.tarjeta-lista {
+  background: var(--tarjeta);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px var(--sombra);
+  overflow: hidden;
+}
+
+.fila-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 1.1rem 1.4rem;
+  border-bottom: 1px solid var(--borde);
+}
+
+.fila-item:last-child {
+  border-bottom: none;
+}
+
+.icono-circulo {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.icono-circulo svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.btn-fila-eliminar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--texto-gris);
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-fila-eliminar:hover {
+  background: var(--peligro-claro);
+  color: var(--peligro);
+}
+
+.banner-suma {
+  background: linear-gradient(100deg, var(--banner-inicio), var(--banner-fin));
+  border-radius: 16px;
+  padding: 1.6rem 2rem;
+}
+
+.banner-suma p {
+  color: var(--acento-texto);
+  opacity: 0.75;
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+}
+
+.banner-suma h2 {
+  color: var(--acento-texto);
+  font-size: 2.2rem;
+}
+
+.contenido-pagina {
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
 }

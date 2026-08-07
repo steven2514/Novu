@@ -1,52 +1,190 @@
 .dashboard {
+    --dash-accent-1: #E3DE6E;
+    --dash-accent-2: #8FA33E;
+    --dash-positivo: #16A34A;
+    --dash-negativo: #DC2626;
+
     padding: 32px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.dashboard h1 {
+.dashboard-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.dashboard-saludo {
+    font-size: 14px;
+    color: var(--texto-gris);
+    margin-bottom: 4px;
+}
+
+.dashboard-header h1 {
     font-size: 28px;
     font-weight: 700;
     color: var(--texto);
 }
 
-.dashboard>p {
-    font-size: 14px;
+.dashboard-btn-ojo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--borde);
+    background-color: var(--tarjeta);
     color: var(--texto-gris);
-    margin-top: -16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
-.tarjetas-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+.dashboard-btn-ojo:hover {
+    background-color: var(--fondo-hover);
+}
+
+/* Selector de mes */
+.dashboard-mes-selector {
+    display: flex;
+    align-items: center;
     gap: 16px;
+    align-self: flex-start;
 }
 
-.dashboard-fila {
+.dashboard-mes-selector button {
+    background-color: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--dash-accent-2);
+}
+
+.dashboard-mes-selector span {
+    font-weight: 600;
+    color: var(--texto);
+    text-transform: capitalize;
+    min-width: 160px;
+    text-align: center;
+}
+
+/* Tarjeta grande de balance */
+.dashboard-balance-card {
+    background: linear-gradient(135deg, var(--dash-accent-1), var(--dash-accent-2));
+    border-radius: 20px;
+    padding: 28px;
+    color: #17171A;
+}
+
+.dashboard-balance-label {
+    font-size: 14px;
+    opacity: 0.75;
+    margin-bottom: 6px;
+}
+
+.dashboard-balance-valor {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.dashboard-balance-fila {
     display: flex;
     gap: 16px;
-    margin-top: 24px;
-    width: 100%;
+    flex-wrap: wrap;
 }
 
-.dashboard-caja {
+.dashboard-balance-pill {
+    flex: 1;
+    min-width: 160px;
+    background-color: rgba(255, 255, 255, 0.35);
+    border-radius: 14px;
+    padding: 12px 16px;
+}
+
+.dashboard-balance-pill span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    opacity: 0.85;
+    margin-bottom: 4px;
+}
+
+.dashboard-balance-pill strong {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Mini tarjetas */
+.dashboard-fila-secundaria {
+    display: flex;
+    gap: 16px;
+}
+
+.dashboard-mini-card {
     flex: 1;
     background-color: var(--tarjeta);
-    border-radius: 12px;
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.dashboard-mini-card p {
+    font-size: 13px;
+    color: var(--texto-gris);
+    margin-bottom: 6px;
+}
+
+.dashboard-mini-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--texto);
+}
+
+.dashboard-mini-card h3.negativo {
+    color: var(--dash-negativo);
+}
+
+/* Cajas (gráficas y listas) */
+.dashboard-caja {
+    background-color: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: 16px;
     padding: 24px;
-    
+    overflow-y: auto;
+    max-height: 400px;
 }
 
 .dashboard-caja h3 {
     margin-bottom: 16px;
     font-size: 16px;
+    color: var(--texto);
 }
 
-.dashboard-caja p {
+.dashboard-caja-vacia {
     color: var(--texto-gris);
     text-align: center;
     padding: 40px 0;
+}
+
+.dashboard-fila {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+.dashboard-fila .dashboard-caja {
+    flex: 1;
 }
 
 .meta-dashboard {
@@ -73,7 +211,7 @@
     transition: width 0.3s ease;
 }
 
-.pago-proximo{
+.pago-proximo {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -83,41 +221,22 @@
     color: var(--texto);
 }
 
-.pago-proximo:last-child{
+.pago-proximo:last-child {
     border-bottom: none;
 }
 
-.dashboard-caja {
-    overflow-y: auto;
-    max-height: 350px;
-}
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard {
+        padding: 20px;
+    }
 
-.dashboard-mes-selector {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
-}
+    .dashboard-fila-secundaria,
+    .dashboard-fila {
+        flex-direction: column;
+    }
 
-.dashboard-mes-selector button {
-    background-color: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    width: 32px;
-    height: 32px;
-    font-size: 18px;
-    cursor: pointer;
-    color: #6C63FF;
-}
-
-.dashboard-mes-selector span {
-    font-weight: 600;
-    color: #1A1A2E;
-    text-transform: capitalize;
-    min-width: 160px;
-    text-align: center;
-}
-
-.dashboard-mes-selector span {
-    color: var(--texto);
+    .dashboard-balance-valor {
+        font-size: 28px;
+    }
 }

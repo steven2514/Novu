@@ -248,11 +248,11 @@
   transition: 0.2s;
 }
 
-.perfil-switch input:checked + .perfil-switch-slider {
+.perfil-switch input:checked+.perfil-switch-slider {
   background-color: var(--principal);
 }
 
-.perfil-switch input:checked + .perfil-switch-slider::before {
+.perfil-switch input:checked+.perfil-switch-slider::before {
   transform: translateX(20px);
 }
 

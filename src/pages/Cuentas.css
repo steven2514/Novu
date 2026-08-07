@@ -9,6 +9,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .cuentas-header h1 {
@@ -21,45 +23,16 @@
     font-size: 1rem;
 }
 
-.cuentas-header button {
-    background-color: var(--principal);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.cuentas-balance {
-    background: var(--tarjeta);
-    border-radius: 12px;
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 1px 3px var(--sombra);
-}
-
-.cuentas-balance p {
-    color: var(--texto-gris);
-    margin-bottom: 0.5rem;
-}
-
-.cuentas-balance h2 {
-    font-size: 2.5rem;
-    color: var(--texto);
-}
-
-.cuentas-lista {
+.cuentas-header-botones {
     display: flex;
+    gap: 12px;
     flex-wrap: wrap;
-    gap: 1rem;
 }
 
 .cuenta-vacio {
     width: 100%;
     background: var(--tarjeta);
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 3rem;
     text-align: center;
     display: flex;
@@ -69,70 +42,32 @@
     box-shadow: 0 1px 3px var(--sombra);
 }
 
-.cuenta-vacio p {
-    color: var(--texto-gris);
-}
-
 .cuenta-vacio p:first-child {
     font-size: 1.2rem;
     font-weight: bold;
     color: var(--texto);
 }
 
-.cuenta-vacio button {
-    background-color: var(--principal);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
+.cuenta-vacio p:last-of-type {
+    color: var(--texto-gris);
+}
+
+.cuentas-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
 }
 
 .cuenta-tarjeta {
     background: var(--tarjeta);
-    border-radius: 12px;
-    padding: 1.5rem;
-    width: 240px;
+    border-radius: 16px;
+    padding: 1.2rem 1.4rem;
     box-shadow: 0 1px 3px var(--sombra);
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.cuenta-tarjeta-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 8px;
-    width: 100%;
-}
-
-.cuenta-icono{
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 18px;
-}
-
-.cuenta-tarjeta-footer{
-    display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-top: 18px;
-}
-
-.cuenta-tipo-badge{
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    background-color: var(--fondo-hover);
-    color: var(--texto-gris);
+    gap: 12px;
+    transition: transform 0.15s, box-shadow 0.15s;
 }
 
 .cuenta-tarjeta:hover {
@@ -140,116 +75,35 @@
     box-shadow: 0 4px 12px var(--sombra-fuerte);
 }
 
-.cuenta-tarjeta-top {
+.cuenta-tarjeta-izq {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 4px;
-}
-
-.cuenta-tipo-badge {
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.cuentas-grupo-titulo{
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--texto);
-    margin-bottom: 12px;
-}
-
-.cuentas-grupo{
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    gap: 12px;
+    min-width: 0;
 }
 
 .cuenta-nombre {
     font-weight: 700;
     color: var(--texto);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
 }
 
-.cuenta-banco {
+.cuenta-tipo-texto {
     font-size: 0.85rem;
     color: var(--texto-gris);
+    margin-top: 2px;
+}
+
+.cuenta-tarjeta-der {
     display: flex;
     align-items: center;
-    gap: 4px;
-    margin-bottom: 4px;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .cuenta-saldo {
-    font-size: 1.4rem;
     font-weight: 700;
-    margin-top: auto;
-}
-
-.btn-eliminar-cuenta {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.1rem;
-    color: var(--peligro);
-    padding: 4px;
-    border-radius: 6px;
-    transition: background 0.2s;
-    position: static;
-}
-
-.btn-eliminar-cuenta:hover {
-    background: var(--peligro-claro);
-}
-
-.punto-ingreso {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin: 1px;
-    background-color: var(--positivo);
-}
-
-.punto-gasto {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin: 1px;
-    background-color: var(--peligro);
-}
-
-.punto-suscripcion {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin: 1px;
-    background-color: var(--principal);
-}
-
-.cuentas-header-botones {
-    display: flex;
-    gap: 12px;
-}
-
-.cuenta-tarjeta-acciones {
-    display: flex;
-    gap: 8px;
-}
-
-.btn-editar-cuenta {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #6B7280;
-}
-
-.btn-editar-cuenta:hover {
-    color: #6C63FF;
+    color: var(--texto);
+    font-size: 1.05rem;
+    white-space: nowrap;
 }

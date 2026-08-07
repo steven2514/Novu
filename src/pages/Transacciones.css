@@ -1,151 +1,124 @@
-.transacciones-page{
+.transacciones-page {
+    --tp-accent-1: #E3DE6E;
+    --tp-accent-2: #8FA33E;
+    --tp-positivo: #6B7A2E;
+    --tp-negativo: #DC2626;
+
     padding: 32px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.trans-header{
+.trans-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
 }
 
-.trans-header h1{
+.trans-header h1 {
     font-size: 28px;
     font-weight: 700;
     color: var(--texto);
 }
 
-.trans-header p{
-    font-size: 14px;
-    color: var(--texto-gris);
-    margin-top: 4px;
-}
-
-.trans-botones-header{
+.btn-exportar {
     display: flex;
-    gap: 12px;
-}
-
-.btn-ingreso{
-    background-color: var(--ingreso);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.btn-gasto {
-    background-color: var(--gasto);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.trans-totales {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-}
-
-.tarjeta-total {
-    background-color: var(--tarjeta);
-    border-radius: 12px;
-    padding: 24px;
+    align-items: center;
+    gap: 6px;
+    background: none;
     border: 1px solid var(--borde);
-}
-
-.tarjeta-total p {
-    font-size: 14px;
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
     color: var(--texto-gris);
-    margin-bottom: 8px;
+    cursor: pointer;
 }
 
-.monto-ingreso {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--ingreso);
+.btn-exportar:hover {
+    background: var(--fondo-hover);
+    color: var(--texto);
 }
 
-.monto-gasto {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--gasto);
-}
-
-.trans-lista-section {
-    background-color: var(--tarjeta);
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid var(--borde);
-}
-
+/* Filtros tipo pill */
 .trans-filtros {
     display: flex;
     gap: 8px;
-    margin-bottom: 16px;
+    flex-wrap: wrap;
 }
 
 .trans-filtros button {
-    padding: 8px 16px;
-    border-radius: 8px;
+    padding: 10px 18px;
+    border-radius: 999px;
     border: 1px solid var(--borde);
-    background: none;
+    background-color: var(--tarjeta);
     cursor: pointer;
     font-size: 14px;
+    font-weight: 600;
     color: var(--texto-gris);
+    white-space: nowrap;
+}
+
+.trans-filtros button:hover {
+    background-color: var(--fondo-hover);
 }
 
 .trans-filtros button.activo {
-    background-color: var(--principal-claro);
-    color: var(--principal);
-    border-color: var(--principal);
-    font-weight: 600;
+    background: linear-gradient(135deg, var(--tp-accent-1), var(--tp-accent-2));
+    color: #17171A;
+    border-color: transparent;
 }
 
-.vacio {
-    text-align: center;
-    color: var(--texto-muted);
-    padding: 32px;
+/* Grupos por fecha */
+.trans-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.btn-eliminar {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: var(--gasto);
+.trans-grupo-fecha {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--texto-gris);
+}
+
+.trans-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .transaccion-item {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--fondo-hover);
+    gap: 14px;
+    background-color: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    padding: 14px 18px;
 }
 
 .transaccion-icono {
     width: 40px;
     height: 40px;
-    border-radius: 10px;
+    border-radius: 50%;
+    background-color: var(--fondo-alt);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    color: var(--texto-gris);
     flex-shrink: 0;
 }
 
 .transaccion-info {
     flex: 1;
+    min-width: 0;
 }
 
 .transaccion-descripcion {
@@ -162,27 +135,48 @@
 .monto-ingreso {
     font-size: 1rem;
     font-weight: 700;
-    color: var(--ingreso);
+    color: var(--tp-positivo);
+    white-space: nowrap;
 }
 
 .monto-gasto {
     font-size: 1rem;
     font-weight: 700;
-    color: var(--gasto);
+    color: var(--tp-negativo);
+    white-space: nowrap;
 }
 
-.btn-exportar {
+.btn-editar-cuenta,
+.btn-eliminar {
     background: none;
-    border: 1px solid var(--borde);
-    border-radius: 8px;
-    padding: 8px 14px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--texto-gris);
+    border: none;
     cursor: pointer;
+    color: var(--texto-gris);
+    display: flex;
+    align-items: center;
+    padding: 4px;
 }
 
-.btn-exportar:hover {
-    background: var(--fondo-hover);
+.btn-editar-cuenta:hover {
     color: var(--texto);
+}
+
+.btn-eliminar:hover {
+    color: var(--tp-negativo);
+}
+
+.vacio {
+    text-align: center;
+    color: var(--texto-muted);
+    padding: 60px 0;
+}
+
+@media (max-width: 768px) {
+    .transacciones-page {
+        padding: 20px;
+    }
+
+    .transaccion-item {
+        flex-wrap: wrap;
+    }
 }
