@@ -76,7 +76,7 @@ function Perfil({ sesion, setSesion }) {
     document.documentElement.style.setProperty('--gradiente-balance', `linear-gradient(135deg, ${hex} 0%, ${obj?.gradienteFin || '#A9C95A'} 100%)`);
     document.documentElement.style.setProperty('--acento', hex);
     document.documentElement.style.setProperty('--acento-oscuro', obj?.oscuro || '#B89A1E');
-    document.documentElement.style.setProperty('--acento-texto', '#1a1a1a');
+    document.documentElement.style.setProperty('--acento-texto', '#ffffff');
     document.documentElement.style.setProperty('--banner-inicio', hex);
     document.documentElement.style.setProperty('--banner-fin', obj?.gradienteFin || '#A9C95A');
     localStorage.setItem('color-acento', hex);

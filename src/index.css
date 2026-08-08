@@ -31,6 +31,12 @@
   --banner-fin: #8FC24A;
 }
 
+[data-theme="light"] {
+  --borde: #D8DADF;
+  --sombra: rgba(0, 0, 0, 0.10);
+  --sombra-suave: rgba(0, 0, 0, 0.07);
+}
+
 [data-theme="dark"] {
   --fondo: #0F0F1A;
   --tarjeta: #1A1A2E;
@@ -142,8 +148,9 @@ body {
 
 .tarjeta-lista {
   background: var(--tarjeta);
+  border: 1px solid var(--borde);
   border-radius: 16px;
-  box-shadow: 0 1px 3px var(--sombra);
+  box-shadow: 0 1px 3px var(--sombra), 0 1px 2px var(--sombra-suave);
   overflow: hidden;
 }
 

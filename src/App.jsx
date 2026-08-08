@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Inicio from './pages/Inicio';
 import Sidebar from './components/Sidebar/Sidebar';
 import Transacciones from './pages/Transacciones';
@@ -105,7 +105,7 @@ function App() {
         document.documentElement.style.setProperty('--gradiente-balance', `linear-gradient(135deg, ${hex} 0%, ${fin} 100%)`);
         document.documentElement.style.setProperty('--acento', hex);
         document.documentElement.style.setProperty('--acento-oscuro', oscuro);
-        document.documentElement.style.setProperty('--acento-texto', '#1a1a1a');
+        document.documentElement.style.setProperty('--acento-texto', '#ffffff');
         document.documentElement.style.setProperty('--banner-inicio', hex);
         document.documentElement.style.setProperty('--banner-fin', fin);
     }, []);
@@ -182,6 +182,8 @@ function App() {
                             <Route path='/perfil' element={<Perfil sesion={sesion} setSesion={setSesion} />} />
 
                             <Route path='/admin' element={<Admin sesion={sesion} />} />
+
+                            <Route path='/login' element={<Navigate to="/" replace />} />
 
                             <Route path='/terminos' element={<Terminos />} />
                             <Route path='/privacidad' element={<Privacidad />} />
