@@ -78,12 +78,14 @@
     background: linear-gradient(100deg, var(--banner-inicio), var(--banner-fin));
     color: var(--acento-texto);
     border: 1px solid var(--borde);
+    font-weight: 700;
 }
 
 .tarjeta-total-gasto {
     background: var(--tarjeta);
     border: 1px solid var(--borde);
     color: var(--tp-negativo);
+    font-weight: 700;
 }
 
 /* Filtros tipo pill */
