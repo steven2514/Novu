@@ -47,31 +47,48 @@ function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
 
     return (
         <div className="formulario-meta">
-            <div className="formulario-meta-header">
-                <h2>{metaEditar ? 'Editar Meta' : 'Nueva Meta'}</h2>
+            <div className="modal-kaipo-header">
+                <h2>{metaEditar ? 'Editar Meta' : 'Nueva meta'}</h2>
                 <button className="btn-cerrar-modal" onClick={onClose}><Icon name="x" /></button>
             </div>
-            <label>Nombre de la Meta</label>
-            <input type="text" value={nombreMeta} onChange={(e) => setNombreMeta(e.target.value)} placeholder="EJ: Iphone 16" />
-            <label>Monto objetivo</label>
-            <input type="number" value={montoObjetivo} onChange={(e) => setMontoObjetivo(e.target.value)} placeholder="0" />
-            <label>Monto Actual</label>
-            <input type="text" value={montoActual} onChange={(e) => setMontoActual(e.target.value)} placeholder="0" />
-            <label>Fecha Objetivo</label>
-            <input type="date" value={fechaObjetivo} onChange={(e) => setFechaObjetivo(e.target.value)} />
-            <label>Icono</label>
-            <div className="iconos-opciones">
-                {ICONOS.map((ic) => (
-                    <div key={ic} className={`icono-opcion ${icono === ic ? 'seleccionado' : ''}`} onClick={() => setIcono(ic)}><Icon name={ic} /></div>
-                ))}
+
+            <div className="modal-kaipo-body">
+                <div className="icono-selector-grid">
+                    {ICONOS.map((ic) => (
+                        <div key={ic} className={`icono-selector-opcion ${icono === ic ? 'seleccionado' : ''}`} onClick={() => setIcono(ic)}>
+                            <Icon name={ic} />
+                        </div>
+                    ))}
+                </div>
+
+                <label>Nombre</label>
+                <input className="campo-pildora" type="text" value={nombreMeta} onChange={(e) => setNombreMeta(e.target.value)} placeholder="Ej: Iphone 16" />
+
+                <div className="formulario-meta-fila-doble">
+                    <div>
+                        <label>Objetivo</label>
+                        <input className="campo-pildora" type="number" value={montoObjetivo} onChange={(e) => setMontoObjetivo(e.target.value)} placeholder="0" />
+                    </div>
+                    <div>
+                        <label>Fecha límite</label>
+                        <input className="campo-pildora" type="date" value={fechaObjetivo} onChange={(e) => setFechaObjetivo(e.target.value)} />
+                    </div>
+                </div>
+
+                <label>Monto actual</label>
+                <input className="campo-pildora" type="text" value={montoActual} onChange={(e) => setMontoActual(e.target.value)} placeholder="0" />
+
+                <label>Color</label>
+                <div className="color-selector-grid">
+                    {COLORES.map((c) => (
+                        <div key={c} className={`color-selector-opcion ${color === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColor(c)} />
+                    ))}
+                </div>
             </div>
-            <label>Color</label>
-            <div className="color-opciones">
-                {COLORES.map((c) => (
-                    <div key={c} className={`color-circulo ${color === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColor(c)} />
-                ))}
-            </div>
-            <button onClick={guardar} disabled={guardando}>{guardando ? 'Guardando...' : metaEditar ? 'Guardar Cambios' : 'Crear Meta'}</button>
+
+            <button className="btn-guardar-gradiente" onClick={guardar} disabled={guardando}>
+                {guardando ? 'Guardando...' : metaEditar ? 'Guardar Cambios' : 'Guardar'}
+            </button>
         </div>
     );
 }

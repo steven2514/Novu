@@ -1,7 +1,5 @@
 .perfil-page {
-  padding: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
+  padding: 2rem 10rem;
 }
 
 .perfil-loading {
@@ -16,7 +14,7 @@
 }
 
 .perfil-header h1 {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   color: var(--texto);
 }
 
@@ -32,13 +30,7 @@
   gap: 1.5rem;
 }
 
-.perfil-card {
-  background: var(--tarjeta);
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 1px 3px var(--sombra);
-  border: 1px solid var(--borde);
-}
+/* .tarjeta-lista ya trae fondo, borde, padding y radio desde index.css */
 
 .perfil-card-peligro {
   border-color: var(--peligro-claro);
@@ -46,26 +38,27 @@
 
 .perfil-card-titulo {
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 660;
   color: var(--texto);
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  padding: 20px 0px 0px 20px;
 }
 
 .perfil-card-body {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  padding: 5px 15px 15px 20px;
 }
 
 .perfil-card-body label {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--texto-gris);
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
+  margin-bottom: 0.3rem;
 }
 
 .perfil-card-body input,
@@ -78,11 +71,22 @@
   font-size: 0.95rem;
   outline: none;
   transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .perfil-card-body input:focus,
 .perfil-card-body select:focus {
-  border-color: var(--principal);
+  border-color: var(--acento);
+}
+
+.perfil-card-body > button.btn-pildora-acento,
+.perfil-card-body > button.btn-pildora-secundario {
+  align-self: flex-start;
+}
+
+.perfil-card-body > button.btn-ancho-completo {
+  align-self: stretch;
 }
 
 .perfil-input-disabled {
@@ -90,77 +94,57 @@
   cursor: not-allowed;
 }
 
-.perfil-btn {
-  padding: 0.65rem 1.25rem;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: filter 0.2s, background 0.2s;
-  align-self: flex-start;
-}
-
-.perfil-btn.primario {
-  background-color: var(--principal);
-  color: white;
-}
-
-.perfil-btn.primario:hover {
-  filter: brightness(1.1);
-}
-
-.perfil-btn.primario:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.perfil-btn.secundario {
-  background-color: var(--fondo-hover);
-  color: var(--texto-gris);
-}
-
-.perfil-btn.secundario:hover {
-  background-color: var(--borde);
-}
-
 .perfil-btn.peligro {
   background: none;
   color: var(--peligro);
   border: 1px solid var(--peligro);
+  padding: 0.65rem 1.25rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.2s;
 }
 
 .perfil-btn.peligro:hover {
   background-color: var(--peligro-claro);
 }
 
-/* ─── Toggle theme ─── */
-.perfil-toggle-row {
-  display: flex;
-  gap: 0.5rem;
+.btn-pildora-acento:disabled,
+.btn-pildora-secundario:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-.perfil-toggle-btn {
-  flex: 1;
-  padding: 0.5rem;
-  border: 1px solid var(--borde);
-  border-radius: 8px;
-  background: var(--fondo);
-  color: var(--texto-gris);
-  font-size: 0.85rem;
-  cursor: pointer;
+.btn-ancho-completo {
+  width: 100%;
+}
+
+/* ─── Apariencia: píldoras grandes (tema / idioma) ─── */
+.perfil-toggle-grande {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.perfil-toggle-grande button {
+  flex: 1;
+  min-width: 100px;
+  padding: 0.85rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--fondo-hover);
+  color: var(--texto-gris);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
   transition: all 0.2s;
 }
 
-.perfil-toggle-btn.activo {
-  background-color: var(--principal-claro);
-  color: var(--principal);
-  border-color: var(--principal);
-  font-weight: 600;
+.perfil-toggle-grande button.activo {
+  background-color: var(--acento);
+  color: var(--acento-texto);
 }
 
 /* ─── Color picker ─── */
@@ -177,6 +161,7 @@
   border: 2px solid transparent;
   cursor: pointer;
   transition: transform 0.2s, border-color 0.2s;
+  flex-shrink: 0;
 }
 
 .perfil-color-btn:hover {
@@ -248,74 +233,55 @@
   transition: 0.2s;
 }
 
-.perfil-switch input:checked+.perfil-switch-slider {
-  background-color: var(--principal);
+.perfil-switch input:checked + .perfil-switch-slider {
+  background-color: var(--acento);
 }
 
-.perfil-switch input:checked+.perfil-switch-slider::before {
+.perfil-switch input:checked + .perfil-switch-slider::before {
   transform: translateX(20px);
 }
 
-/* ─── Categorías ─── */
-.perfil-cat-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.6rem;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--borde);
+.perfil-switch input:disabled + .perfil-switch-slider {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.perfil-cat-form input[type="color"] {
-  width: 100%;
-  height: 38px;
-  padding: 2px;
-  cursor: pointer;
+/* ─── Conexiones ─── */
+.perfil-conexiones-desc {
+  margin-bottom: 0.25rem;
 }
 
-.perfil-cat-form-botones {
-  display: flex;
-  gap: 0.5rem;
-  align-items: flex-end;
-}
-
-.perfil-cat-form-botones .perfil-btn {
-  width: 100%;
-}
-
-.perfil-vacio,
-.perfil-cargando {
-  text-align: center;
+.icono-circulo-neutro {
+  background-color: var(--fondo-hover);
   color: var(--texto-gris);
-  font-size: 0.9rem;
-  padding: 1rem;
 }
 
-.perfil-cat-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.perfil-conexion-estado {
+  font-size: 0.8rem;
+  color: var(--texto-gris);
+  margin-top: 2px;
 }
 
-.perfil-cat-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 0.75rem;
-  border-radius: 8px;
-  background-color: var(--fondo-alt);
-}
-
-.perfil-cat-icono {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.btn-conectar {
+  background-color: var(--acento);
+  color: var(--acento-texto);
+  border: none;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
   flex-shrink: 0;
+  opacity: 1;
 }
 
+.btn-conectar:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+/* ─── Categorías ─── */
 .perfil-cat-info {
   flex: 1;
   min-width: 0;
@@ -327,39 +293,6 @@
   color: var(--texto);
 }
 
-.perfil-cat-tipo {
-  font-size: 0.75rem;
-  color: var(--texto-gris);
-  text-transform: capitalize;
-}
-
-.perfil-cat-color-muestra {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.perfil-cat-accion {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--texto-gris);
-  padding: 4px;
-  border-radius: 4px;
-  transition: background 0.2s;
-}
-
-.perfil-cat-accion:hover {
-  background-color: var(--fondo-hover);
-  color: var(--texto);
-}
-
-.perfil-cat-accion.eliminar:hover {
-  color: var(--peligro);
-  background-color: var(--peligro-claro);
-}
-
 .perfil-error {
   font-size: 0.85rem;
   color: var(--peligro);
@@ -368,4 +301,89 @@
 .perfil-card-desc {
   font-size: 0.9rem;
   color: var(--texto-gris);
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .perfil-page {
+    padding: 2rem 3rem;
+  }
+}
+
+/* Tablet chica / celular horizontal */
+@media (max-width: 768px) {
+  .perfil-page {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .perfil-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .perfil-card-titulo {
+    padding: 16px 0px 0px 16px;
+    font-size: 1rem;
+  }
+
+  .perfil-card-body {
+    padding: 5px 12px 12px 16px;
+  }
+
+  .perfil-switch-row {
+    flex-wrap: wrap;
+  }
+}
+
+/* Celular */
+@media (max-width: 480px) {
+  .perfil-page {
+    padding: 1rem 0.85rem;
+  }
+
+  .perfil-header h1 {
+    font-size: 1.15rem;
+  }
+
+  .perfil-header p {
+    font-size: 0.9rem;
+  }
+
+  .perfil-card-titulo {
+    padding: 14px 0px 0px 14px;
+    gap: 0.5rem;
+  }
+
+  .perfil-card-body {
+    padding: 5px 10px 12px 14px;
+    gap: 0.6rem;
+  }
+
+  .perfil-toggle-grande {
+    flex-direction: column;
+  }
+
+  .perfil-toggle-grande button {
+    min-width: 0;
+  }
+
+  .perfil-color-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .btn-conectar {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.8rem;
+  }
+
+  .perfil-btn.peligro,
+  .perfil-card-body > button.btn-pildora-acento,
+  .perfil-card-body > button.btn-pildora-secundario {
+    align-self: stretch;
+    text-align: center;
+  }
 }

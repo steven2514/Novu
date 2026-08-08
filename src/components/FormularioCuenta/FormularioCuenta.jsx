@@ -45,29 +45,44 @@ function FormularioCuenta({ setCuenta, onClose, cuentaEditar }) {
 
     return (
         <div className="formulario-cuenta">
-            <div className="formulario-meta-header">
-                <h2>{cuentaEditar ? 'Editar Cuenta' : 'Nueva Cuenta'}</h2>
+            <div className="modal-kaipo-header">
+                <h2>{cuentaEditar ? 'Editar Cuenta' : 'Nueva cuenta'}</h2>
                 <button className="btn-cerrar-modal" onClick={onClose}><Icon name="x" /></button>
             </div>
-            <label>Nombre</label>
-            <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Cuenta Principal" />
-            <label>Tipo de Cuenta</label>
-            <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
-                <option value="debito">Débito</option>
-                <option value="efectivo">Efectivo</option>
-                <option value="credito">Crédito</option>
-            </select>
-            <label>Saldo {cuentaEditar ? '' : 'Inicial'}</label>
-            <input type="number" value={saldo} onChange={(e) => setSaldo(e.target.value)} placeholder="0.00" />
-            <label>Banco (opcional)</label>
-            <input type="text" value={banco} onChange={(e) => setBanco(e.target.value)} placeholder="Ej: Banco Nacional" />
-            <label>Color</label>
-            <div className="color-opciones">
-                {['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4', '#00E676'].map((c) => (
-                    <div key={c} className={`color-circulo ${color === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColor(c)} />
-                ))}
+
+            <div className="modal-kaipo-body">
+                <label>Nombre</label>
+                <input className="campo-pildora" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Cuenta Principal" />
+
+                <div className="formulario-cuenta-fila-doble">
+                    <div>
+                        <label>Tipo</label>
+                        <select className="campo-pildora" value={tipo} onChange={(e) => setTipo(e.target.value)}>
+                            <option value="debito">Débito</option>
+                            <option value="efectivo">Efectivo</option>
+                            <option value="credito">Crédito</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Saldo {cuentaEditar ? '' : 'inicial'}</label>
+                        <input className="campo-pildora" type="number" value={saldo} onChange={(e) => setSaldo(e.target.value)} placeholder="0.00" />
+                    </div>
+                </div>
+
+                <label>Banco (opcional)</label>
+                <input className="campo-pildora" type="text" value={banco} onChange={(e) => setBanco(e.target.value)} placeholder="Ej: Banco Nacional" />
+
+                <label>Color</label>
+                <div className="color-selector-grid">
+                    {['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4', '#00E676'].map((c) => (
+                        <div key={c} className={`color-selector-opcion ${color === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColor(c)} />
+                    ))}
+                </div>
             </div>
-            <button onClick={guardar} disabled={guardando}>{guardando ? 'Guardando...' : cuentaEditar ? 'Guardar Cambios' : 'Crear Cuenta'}</button>
+
+            <button className="btn-guardar-gradiente" onClick={guardar} disabled={guardando}>
+                {guardando ? 'Guardando...' : cuentaEditar ? 'Guardar Cambios' : 'Guardar'}
+            </button>
         </div>
     );
 }

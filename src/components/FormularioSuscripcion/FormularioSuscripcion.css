@@ -1,126 +1,16 @@
 .formulario-suscripcion {
-    background-color: var(--tarjeta);
-    border-radius: 16px;
-    padding: 24px;
-    width: 100%;
-    max-width: 420px;
+    display: flex;
+    flex-direction: column;
 }
 
-.formulario-suscripcion h2 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--texto);
-    margin-bottom: 20px;
-}
-
-.formulario-suscripcion label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--texto);
-    margin-top: 16px;
-    margin-bottom: 6px;
-}
-
-.formulario-suscripcion input[type="text"],
-.formulario-suscripcion input[type="number"],
-.formulario-suscripcion input[type="date"] {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid var(--borde);
-    border-radius: 10px;
-    font-size: 15px;
-    color: var(--texto);
-    box-sizing: border-box;
-}
-
-.formulario-suscripcion input::placeholder {
-    color: var(--texto-muted);
-}
-
-.formulario-suscripcion input:focus {
-    outline: none;
-    border-color: var(--principal);
-}
-
-.formulario-suscripcion select {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid var(--borde);
-    border-radius: 10px;
-    font-size: 15px;
-    color: var(--texto);
-    background-color: var(--tarjeta);
-    box-sizing: border-box;
-}
-
-.formulario-suscripcion select:focus {
-    outline: none;
-    border-color: var(--principal);
-}
-
-.iconos-opciones {
+.formulario-suscripcion-fila-doble {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
 }
 
-.icono-opcion {
+.formulario-suscripcion-fila-doble>div {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: 1 / 1;
-    border: 1px solid var(--borde);
-    border-radius: 10px;
-    font-size: 18px;
-    cursor: pointer;
-    background-color: var(--tarjeta);
-}
-
-.icono-opcion.seleccionado {
-    border-color: var(--principal);
-    background-color: #6C63FF11;
-}
-
-.color-opciones {
-    display: flex;
-    gap: 10px;
-}
-
-.color-circulo {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid transparent;
-}
-
-.color-circulo.seleccionado {
-    border-color: var(--principal);
-    box-shadow: 0 0 0 2px var(--tarjeta), 0 0 0 4px var(--principal);
-}
-
-.formulario-suscripcion button {
-    width: 100%;
-    margin-top: 24px;
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #FFFFFF;
-    cursor: pointer;
-    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
-}
-
-.formulario-suscripcion button:hover {
-    opacity: 0.9;
-}
-
-.formulario-suscripcion .btn-cerrar-modal {
-    width: auto;
-    background: none;
-    color: var(--texto-gris);
-    padding: 0;
-    margin: 0;
+    flex-direction: column;
+    gap: 0.4rem;
 }

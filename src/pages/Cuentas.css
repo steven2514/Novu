@@ -80,18 +80,30 @@
     align-items: center;
     gap: 12px;
     min-width: 0;
+    flex: 1;
+}
+
+.cuenta-tarjeta-izq>div {
+    min-width: 0;
+    overflow: hidden;
 }
 
 .cuenta-nombre {
     font-weight: 700;
     color: var(--texto);
     font-size: 1.05rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .cuenta-tipo-texto {
     font-size: 0.85rem;
     color: var(--texto-gris);
     margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .cuenta-tarjeta-der {

@@ -1,0 +1,113 @@
+.modal-agregar {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-agregar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modal-agregar-header h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--texto);
+}
+
+.modal-agregar-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.modal-agregar-body label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto-gris);
+}
+
+.modal-agregar-fila-doble {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.modal-agregar-fila-doble>div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* Con 6 pestañas, permite scroll horizontal en pantallas angostas en vez de romper el layout */
+.tabs-pildora-scroll {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs-pildora-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs-pildora-scroll .tab-pildora {
+  flex: 0 0 auto;
+}
+
+/* ═══ Dropdown personalizado ═══ */
+.dropdown-pildora {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-pildora-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdown-placeholder {
+  color: var(--texto-gris);
+}
+
+.dropdown-pildora-panel {
+  position: fixed;
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  padding: 0.4rem;
+  box-shadow: 0 8px 24px var(--sombra);
+  z-index: 1000;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.dropdown-pildora-opcion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--texto);
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+
+.dropdown-pildora-opcion:hover {
+  background-color: var(--fondo-hover);
+}
+
+.dropdown-pildora-opcion.seleccionada {
+  background-color: var(--principal-claro);
+  color: var(--acento);
+  font-weight: 600;
+}
+
+.dropdown-pildora-opcion svg,
+.dropdown-pildora-trigger svg {
+  flex-shrink: 0;
+  color: var(--texto-gris);
+}

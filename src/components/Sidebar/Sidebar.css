@@ -1,8 +1,8 @@
 .sidebar {
-    --sb-accent-1: #E3DE6E;
-    --sb-accent-2: #8FA33E;
-    --sb-activo-fondo: #FCF6D9;
-    --sb-activo-texto: #A8931F;
+    --sb-accent-1: var(--acento);
+    --sb-accent-2: var(--acento-oscuro);
+    --sb-activo-fondo: color-mix(in srgb, var(--acento) 18%, var(--fondo));
+    --sb-activo-texto: var(--acento-oscuro);
 
     width: 240px;
     min-height: 100vh;
@@ -34,7 +34,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #17171A;
+    color: var(--sb-activo-texto);
     flex-shrink: 0;
 }
 
@@ -87,7 +87,7 @@
     border-radius: 999px;
     padding: 12px;
     background: linear-gradient(135deg, var(--sb-accent-1), var(--sb-accent-2));
-    color: #17171A;
+    color: var(--sb-activo-texto);
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;

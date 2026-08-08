@@ -53,40 +53,63 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, setCuentas,
 
     return (
         <div className="formulario-suscripcion">
-            <div className="formulario-meta-header">
-                <h2>{suscripcionEditar ? 'Editar Suscripción' : 'Nueva Suscripcion'}</h2>
+            <div className="modal-kaipo-header">
+                <h2>{suscripcionEditar ? 'Editar Suscripción' : 'Nueva suscripción'}</h2>
                 <button className="btn-cerrar-modal" onClick={onClose}><Icon name="x" /></button>
             </div>
-            <label>Nombre</label>
-            <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Netflix" />
-            <label>Monto</label>
-            <input type="number" value={monto} onChange={(e) => setMonto(e.target.value)} placeholder="0.00" />
-            <label>Cuenta</label>
-            <select value={cuenta} onChange={(e) => setCuenta(e.target.value)}>
-                <option value="">Seleccionar cuenta</option>
-                {cuentas.map((c, i) => (<option key={i} value={c.nombre}>{c.nombre}</option>))}
-            </select>
-            <label>Fecha de Renovación</label>
-            <input type="date" value={fechaRenovacion} onChange={(e) => setFechaRenovacion(e.target.value)} />
-            <label>Frecuencia</label>
-            <select value={frecuencia} onChange={(e) => setFrecuencia(e.target.value)}>
-                <option value="diario">Diario</option>
-                <option value="semanal">Semanal</option>
-                <option value="mensual">Mensual</option>
-            </select>
-            <label>Icono</label>
-            <div className="iconos-opciones">
-                {ICONOS.map((ic) => (
-                    <div key={ic} className={`icono-opcion ${icono === ic ? 'seleccionado' : ''}`} onClick={() => setIcono(ic)}><Icon name={ic} /></div>
-                ))}
+
+            <div className="modal-kaipo-body">
+                <div className="icono-selector-grid">
+                    {ICONOS.map((ic) => (
+                        <div key={ic} className={`icono-selector-opcion ${icono === ic ? 'seleccionado' : ''}`} onClick={() => setIcono(ic)}>
+                            <Icon name={ic} />
+                        </div>
+                    ))}
+                </div>
+
+                <label>Nombre</label>
+                <input className="campo-pildora" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Netflix" />
+
+                <div className="formulario-suscripcion-fila-doble">
+                    <div>
+                        <label>Monto</label>
+                        <input className="campo-pildora" type="number" value={monto} onChange={(e) => setMonto(e.target.value)} placeholder="0.00" />
+                    </div>
+                    <div>
+                        <label>Ciclo</label>
+                        <select className="campo-pildora" value={frecuencia} onChange={(e) => setFrecuencia(e.target.value)}>
+                            <option value="diario">Diario</option>
+                            <option value="semanal">Semanal</option>
+                            <option value="mensual">Mensual</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div className="formulario-suscripcion-fila-doble">
+                    <div>
+                        <label>Próximo cobro</label>
+                        <input className="campo-pildora" type="date" value={fechaRenovacion} onChange={(e) => setFechaRenovacion(e.target.value)} />
+                    </div>
+                    <div>
+                        <label>Cuenta</label>
+                        <select className="campo-pildora" value={cuenta} onChange={(e) => setCuenta(e.target.value)}>
+                            <option value="">Seleccionar cuenta</option>
+                            {cuentas.map((c, i) => (<option key={i} value={c.nombre}>{c.nombre}</option>))}
+                        </select>
+                    </div>
+                </div>
+
+                <label>Color</label>
+                <div className="color-selector-grid">
+                    {COLORES.map((c) => (
+                        <div key={c} className={`color-selector-opcion ${color === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColor(c)} />
+                    ))}
+                </div>
             </div>
-            <label>Color</label>
-            <div className="color-opciones">
-                {COLORES.map((c) => (
-                    <div key={c} className={`color-circulo ${color === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColor(c)} />
-                ))}
-            </div>
-            <button onClick={guardar} disabled={guardando}>{guardando ? 'Guardando...' : suscripcionEditar ? 'Guardar Cambios' : 'Crear Suscripción'}</button>
+
+            <button className="btn-guardar-gradiente" onClick={guardar} disabled={guardando}>
+                {guardando ? 'Guardando...' : suscripcionEditar ? 'Guardar Cambios' : 'Guardar'}
+            </button>
         </div>
     );
 }

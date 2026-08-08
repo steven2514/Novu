@@ -1,6 +1,6 @@
 .dashboard {
-    --dash-accent-1: #E3DE6E;
-    --dash-accent-2: #8FA33E;
+    --dash-accent-1: var(--acento);
+    --dash-accent-2: var(--acento-oscuro);
     --dash-positivo: #16A34A;
     --dash-negativo: #DC2626;
 
@@ -82,7 +82,7 @@
     background: linear-gradient(135deg, var(--dash-accent-1), var(--dash-accent-2));
     border-radius: 20px;
     padding: 28px;
-    color: #17171A;
+    color: var(--acento-texto);
 }
 
 .dashboard-balance-label {

@@ -1,6 +1,6 @@
 .transacciones-page {
-    --tp-accent-1: #E3DE6E;
-    --tp-accent-2: #8FA33E;
+    --tp-accent-1: var(--acento);
+    --tp-accent-2: var(--acento-oscuro);
     --tp-positivo: #6B7A2E;
     --tp-negativo: #DC2626;
 
@@ -70,7 +70,7 @@
 
 .trans-filtros button.activo {
     background: linear-gradient(135deg, var(--tp-accent-1), var(--tp-accent-2));
-    color: #17171A;
+    color: var(--acento-texto);
     border-color: transparent;
 }
 
