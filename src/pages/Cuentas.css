@@ -54,7 +54,7 @@
 
 .cuentas-lista {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1rem;
 }
 
@@ -64,9 +64,10 @@
     padding: 1.2rem 1.4rem;
     box-shadow: 0 1px 3px var(--sombra);
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px 12px;
     transition: transform 0.15s, box-shadow 0.15s;
 }
 
@@ -79,8 +80,8 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    min-width: 0;
-    flex: 1;
+    min-width: 140px;
+    flex: 1 1 auto;
 }
 
 .cuenta-tarjeta-izq>div {

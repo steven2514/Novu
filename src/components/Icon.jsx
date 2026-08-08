@@ -56,11 +56,7 @@ export function Icon({
   className = '',
   style,
 }) {
-  const Component = ICON_MAP[name];
-
-  if (!Component) {
-    return <span>{name}</span>;
-  }
+  const Component = ICON_MAP[name] || Lucide.Circle;
 
   return (
     <Component

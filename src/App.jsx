@@ -19,7 +19,6 @@ import Loader from './components/Loader/Loader';
 import Terminos from './pages/Terminos';
 import Privacidad from './pages/Privacidad';
 import Splash from './components/Splash/Splash';
-import './flotante.css';
 import NotFound from './pages/NotFound';
 
 
@@ -92,6 +91,17 @@ function App() {
         });
     }, [sesion]);
 
+    // Aplica el tema (oscuro/claro) al arrancar la app, antes de renderizar
+    // cualquier página. Si el usuario nunca eligió uno, arranca en oscuro por defecto.
+    useEffect(() => {
+        const tema = localStorage.getItem('tema');
+        const esOscuro = tema ? tema === 'oscuro' : true;
+        document.documentElement.setAttribute('data-theme', esOscuro ? 'dark' : 'light');
+        if (!tema) {
+            localStorage.setItem('tema', 'oscuro');
+        }
+    }, []);
+
     useEffect(() => {
         const hex = localStorage.getItem('color-acento');
         if (!hex) return;
@@ -105,7 +115,7 @@ function App() {
         document.documentElement.style.setProperty('--gradiente-balance', `linear-gradient(135deg, ${hex} 0%, ${fin} 100%)`);
         document.documentElement.style.setProperty('--acento', hex);
         document.documentElement.style.setProperty('--acento-oscuro', oscuro);
-        document.documentElement.style.setProperty('--acento-texto', '#ffffff');
+        document.documentElement.style.setProperty('--acento-texto', '#1a1a1a');
         document.documentElement.style.setProperty('--banner-inicio', hex);
         document.documentElement.style.setProperty('--banner-fin', fin);
     }, []);
@@ -170,7 +180,7 @@ function App() {
 
                             <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} abrirModalTransferencia={() => abrirModal('transferencia')} />} />
 
-                            <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} setCuentas={setCuentas} sesion={sesion} />} />
+                            <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} setCuentas={setCuentas} setTransacciones={setTransacciones} sesion={sesion} />} />
 
 
                             <Route path='/Metas' element={<Meta metas={metas} setMetas={setMetas} sesion={sesion} />} />
@@ -206,12 +216,6 @@ function App() {
                                 tipoInicial={modalTipo}
                             />
                         </Modal>
-
-                        <div className="flotante-container">
-                            <button className="flotante-btn" onClick={() => abrirModal('gasto')}>
-                                +
-                            </button>
-                        </div>
                     </div>
                 </div>
             )}

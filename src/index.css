@@ -38,8 +38,8 @@
 }
 
 [data-theme="dark"] {
-  --fondo: #0F0F1A;
-  --tarjeta: #1A1A2E;
+  --fondo: #000000;
+  --tarjeta: #121212;
   --principal: #6C63FF;
   --principal-oscuro: #4338CA;
   --principal-claro: #2D2A5E;
@@ -57,9 +57,9 @@
   --texto: #E5E7EB;
   --texto-gris: #9CA3AF;
   --texto-muted: #6B7280;
-  --borde: #2D2D44;
-  --fondo-alt: #151528;
-  --fondo-hover: #2A2A40;
+  --borde: #262626;
+  --fondo-alt: #0A0A0A;
+  --fondo-hover: #1C1C1C;
   --sombra: rgba(0, 0, 0, 0.3);
   --sombra-suave: rgba(0, 0, 0, 0.2);
   --sombra-fuerte: rgba(0, 0, 0, 0.4);
@@ -70,17 +70,25 @@
   --banner-fin: #7CB143;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   background-color: var(--fondo);
   color: var(--texto);
-  font-family: system-ui, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
+
+h1,
+h2,
+h3 {
+  font-family: 'Sora', 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
 
 .layout {
   display: flex;

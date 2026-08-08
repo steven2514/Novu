@@ -45,11 +45,53 @@
     color: var(--texto);
 }
 
+/* Tarjetas de totales (Total Ingresos / Total Gastos) */
+.trans-totales {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.tarjeta-total {
+    flex: 1;
+    min-width: 220px;
+    border-radius: 20px;
+    padding: 24px 28px;
+    box-shadow: 0 1px 3px var(--sombra), 0 1px 2px var(--sombra-suave);
+}
+
+.tarjeta-total p {
+    font-size: 14px;
+    opacity: 0.75;
+    margin-bottom: 8px;
+    color: inherit;
+}
+
+.tarjeta-total h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: inherit;
+}
+
+.tarjeta-total-ingreso {
+    background: linear-gradient(100deg, var(--banner-inicio), var(--banner-fin));
+    color: var(--acento-texto);
+    border: 1px solid var(--borde);
+}
+
+.tarjeta-total-gasto {
+    background: var(--tarjeta);
+    border: 1px solid var(--borde);
+    color: var(--tp-negativo);
+}
+
 /* Filtros tipo pill */
 .trans-filtros {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    padding: 0px 0px 15px 0px;
 }
 
 .trans-filtros button {
@@ -101,7 +143,7 @@
     background-color: var(--tarjeta);
     border: 1px solid var(--borde);
     border-radius: 16px;
-    padding: 14px 18px;
+    padding: 10px 20px;
 }
 
 .transaccion-icono {
@@ -138,6 +180,7 @@
     color: var(--tp-positivo);
     white-space: nowrap;
 }
+
 
 .monto-gasto {
     font-size: 1rem;

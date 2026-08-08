@@ -33,20 +33,18 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
                     <p>Registro completo de ingresos y gastos</p>
                 </div>
                 <div className="trans-botones-header">
-                    <button className="btn-ingreso" onClick={() => abrirModal('ingreso')}>+ Ingreso</button>
-                    <button className="btn-gasto" onClick={() => abrirModal('gasto')}>+ Gasto</button>
                     <button className="btn-exportar" onClick={() => exportarCSV(transacciones, 'transacciones')}>⬇ Exportar</button>
                 </div>
             </div>
 
             <div className="trans-totales">
-                <div className="tarjeta-total">
+                <div className="tarjeta-total tarjeta-total-ingreso">
                     <p>Total Ingresos</p>
-                    <h2 className="monto-ingreso">${totalIngresos}</h2>
+                    <h2>${totalIngresos.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
                 </div>
-                <div className="tarjeta-total">
+                <div className="tarjeta-total tarjeta-total-gasto">
                     <p>Total Gastos</p>
-                    <h2 className="monto-gasto">${totalGastos}</h2>
+                    <h2>${totalGastos.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
                 </div>
             </div>
 
