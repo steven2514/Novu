@@ -216,6 +216,44 @@
     padding: 60px 0;
 }
 
+.trans-paginacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.pagina-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 8px;
+    border: 1px solid var(--borde);
+    background: var(--tarjeta);
+    color: var(--texto);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.pagina-btn:hover:not(:disabled) {
+    background: var(--fondo-hover);
+}
+
+.pagina-btn.activo {
+    background: var(--acento);
+    color: var(--acento-texto);
+    border-color: var(--acento);
+}
+
+.pagina-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
     .transacciones-page {
         padding: 20px;
