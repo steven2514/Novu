@@ -32,12 +32,11 @@
     color: var(--texto-gris);
     font-size: 0.9rem;
     margin-bottom: 0.35rem;
+    
 }
 
-.tarjeta-total h2 {
-    font-size: 1.9rem;
-    color: var(--texto);
-}
+
+tarjeta-lista
 
 .seccion-vacia {
     background: var(--tarjeta);
@@ -76,6 +75,20 @@
     color: var(--texto-gris);
     font-size: 0.85rem;
     margin-top: 2px;
+}
+
+.suscripciones-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.suscripciones-lista .fila-item {
+    background: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px var(--sombra);
+    border-bottom: none;
 }
 
 .fila-derecha {

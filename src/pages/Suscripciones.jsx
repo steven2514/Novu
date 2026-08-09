@@ -7,6 +7,7 @@ import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
 import exportarCSV from '../utils/exportarCSV';
+import { useToast } from '../Context/ToastContext';
 
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 const FRECUENCIAS = { diario: 'Diario', semanal: 'Semanal', mensual: 'Mensual' };
@@ -25,19 +26,52 @@ function sumarCiclo(fecha, frecuencia) {
     return d.toISOString().slice(0, 10);
 }
 
-function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, sesion }) {
+function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, setTransacciones, sesion }) {
 
     const [suscripcionEditar, setSuscripcionEditar] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const gastoMensual = suscripciones.reduce((acc, c) => acc + Number(c.monto), 0);
     const { mostrarTour, cerrarTour } = useTour('suscripciones', sesion);
+    const { mostrarToast } = useToast();
 
     async function pagarSuscripcion(sus) {
         const nuevaFecha = sumarCiclo(sus.fecha_renovacion, sus.frecuencia);
-        const { error } = await supabase.from('suscripciones').update({ fecha_renovacion: nuevaFecha }).eq('id', sus.id);
-        if (error) return;
+
+        const { error: errorFecha } = await supabase
+            .from('suscripciones')
+            .update({ fecha_renovacion: nuevaFecha })
+            .eq('id', sus.id);
+        if (errorFecha) { mostrarToast('No se pudo actualizar la suscripción', 'error'); return; }
+
+        const { data: nuevaTransaccion, error: errorTransaccion } = await supabase
+            .from('transacciones')
+            .insert({
+                descripcion: sus.nombre,
+                monto: sus.monto,
+                tipo: 'gasto',
+                categoria: 'suscripciones',
+                cuenta: sus.cuenta,
+                fecha: new Date().toISOString().slice(0, 10),
+                user_id: sesion.user.id,
+            })
+            .select()
+            .single();
+        if (errorTransaccion) { mostrarToast('No se pudo registrar el pago', 'error'); return; }
+
+        const cuenta = cuentas.find(c => c.nombre === sus.cuenta);
+        if (cuenta) {
+            const nuevoSaldo = Number(cuenta.saldo) - Number(sus.monto);
+            const { error: errorSaldo } = await supabase
+                .from('cuentas')
+                .update({ saldo: nuevoSaldo })
+                .eq('id', cuenta.id);
+            if (errorSaldo) { mostrarToast('No se pudo actualizar el saldo', 'error'); return; }
+            setCuentas(prev => prev.map(c => c.id === cuenta.id ? { ...c, saldo: nuevoSaldo } : c));
+        }
+
         setSuscripciones(prev => prev.map(s => s.id === sus.id ? { ...s, fecha_renovacion: nuevaFecha } : s));
-        setCuentas(prev => prev.map(c => c.nombre === sus.cuenta ? { ...c, saldo: Number(c.saldo) - Number(sus.monto) } : c));
+        setTransacciones(prev => [nuevaTransaccion, ...prev]);
+        mostrarToast('Suscripción pagada correctamente', 'exito');
     }
 
     return (
@@ -70,7 +104,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                     <button className="btn-pildora-acento" onClick={() => setModalVisible(true)}>+ Agregar suscripción</button>
                 </div>
             ) : (
-                <div className="tarjeta-lista">
+                <div className="suscripciones-lista">
                     {suscripciones.map((sus, index) => (
                         <div key={index} className="fila-item">
                             <div className="icono-circulo" style={{ backgroundColor: (sus.color || '#6C63FF') + '22' }}>
@@ -89,6 +123,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                                 <button className="btn-fila-eliminar" title="Eliminar" onClick={() => {
                                     supabase.from('suscripciones').delete().eq('id', sus.id).then(() => { });
                                     setSuscripciones(prev => prev.filter(s => s.id !== sus.id));
+                                    mostrarToast('Suscripción eliminada', 'exito');
                                 }}>
                                     <Icon name="trash-2" size={16} />
                                 </button>

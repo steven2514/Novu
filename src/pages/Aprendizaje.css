@@ -48,7 +48,7 @@
     box-shadow: 0 1px 3px var(--sombra-suave);
 }
 
-.icono-circulo {
+.icono-circulo-aprendizaje {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -57,17 +57,18 @@
     justify-content: center;
     font-size: 18px;
     border: 2px solid currentColor;
+    flex-shrink: 0;
 }
 
-.icono-circulo.morado {
+.icono-circulo-aprendizaje.morado {
     color: var(--principal);
 }
 
-.icono-circulo.verde {
+.icono-circulo-aprendizaje.verde {
     color: var(--positivo);
 }
 
-.icono-circulo.naranja {
+.icono-circulo-aprendizaje.naranja {
     color: var(--ahorro);
 }
 

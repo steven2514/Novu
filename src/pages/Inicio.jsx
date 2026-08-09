@@ -32,7 +32,9 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion }) {
         .filter((t) => t.tipo === 'gasto')
         .reduce((acc, t) => acc + Number(t.monto), 0);
 
-    const totalNetoMes = totalIngresos - totalGasto;
+    const totalSuscripcionesPagadasMes = transaccionesDelMes
+        .filter(t => t.tipo === 'gasto' && t.categoria === 'suscripciones')
+        .reduce((acc, t) => acc + Number(t.monto), 0);
 
     const ahorradoEnMetas = metas.reduce((acc, m) => acc + Number(m.monto_actual || 0), 0);
 
@@ -117,7 +119,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion }) {
                 </div>
                 <div className="dashboard-mini-card">
                     <p>Total mensual</p>
-                    <h3 className={totalNetoMes < 0 ? 'negativo' : ''}>{formatoMonto(totalNetoMes, totalNetoMes < 0 ? '-' : '')}</h3>
+                    <h3>{formatoMonto(totalSuscripcionesPagadasMes)}</h3>
                 </div>
             </div>
 

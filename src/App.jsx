@@ -8,7 +8,6 @@ import Meta from './pages/Metas';
 import Calendario from './pages/Calendario';
 import Aprendizaje from './pages/Aprendizaje';
 import Perfil from './pages/Perfil';
-import Admin from './pages/Admin';
 import Modal from './components/Modal/Modal';
 import { useState, useEffect } from 'react';
 import ModalAgregar from './components/ModalAgregar/ModalAgregar';
@@ -19,7 +18,7 @@ import Loader from './components/Loader/Loader';
 import Terminos from './pages/Terminos';
 import Privacidad from './pages/Privacidad';
 import Splash from './components/Splash/Splash';
-import NotFound from './pages/NotFound';
+
 
 
 function App() {
@@ -191,14 +190,12 @@ function App() {
 
                             <Route path='/perfil' element={<Perfil sesion={sesion} setSesion={setSesion} />} />
 
-                            <Route path='/admin' element={<Admin sesion={sesion} />} />
-
                             <Route path='/login' element={<Navigate to="/" replace />} />
 
                             <Route path='/terminos' element={<Terminos />} />
                             <Route path='/privacidad' element={<Privacidad />} />
 
-                            <Route path='*' element={<NotFound />} />
+                            <Route path='*' element={<Navigate to="/" replace />} />
 
                         </Routes>
 
