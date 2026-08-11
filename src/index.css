@@ -31,6 +31,12 @@
   --banner-fin: #8FC24A;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 [data-theme="light"] {
   --borde: #D8DADF;
   --sombra: rgba(0, 0, 0, 0.10);
