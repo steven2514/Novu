@@ -29,6 +29,17 @@ function fechaHoyInput() {
     return new Date().toISOString().split('T')[0];
 }
 
+// ─── Helpers de formato de monto (7000 -> "7.000") ───
+function limpiarNumero(valor) {
+    // Deja solo dígitos (quita puntos, letras, etc.)
+    return String(valor).replace(/\D/g, '');
+}
+function formatearNumero(valor) {
+    const limpio = limpiarNumero(valor);
+    if (!limpio) return '';
+    return new Intl.NumberFormat('es-CO').format(Number(limpio));
+}
+
 // ─── Iconos SVG propios (no dependen del mapeo de Icon) ───
 function ChevronDownIcon() {
     return (
@@ -106,6 +117,8 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     const [guardando, setGuardando] = useState(false);
 
     // ─── Campos: Gasto / Ingreso ───
+    // "monto" guarda SOLO dígitos (ej: "7000"), lo que se envía a Supabase.
+    // En el input se muestra formateado con formatearNumero(monto) (ej: "7.000").
     const [monto, setMonto] = useState('');
     const [categoria, setCategoria] = useState('');
     const [cuenta, setCuenta] = useState('');
@@ -133,7 +146,7 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
 
     useEffect(() => {
         if (transaccionEditar) {
-            setMonto(transaccionEditar.monto);
+            setMonto(limpiarNumero(transaccionEditar.monto));
             setCategoria(transaccionEditar.categoria);
             setCuenta(transaccionEditar.cuenta);
             setNota(transaccionEditar.descripcion || '');
@@ -266,7 +279,14 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
             {esTransaccion && (
                 <div className="modal-agregar-body">
                     <label>Monto</label>
-                    <input className="campo-pildora" type="number" value={monto} onChange={(e) => setMonto(e.target.value)} placeholder="0.00" />
+                    <input
+                        className="campo-pildora"
+                        type="text"
+                        inputMode="numeric"
+                        value={formatearNumero(monto)}
+                        onChange={(e) => setMonto(limpiarNumero(e.target.value))}
+                        placeholder="0"
+                    />
 
                     <label>Categoría</label>
                     <DropdownPildora value={categoria} onChange={setCategoria} opciones={categorias} placeholder="Seleccionar categoría" />
@@ -308,7 +328,14 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                     />
 
                     <label>Monto</label>
-                    <input className="campo-pildora" type="number" value={monto} onChange={(e) => setMonto(e.target.value)} placeholder="0" />
+                    <input
+                        className="campo-pildora"
+                        type="text"
+                        inputMode="numeric"
+                        value={formatearNumero(monto)}
+                        onChange={(e) => setMonto(limpiarNumero(e.target.value))}
+                        placeholder="0"
+                    />
                 </div>
             )}
 
@@ -333,7 +360,14 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                         </div>
                         <div>
                             <label>Saldo inicial</label>
-                            <input className="campo-pildora" type="number" value={saldoCuenta} onChange={(e) => setSaldoCuenta(e.target.value)} placeholder="0.00" />
+                            <input
+                                className="campo-pildora"
+                                type="text"
+                                inputMode="numeric"
+                                value={formatearNumero(saldoCuenta)}
+                                onChange={(e) => setSaldoCuenta(limpiarNumero(e.target.value))}
+                                placeholder="0"
+                            />
                         </div>
                     </div>
 
@@ -357,7 +391,14 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                     <div className="modal-agregar-fila-doble">
                         <div>
                             <label>Objetivo</label>
-                            <input className="campo-pildora" type="number" value={montoObjetivo} onChange={(e) => setMontoObjetivo(e.target.value)} placeholder="0" />
+                            <input
+                                className="campo-pildora"
+                                type="text"
+                                inputMode="numeric"
+                                value={formatearNumero(montoObjetivo)}
+                                onChange={(e) => setMontoObjetivo(limpiarNumero(e.target.value))}
+                                placeholder="0"
+                            />
                         </div>
                         <div>
                             <label>Fecha límite</label>
@@ -366,7 +407,14 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                     </div>
 
                     <label>Monto actual (opcional)</label>
-                    <input className="campo-pildora" type="text" value={montoActual} onChange={(e) => setMontoActual(e.target.value)} placeholder="0" />
+                    <input
+                        className="campo-pildora"
+                        type="text"
+                        inputMode="numeric"
+                        value={formatearNumero(montoActual)}
+                        onChange={(e) => setMontoActual(limpiarNumero(e.target.value))}
+                        placeholder="0"
+                    />
 
                     <label>Icono</label>
                     <div className="icono-selector-grid">
