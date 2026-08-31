@@ -1,23 +1,12 @@
 /* =========================================
-   RESPONSIVE GLOBAL - NOVU
+   NOVU - RESPONSIVE
    ========================================= */
 
-/* Evita desbordamiento horizontal */
-html,
-body,
-#root {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
+/* En escritorio el botón hamburguesa no existe */
+.btn-hamburguesa {
+  display: none;
 }
 
-/* Imágenes y elementos multimedia */
-img,
-svg,
-video,
-canvas {
-  max-width: 100%;
-}
 
 /* =========================================
    TABLET
@@ -25,31 +14,17 @@ canvas {
 
 @media (max-width: 1024px) {
 
-  /* Layout principal */
-  .main-content {
-    width: 100%;
-    max-width: 100%;
+  .layout {
+    gap: 12px;
+    margin: 12px;
   }
 
-  /* Grids */
-  .grid,
-  .cards-grid,
-  .stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .sidebar {
+    width: 240px;
   }
 
-  /* Contenedores */
-  .container,
-  .page-container {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  /* Tablas */
-  .table-container {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  .contenido {
+    min-width: 0;
   }
 }
 
@@ -60,272 +35,309 @@ canvas {
 
 @media (max-width: 768px) {
 
-  /* -----------------------------------------
-     LAYOUT
-     ----------------------------------------- */
+  /* -----------------------------
+     LAYOUT PRINCIPAL
+     ----------------------------- */
 
-  body {
-    min-width: 0;
+  .layout {
+    display: block !important;
+    width: 100% !important;
+    height: 100vh !important;
+    margin: 0 !important;
   }
 
-  #root {
-    min-width: 0;
-  }
-
-  .main-content {
-    width: 100%;
-    min-width: 0;
-    margin-left: 0;
-    padding: 16px;
-  }
-
-  .container,
-  .page-container {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    padding-left: 0;
-    padding-right: 0;
+  .contenido {
+    width: 100% !important;
+    height: 100vh !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 60px 16px 20px !important;
+    border-radius: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
   }
 
 
-  /* -----------------------------------------
+  /* -----------------------------
      SIDEBAR
-     ----------------------------------------- */
+     ----------------------------- */
 
   .sidebar {
-    width: 280px;
-    max-width: 85vw;
-    position: fixed;
-    z-index: 1000;
+    position: fixed !important;
+
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 280px !important;
+    max-width: 85vw !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+
+    z-index: 2000 !important;
+
+    padding: 26px 14px !important;
+
+    background: linear-gradient(160deg,
+        #075f61 0%,
+        #123f55 45%,
+        #29245f 100%) !important;
+
+    overflow-y: auto !important;
+
+    /* OCULTO */
+    transform: translateX(-110%) !important;
+
+    transition: transform 0.25s ease !important;
   }
 
-  .sidebar.closed {
-    transform: translateX(-100%);
-  }
-
-
-  /* -----------------------------------------
-     NAVBAR
-     ----------------------------------------- */
-
-  .navbar {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .navbar-content {
-    width: 100%;
-    min-width: 0;
-    padding: 0 16px;
-  }
-
-  .menu-toggle,
-  .hamburger,
-  .mobile-menu-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-
-  /* -----------------------------------------
-     GRID
-     ----------------------------------------- */
-
-  .grid,
-  .cards-grid,
-  .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .two-columns,
-  .three-columns,
-  .four-columns {
-    grid-template-columns: 1fr;
+  /* SIDEBAR ABIERTO */
+  .sidebar.sidebar-abierto {
+    transform: translateX(0) !important;
   }
 
 
-  /* -----------------------------------------
-     FLEX
-     ----------------------------------------- */
+  /* -----------------------------
+     BOTÓN HAMBURGUESA
+     ----------------------------- */
 
-  .row,
-  .flex-row {
-    flex-wrap: wrap;
+  .btn-hamburguesa {
+    display: flex !important;
+
+    position: fixed !important;
+
+    top: 14px !important;
+    left: 14px !important;
+
+    width: 44px !important;
+    height: 44px !important;
+
+    z-index: 3000 !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 0 !important;
+
+    background: rgba(255, 255, 255, 0.92) !important;
+
+    color: #18212f !important;
+
+    border: none !important;
+    border-radius: 12px !important;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+
+    cursor: pointer !important;
   }
 
-  .responsive-row {
-    flex-direction: column;
-    align-items: stretch;
+
+  /* -----------------------------
+     CONTENEDORES DE PÁGINA
+     ----------------------------- */
+
+  .contenido-pagina {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
   }
 
 
-  /* -----------------------------------------
+  /* -----------------------------
+     DASHBOARD
+     ----------------------------- */
+
+  .dashboard {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .tarjetas-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .dashboard-fila {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  .dashboard-caja {
+    width: 100% !important;
+  }
+
+
+  /* -----------------------------
      HEADERS
-     ----------------------------------------- */
+     ----------------------------- */
 
-  .page-header,
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .page-title {
-    font-size: 24px;
-    line-height: 1.2;
-  }
-
-  .section-title {
-    font-size: 20px;
+  .cuentas-header,
+  .trans-header,
+  .metas-header,
+  .calendario-header,
+  .suscripciones-header,
+  .aprendizaje-header {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
   }
 
 
-  /* -----------------------------------------
-     BOTONES
-     ----------------------------------------- */
+  /* -----------------------------
+     CUENTAS
+     ----------------------------- */
 
-  .actions,
-  .button-group {
-    width: 100%;
-    flex-wrap: wrap;
+  .cuentas-page {
+    width: 100% !important;
+    min-width: 0 !important;
   }
 
-  .actions button,
-  .button-group button {
-    max-width: 100%;
+  .cuentas-lista {
+    grid-template-columns: 1fr !important;
   }
 
-
-  /* -----------------------------------------
-     FORMULARIOS
-     ----------------------------------------- */
-
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .form-group {
-    width: 100%;
-    min-width: 0;
-  }
-
-  input,
-  select,
-  textarea {
-    max-width: 100%;
-    box-sizing: border-box;
+  .cuenta-tarjeta {
+    width: 100% !important;
   }
 
 
-  /* -----------------------------------------
-     TABLAS
-     ----------------------------------------- */
+  /* -----------------------------
+     TRANSACCIONES
+     ----------------------------- */
 
-  .table-container,
-  .table-wrapper {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  .transacciones-page {
+    width: 100% !important;
+    min-width: 0 !important;
   }
 
-  table {
-    min-width: 600px;
+  .trans-botones-header {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
   }
 
-
-  /* -----------------------------------------
-     MODALES
-     ----------------------------------------- */
-
-  .modal {
-    width: calc(100% - 32px);
-    max-width: calc(100% - 32px);
-    margin: 16px;
+  .trans-totales {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
-  .modal-content {
-    max-width: 100%;
-    box-sizing: border-box;
+  .trans-lista-section {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .transaccion-item {
+    min-width: 0 !important;
   }
 
 
-  /* -----------------------------------------
+  /* -----------------------------
+     METAS
+     ----------------------------- */
+
+  .metas-page {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .resumen-metas {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .metas-lista {
+    grid-template-columns: 1fr !important;
+  }
+
+
+  /* -----------------------------
+     SUSCRIPCIONES
+     ----------------------------- */
+
+  .suscripciones-page {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .suscripciones-lista {
+    grid-template-columns: 1fr !important;
+  }
+
+
+  /* -----------------------------
      CALENDARIO
-     ----------------------------------------- */
+     ----------------------------- */
 
-  .calendar {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
+  .calendario-page {
+    width: 100% !important;
+    min-width: 0 !important;
   }
 
-  .calendar-grid {
-    min-width: 600px;
+  .calendario-card {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: auto !important;
   }
 
-
-  /* -----------------------------------------
-     TARJETAS
-     ----------------------------------------- */
-
-  .card {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+  .calendario-grid {
+    min-width: 500px !important;
   }
 
 
-  /* -----------------------------------------
-     TEXTO
-     ----------------------------------------- */
+  /* -----------------------------
+     MODALES
+     ----------------------------- */
 
-  .text-large {
-    font-size: 24px;
+  .modal-contenido {
+    width: calc(100% - 32px) !important;
+    max-width: calc(100% - 32px) !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
   }
 
-  .text-medium {
-    font-size: 18px;
+
+  /* -----------------------------
+     FORMULARIOS
+     ----------------------------- */
+
+  .formulario,
+  .formulario-cuenta,
+  .formulario-meta,
+  .formulario-tarea,
+  .formulario-suscripcion {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
   }
 
-  .text-small {
-    font-size: 14px;
-  }
 }
 
 
 /* =========================================
-   MÓVILES PEQUEÑOS
+   MÓVIL PEQUEÑO
    ========================================= */
 
 @media (max-width: 480px) {
 
-  .main-content {
-    padding: 12px;
+  .contenido {
+    padding: 58px 12px 16px !important;
   }
 
-  .page-title {
-    font-size: 21px;
+  .tarjetas-grid {
+    grid-template-columns: 1fr !important;
   }
 
-  .section-title {
-    font-size: 18px;
+  .trans-totales {
+    grid-template-columns: 1fr !important;
   }
 
-  .card {
-    padding: 14px;
+  .resumen-metas {
+    grid-template-columns: 1fr !important;
   }
 
-  button {
-    max-width: 100%;
+  .modal-contenido {
+    width: calc(100% - 20px) !important;
+    max-width: calc(100% - 20px) !important;
+    padding: 20px 16px !important;
   }
 
-  .modal {
-    width: calc(100% - 24px);
-    max-width: calc(100% - 24px);
-    margin: 12px;
-  }
 }
