@@ -1,18 +1,20 @@
 .transacciones-page {
     --tp-accent-1: var(--acento);
     --tp-accent-2: var(--acento-oscuro);
-    --tp-positivo: #6B7A2E;
-    --tp-negativo: #DC2626;
 
+    color: var(--texto);
+    box-sizing: border-box;
     padding: 32px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 900px;
-    margin: 0 auto;
     width: 100%;
-    box-sizing: border-box;
 }
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .trans-header {
     display: flex;
@@ -22,103 +24,194 @@
 
 .trans-header h1 {
     font-size: 28px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--texto);
+    letter-spacing: -0.01em;
 }
+
+
+/* =========================================================
+   BOTÓN EXPORTAR
+   ========================================================= */
 
 .btn-exportar {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: none;
-    border: 1px solid var(--borde);
+
+    border: 1px solid var(--glass-border);
     border-radius: 999px;
-    padding: 8px 16px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--texto-gris);
+    padding: 12px 22px;
+
+    background: transparent;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+    color: var(--texto);
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
     cursor: pointer;
 }
 
 .btn-exportar:hover {
-    background: var(--fondo-hover);
-    color: var(--texto);
+    background: rgba(255, 255, 255, 0.16);
 }
 
-/* Tarjetas de totales (Total Ingresos / Total Gastos) */
+
+/* =========================================================
+   TARJETAS DE TOTALES
+   ========================================================= */
+
 .trans-totales {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
-    margin-bottom: 4px;
 }
+
+
+/* =========================================================
+   TARJETAS GRANDES (mismo tratamiento que dashboard-stat-card)
+   ========================================================= */
 
 .tarjeta-total {
     flex: 1;
     min-width: 220px;
-    border-radius: 20px;
-    padding: 24px 28px;
-    box-shadow: 0 1px 3px var(--sombra), 0 1px 2px var(--sombra-suave);
+
+    position: relative;
+    overflow: hidden;
+
+    background: transparent;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-radius: 24px;
+    padding: 28px 32px;
+
+    transition: background 0.2s;
 }
 
+.tarjeta-total:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+
+/* =========================================================
+   TEXTO DE LAS TARJETAS
+   ========================================================= */
+
 .tarjeta-total p {
-    font-size: 14px;
-    opacity: 0.75;
-    margin-bottom: 8px;
-    color: inherit;
+    position: relative;
+    z-index: 2;
+
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--texto);
+    letter-spacing: -0.01em;
+
+    margin-bottom: 10px;
 }
 
 .tarjeta-total h2 {
-    font-size: 28px;
-    font-weight: 800;
-    color: inherit;
+    position: relative;
+    z-index: 2;
+
+    font-size: clamp(22px, 2vw, 30px);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--texto);
 }
 
-.tarjeta-total-ingreso {
-    background: linear-gradient(100deg, var(--banner-inicio), var(--banner-fin));
-    color: var(--acento-texto);
-    border: 1px solid var(--borde);
-    font-weight: 700;
+.tarjeta-total-ingreso h2 {
+    color: var(--positivo);
 }
 
-.tarjeta-total-gasto {
-    background: var(--tarjeta);
-    border: 1px solid var(--borde);
-    color: var(--tp-negativo);
-    font-weight: 700;
+.tarjeta-total-gasto h2 {
+    color: var(--negativo);
 }
 
-/* Filtros tipo pill */
+
+/* =========================================================
+   SECCIÓN DE LISTA (mismo tratamiento que dashboard-caja)
+   ========================================================= */
+
+.trans-lista-section {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    background: transparent;
+    border: 1px solid var(--glass-border-soft);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-radius: 24px;
+    padding: 32px;
+
+    flex: 1;
+}
+
+.trans-lista-section::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* =========================================================
+   FILTROS (mismo tratamiento que tabs-periodo)
+   ========================================================= */
+
 .trans-filtros {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    padding: 0px 0px 15px 0px;
+    display: inline-flex;
+    gap: 4px;
+
+    background: transparent;
+    border: 1px solid var(--glass-border-soft);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-radius: 10px;
+    padding: 3px;
+    margin-bottom: 20px;
 }
 
 .trans-filtros button {
-    padding: 10px 18px;
-    border-radius: 999px;
-    border: 1px solid var(--borde);
-    background-color: var(--tarjeta);
-    cursor: pointer;
-    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+
+    font-size: 12px;
     font-weight: 600;
     color: var(--texto-gris);
+
     white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .trans-filtros button:hover {
-    background-color: var(--fondo-hover);
+    color: var(--texto);
 }
 
 .trans-filtros button.activo {
-    background: linear-gradient(135deg, var(--tp-accent-1), var(--tp-accent-2));
-    color: var(--acento-texto);
-    border-color: transparent;
+    background: rgba(255, 255, 255, 0.28);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    color: var(--texto);
+    font-weight: 700;
 }
 
-/* Grupos por fecha */
+
+/* =========================================================
+   GRUPOS POR FECHA
+   ========================================================= */
+
 .trans-grupo {
     display: flex;
     flex-direction: column;
@@ -132,33 +225,69 @@
     color: var(--texto-gris);
 }
 
+
+/* =========================================================
+   LISTA
+   ========================================================= */
+
 .trans-lista {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
+
+/* =========================================================
+   TRANSACCIÓN (mismo tratamiento que fila-movimiento-reciente)
+   ========================================================= */
+
 .transaccion-item {
     display: flex;
     align-items: center;
     gap: 14px;
-    background-color: var(--tarjeta);
-    border: 1px solid var(--borde);
-    border-radius: 16px;
-    padding: 10px 20px;
+
+    padding: 12px 16px;
+    border-radius: 14px;
+
+    background: transparent;
+    border: 1px solid var(--glass-border-soft);
+
+    transition: background 0.2s, border-color 0.2s;
 }
+
+.transaccion-item:hover {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: var(--glass-border);
+}
+
+
+/* =========================================================
+   ICONO (mismo tratamiento que fila-movimiento-avatar)
+   ========================================================= */
 
 .transaccion-icono {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: var(--fondo-alt);
+
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--texto-gris);
     flex-shrink: 0;
+
+    background: transparent;
+    border: 1px solid var(--glass-border-soft);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--texto);
 }
+
+
+/* =========================================================
+   INFORMACIÓN
+   ========================================================= */
 
 .transaccion-info {
     flex: 1;
@@ -166,55 +295,84 @@
 }
 
 .transaccion-descripcion {
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 800;
     color: var(--texto);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .transaccion-meta {
-    font-size: 0.85rem;
+    font-size: 11px;
+    font-weight: 600;
     color: var(--texto-gris);
     margin-top: 2px;
 }
 
+
+/* =========================================================
+   MONTOS
+   ========================================================= */
+
 .monto-ingreso {
-    font-size: 1rem;
+    font-size: 13px;
     font-weight: 700;
-    color: var(--tp-positivo);
+    color: var(--positivo);
     white-space: nowrap;
 }
-
 
 .monto-gasto {
-    font-size: 1rem;
+    font-size: 13px;
     font-weight: 700;
-    color: var(--tp-negativo);
+    color: var(--negativo);
     white-space: nowrap;
 }
+
+
+/* =========================================================
+   BOTONES EDITAR / ELIMINAR
+   ========================================================= */
 
 .btn-editar-cuenta,
 .btn-eliminar {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--texto-gris);
+
     display: flex;
     align-items: center;
     padding: 4px;
+
+    color: var(--texto-gris);
+    transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .btn-editar-cuenta:hover {
     color: var(--texto);
+    transform: scale(1.08);
 }
 
 .btn-eliminar:hover {
-    color: var(--tp-negativo);
+    color: var(--negativo);
+    transform: scale(1.08);
 }
+
+
+/* =========================================================
+   ESTADO VACÍO
+   ========================================================= */
 
 .vacio {
     text-align: center;
-    color: var(--texto-muted);
+    color: var(--texto-gris);
     padding: 60px 0;
 }
+
+
+/* =========================================================
+   PAGINACIÓN (mismo tratamiento que dashboard-icon-btn)
+   ========================================================= */
 
 .trans-paginacion {
     display: flex;
@@ -229,30 +387,67 @@
     min-width: 36px;
     height: 36px;
     padding: 0 10px;
-    border-radius: 8px;
-    border: 1px solid var(--borde);
-    background: var(--tarjeta);
-    color: var(--texto);
-    font-size: 0.9rem;
+
+    border-radius: 10px;
+    border: 1px solid var(--glass-border-soft);
+
+    background: transparent;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+    font-size: 13px;
     font-weight: 600;
+    color: var(--texto);
+
     cursor: pointer;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s ease, color 0.15s ease;
 }
 
 .pagina-btn:hover:not(:disabled) {
-    background: var(--fondo-hover);
+    background: rgba(255, 255, 255, 0.16);
 }
 
 .pagina-btn.activo {
-    background: var(--acento);
-    color: var(--acento-texto);
-    border-color: var(--acento);
+    background: rgba(255, 255, 255, 0.28);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    font-weight: 700;
 }
 
 .pagina-btn:disabled {
-    opacity: 0.4;
+    opacity: 0.35;
     cursor: not-allowed;
 }
+
+
+/* =========================================================
+   EFECTO "RELUCIENTE" (idéntico al del dashboard)
+   ========================================================= */
+
+.tarjeta-total::before,
+.trans-lista-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.35) 50%, transparent 100%);
+    transform: skewX(-20deg);
+    pointer-events: none;
+    transition: left 0.85s ease;
+    z-index: 1;
+}
+
+.tarjeta-total:hover::before
+{
+    left: 130%;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (max-width: 768px) {
     .transacciones-page {
@@ -261,5 +456,13 @@
 
     .transaccion-item {
         flex-wrap: wrap;
+    }
+
+    .trans-totales {
+        flex-direction: column;
+    }
+
+    .tarjeta-total {
+        min-width: 100%;
     }
 }

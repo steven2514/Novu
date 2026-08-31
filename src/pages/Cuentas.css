@@ -1,9 +1,20 @@
+/* =========================================================
+   CUENTAS - LIQUID GLASS
+   ========================================================= */
+
 .cuentas-page {
     padding: 2rem;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
 }
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .cuentas-header {
     display: flex;
@@ -15,12 +26,18 @@
 
 .cuentas-header h1 {
     font-size: 1.8rem;
+    font-weight: 800;
+
     color: var(--texto);
+    letter-spacing: -0.01em;
+
+    margin: 0;
 }
 
 .cuentas-header p {
     color: var(--texto-gris);
     font-size: 1rem;
+    margin-top: 6px;
 }
 
 .cuentas-header-botones {
@@ -29,28 +46,115 @@
     flex-wrap: wrap;
 }
 
+
+/* =========================================================
+   TARJETA "SUMA DE TUS CUENTAS" (mismo tratamiento que tarjeta-total)
+   ========================================================= */
+
+.banner-suma {
+    position: relative;
+    overflow: hidden;
+
+    padding: 28px 32px;
+
+    background: transparent;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-radius: 24px;
+
+    transition: background 0.2s;
+}
+
+.banner-suma:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.banner-suma p {
+    position: relative;
+    z-index: 2;
+
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--texto);
+    letter-spacing: -0.01em;
+
+    margin-bottom: 10px;
+}
+
+.banner-suma h2 {
+    position: relative;
+    z-index: 2;
+
+    font-size: clamp(24px, 2vw, 32px);
+    line-height: 1.2;
+
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--texto);
+}
+
+/* Efecto "reluciente" — solo el banner de totales */
+.banner-suma::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.35) 50%, transparent 100%);
+    transform: skewX(-20deg);
+    pointer-events: none;
+    transition: left 0.85s ease;
+    z-index: 1;
+}
+
+.banner-suma:hover::before {
+    left: 130%;
+}
+
+
+/* =========================================================
+   SECCIÓN VACÍA (mismo tratamiento que dashboard-caja)
+   ========================================================= */
+
 .cuenta-vacio {
     width: 100%;
-    background: var(--tarjeta);
-    border-radius: 16px;
-    padding: 3rem;
-    text-align: center;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    box-shadow: 0 1px 3px var(--sombra);
+
+    padding: 3.5rem;
+    text-align: center;
+
+    background: transparent;
+    border: 1px solid var(--glass-border-soft);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-radius: 24px;
 }
 
 .cuenta-vacio p:first-child {
     font-size: 1.2rem;
-    font-weight: bold;
+    font-weight: 750;
     color: var(--texto);
+    margin: 0;
 }
 
 .cuenta-vacio p:last-of-type {
     color: var(--texto-gris);
+    margin: 0;
 }
+
+
+/* =========================================================
+   LISTA + TARJETA DE CUENTA (mismo tratamiento que fila-item / transaccion-item)
+   ========================================================= */
 
 .cuentas-lista {
     display: grid;
@@ -59,21 +163,24 @@
 }
 
 .cuenta-tarjeta {
-    background: var(--tarjeta);
-    border-radius: 16px;
-    padding: 1.2rem 1.4rem;
-    box-shadow: 0 1px 3px var(--sombra);
+    padding: 16px 20px;
+
+    background: transparent;
+    border: 1px solid var(--glass-border-soft);
+    border-radius: 18px;
+
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 10px 12px;
-    transition: transform 0.15s, box-shadow 0.15s;
+
+    transition: background 0.2s, border-color 0.2s;
 }
 
 .cuenta-tarjeta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--sombra-fuerte);
+    background: rgba(255, 255, 255, 0.10);
+    border-color: var(--glass-border);
 }
 
 .cuenta-tarjeta-izq {
@@ -119,4 +226,105 @@
     color: var(--texto);
     font-size: 1.05rem;
     white-space: nowrap;
+}
+
+
+/* =========================================================
+   ICONO (mismo tratamiento que transaccion-icono)
+   ========================================================= */
+
+.icono-circulo {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+    border: 1px solid var(--glass-border-soft);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+    color: var(--texto);
+}
+
+
+/* =========================================================
+   BOTÓN ELIMINAR / EDITAR
+   ========================================================= */
+
+.btn-fila-eliminar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    border-radius: 10px;
+    border: 1px solid var(--glass-border-soft);
+
+    background: transparent;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    color: var(--texto-gris);
+
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-fila-eliminar:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: var(--negativo);
+    transform: scale(1.05);
+}
+
+
+/* =========================================================
+   BOTONES DEL HEADER
+   ========================================================= */
+
+.cuentas-header .btn-pildora-secundario {
+    background: transparent;
+    color: var(--texto);
+    border: 1px solid var(--glass-border-soft);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.cuentas-header .btn-pildora-secundario:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 640px) {
+    .cuentas-page {
+        padding: 20px;
+    }
+
+    .cuentas-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .cuenta-tarjeta {
+        flex-wrap: wrap;
+    }
+
+    .cuenta-tarjeta-der {
+        width: 100%;
+        justify-content: space-between;
+        margin-left: 58px;
+    }
 }

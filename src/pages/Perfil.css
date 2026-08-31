@@ -1,6 +1,18 @@
+```css
+/* =========================================================
+   PERFIL - LIQUID GLASS
+   Mismo lenguaje visual del Dashboard
+   ========================================================= */
+
 .perfil-page {
-  padding: 2rem 10rem;
+  padding: 32px;
+  width: 100%;
+  box-sizing: border-box;
 }
+
+/* =========================================================
+   LOADING
+   ========================================================= */
 
 .perfil-loading {
   text-align: center;
@@ -9,70 +21,190 @@
   font-size: 1.1rem;
 }
 
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 .perfil-header {
-  margin-bottom: 2rem;
+  padding: 30px 0px 0px 10px;
+  margin-bottom: 20px;
 }
 
 .perfil-header h1 {
-  font-size: 1.4rem;
+  font-size: 34px;
   color: var(--texto);
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .perfil-header p {
   color: var(--texto-gris);
-  font-size: 1rem;
-  margin-top: 0.25rem;
+  font-size: 15px;
+  margin-top: 6px;
 }
+
+/* =========================================================
+   GRID
+   ========================================================= */
 
 .perfil-grid {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  
+  gap: 20px;
 }
 
+/* =========================================================
+   TARJETAS - LIQUID GLASS
+   ========================================================= */
 
-/* .tarjeta-lista ya trae fondo, borde, padding y radio desde index.css */
+.perfil-page .tarjeta-lista {
+  position: relative;
+  overflow: hidden;
 
-.perfil-card-peligro {
+  background: transparent !important;
+
+  border: 1px solid var(--glass-border-soft);
+  border-radius: 24px;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 8px 20px rgba(0, 0, 0, 0.15);
+
+  transition:
+    transform 0.25s ease,
+    background 0.2s ease,
+    box-shadow 0.25s ease;
+}
+
+/* =========================================================
+   EFECTO DE LUZ
+   ========================================================= */
+
+.perfil-page .tarjeta-lista::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: -75%;
+
+  width: 45%;
+  height: 100%;
+
+  background:
+    linear-gradient(115deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 100%);
+
+  transform: skewX(-20deg);
+
+  pointer-events: none;
+
+  transition: left 0.85s ease;
+
+  z-index: 1;
+}
+
+.perfil-page .tarjeta-lista:hover::before {
+  left: 130%;
+}
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.perfil-page .tarjeta-lista:hover {
+  transform: translateY(-2px);
+
+  background: rgba(255, 255, 255, 0.16) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 12px 28px rgba(0, 0, 0, 0.17);
+}
+
+.perfil-page .tarjeta-lista>* {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================================
+   TARJETA PELIGRO
+   ========================================================= */
+
+.perfil-page .perfil-card-peligro {
   border-color: var(--peligro-claro);
 }
 
+/* =========================================================
+   TÍTULO DE TARJETA
+   ========================================================= */
+
 .perfil-card-titulo {
-  font-size: 1.1rem;
-  font-weight: 660;
+  font-size: 18px;
+  font-weight: 800;
   color: var(--texto);
-  margin-bottom: 1rem;
+
+  margin-bottom: 16px;
+
   display: flex;
   align-items: center;
+
   gap: 0.75rem;
-  padding: 20px 0px 0px 20px;
+
+  padding: 24px 24px 0;
 }
+
+/* =========================================================
+   CUERPO
+   ========================================================= */
 
 .perfil-card-body {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 5px 15px 15px 20px;
+
+  padding: 4px 24px 24px;
 }
 
 .perfil-card-body label {
-  font-size: 0.9rem;
+  font-size: 13px;
   font-weight: 600;
   color: var(--texto-gris);
-  margin-bottom: 0.3rem;
+  margin-bottom: 4px;
 }
+
+/* =========================================================
+   INPUTS Y SELECTS
+   ========================================================= */
 
 .perfil-card-body input,
 .perfil-card-body select {
-  padding: 0.65rem 0.75rem;
-  border: 1px solid var(--borde);
-  border-radius: 8px;
-  background-color: var(--fondo);
+  padding: 12px 14px;
+
+  border: 1px solid var(--glass-border-soft);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
   color: var(--texto);
-  font-size: 0.95rem;
+
+  font-size: 14px;
+
   outline: none;
-  transition: border-color 0.2s;
+
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+
   width: 100%;
   box-sizing: border-box;
 }
@@ -80,38 +212,77 @@
 .perfil-card-body input:focus,
 .perfil-card-body select:focus {
   border-color: var(--acento);
+
+  background-color: rgba(255, 255, 255, 0.12);
+
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.06);
 }
 
-.perfil-card-body > button.btn-pildora-acento,
-.perfil-card-body > button.btn-pildora-secundario {
-  align-self: flex-start;
-}
-
-.perfil-card-body > button.btn-ancho-completo {
-  align-self: stretch;
-}
+/* =========================================================
+   INPUT DESHABILITADO
+   ========================================================= */
 
 .perfil-input-disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.perfil-btn.peligro {
-  background: none;
-  color: var(--peligro);
-  border: 1px solid var(--peligro);
-  padding: 0.65rem 1.25rem;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+.perfil-card-body>button.btn-pildora-acento,
+.perfil-card-body>button.btn-pildora-secundario {
   align-self: flex-start;
-  transition: background 0.2s;
+}
+
+.perfil-card-body>button.btn-ancho-completo {
+  align-self: stretch;
+}
+
+.btn-ancho-completo {
+  width: 100%;
+}
+
+/* =========================================================
+   BOTÓN PELIGRO
+   ========================================================= */
+
+.perfil-btn.peligro {
+  background: rgba(241, 108, 122, 0.08);
+
+  color: var(--peligro);
+
+  border: 1px solid var(--peligro);
+
+  padding: 10px 20px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  align-self: flex-start;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .perfil-btn.peligro:hover {
   background-color: var(--peligro-claro);
+  transform: translateY(-1px);
 }
+
+/* =========================================================
+   BOTONES DESHABILITADOS
+   ========================================================= */
 
 .btn-pildora-acento:disabled,
 .btn-pildora-secundario:disabled {
@@ -119,11 +290,10 @@
   cursor: not-allowed;
 }
 
-.btn-ancho-completo {
-  width: 100%;
-}
+/* =========================================================
+   TOGGLE GRANDE
+   ========================================================= */
 
-/* ─── Apariencia: píldoras grandes (tema / idioma) ─── */
 .perfil-toggle-grande {
   display: flex;
   gap: 0.6rem;
@@ -132,24 +302,52 @@
 
 .perfil-toggle-grande button {
   flex: 1;
+
   min-width: 100px;
-  padding: 0.85rem;
-  border: none;
+
+  padding: 12px;
+
+  border: 1px solid var(--glass-border-soft);
   border-radius: 999px;
-  background: var(--fondo-hover);
+
+  background: transparent;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
   color: var(--texto-gris);
-  font-size: 0.95rem;
+
+  font-size: 14px;
   font-weight: 600;
+
   cursor: pointer;
-  transition: all 0.2s;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.perfil-toggle-grande button:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
 }
 
 .perfil-toggle-grande button.activo {
   background-color: var(--acento);
+  border-color: transparent;
+
   color: var(--acento-texto);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
-/* ─── Color picker ─── */
+/* =========================================================
+   COLOR PICKER
+   ========================================================= */
+
 .perfil-colores {
   display: flex;
   gap: 0.6rem;
@@ -159,11 +357,22 @@
 .perfil-color-btn {
   width: 32px;
   height: 32px;
+
   border-radius: 50%;
+
   border: 2px solid transparent;
+
   cursor: pointer;
-  transition: transform 0.2s, border-color 0.2s;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+
   flex-shrink: 0;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 .perfil-color-btn:hover {
@@ -172,36 +381,48 @@
 
 .perfil-color-activo {
   border-color: var(--texto);
+
   transform: scale(1.15);
-  box-shadow: 0 0 0 2px var(--tarjeta), 0 0 0 4px var(--texto);
+
+  box-shadow:
+    0 0 0 2px var(--tarjeta),
+    0 0 0 4px var(--texto);
 }
 
-/* ─── Switches toggles ─── */
+/* =========================================================
+   SWITCHES
+   ========================================================= */
+
 .perfil-switch-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   gap: 1rem;
-  padding: 0.5rem 0;
+
+  padding: 8px 0;
 }
 
 .perfil-switch-label {
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--texto);
 }
 
 .perfil-switch-desc {
-  font-size: 0.8rem;
+  font-size: 12px;
   color: var(--texto-gris);
-  margin-top: 0.15rem;
+  margin-top: 3px;
 }
 
 .perfil-switch {
   position: relative;
+
   display: inline-block;
+
   width: 44px;
   height: 24px;
+
   flex-shrink: 0;
 }
 
@@ -213,69 +434,214 @@
 
 .perfil-switch-slider {
   position: absolute;
+
   cursor: pointer;
+
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--borde);
+
+  background-color: rgba(255, 255, 255, 0.14);
+
+  border: 1px solid var(--glass-border-soft);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
   border-radius: 24px;
+
   transition: 0.2s;
 }
 
 .perfil-switch-slider::before {
   content: "";
+
   position: absolute;
+
   height: 18px;
   width: 18px;
-  left: 3px;
-  bottom: 3px;
+
+  left: 2px;
+  bottom: 2px;
+
   background-color: white;
+
   border-radius: 50%;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.2);
+
   transition: 0.2s;
 }
 
-.perfil-switch input:checked + .perfil-switch-slider {
+.perfil-switch input:checked+.perfil-switch-slider {
   background-color: var(--acento);
+  border-color: transparent;
 }
 
-.perfil-switch input:checked + .perfil-switch-slider::before {
+.perfil-switch input:checked+.perfil-switch-slider::before {
   transform: translateX(20px);
 }
 
-.perfil-switch input:disabled + .perfil-switch-slider {
+.perfil-switch input:disabled+.perfil-switch-slider {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* ─── Conexiones ─── */
+/* =========================================================
+   CONEXIONES
+   ========================================================= */
+
 .perfil-conexiones-desc {
   margin-bottom: 0.25rem;
 }
 
+/* =========================================================
+   FILAS
+   ========================================================= */
+
+.perfil-page .fila-item {
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 12px 16px;
+
+  background: transparent !important;
+
+  border: 1px solid var(--glass-border-soft);
+  border-radius: 14px;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 6px 16px rgba(0, 0, 0, 0.10);
+
+  transition:
+    transform 0.25s ease,
+    background 0.2s ease,
+    box-shadow 0.25s ease;
+}
+
+/* =========================================================
+   BRILLO DE FILA
+   ========================================================= */
+
+.perfil-page .fila-item::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -75%;
+
+  width: 45%;
+  height: 100%;
+
+  background:
+    linear-gradient(115deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.30) 50%,
+      transparent 100%);
+
+  transform: skewX(-20deg);
+
+  pointer-events: none;
+
+  transition: left 0.75s ease;
+
+  z-index: 1;
+}
+
+.perfil-page .fila-item:hover::before {
+  left: 130%;
+}
+
+.perfil-page .fila-item:hover {
+  transform: translateY(-2px);
+
+  background: rgba(255, 255, 255, 0.12) !important;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.perfil-page .fila-item>* {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================================
+   ICONO NEUTRO
+   ========================================================= */
+
 .icono-circulo-neutro {
-  background-color: var(--fondo-hover);
+  background: rgba(255, 255, 255, 0.08);
+
+  border: 1px solid var(--glass-border-soft);
+
   color: var(--texto-gris);
 }
 
+/* =========================================================
+   ESTADO DE CONEXIÓN
+   ========================================================= */
+
 .perfil-conexion-estado {
-  font-size: 0.8rem;
+  font-size: 12px;
   color: var(--texto-gris);
   margin-top: 2px;
 }
 
+/* =========================================================
+   BOTÓN CONECTAR
+   ========================================================= */
+
 .btn-conectar {
   background-color: var(--acento);
+
   color: var(--acento-texto);
+
   border: none;
-  padding: 0.5rem 1.1rem;
+
+  padding: 8px 18px;
+
   border-radius: 999px;
-  font-weight: 600;
-  font-size: 0.85rem;
+
+  font-weight: 700;
+  font-size: 12px;
+
   cursor: pointer;
+
   white-space: nowrap;
+
   flex-shrink: 0;
+
   opacity: 1;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    0 4px 12px rgba(0, 0, 0, 0.12);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn-conectar:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .btn-conectar:disabled {
@@ -283,85 +649,61 @@
   opacity: 1;
 }
 
-/* ─── Categorías ─── */
+/* =========================================================
+   CATEGORÍAS
+   ========================================================= */
+
 .perfil-cat-info {
   flex: 1;
   min-width: 0;
 }
 
 .perfil-cat-nombre {
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--texto);
 }
 
 .perfil-error {
-  font-size: 0.85rem;
+  font-size: 13px;
   color: var(--peligro);
 }
 
 .perfil-card-desc {
-  font-size: 0.9rem;
+  font-size: 13px;
   color: var(--texto-gris);
 }
 
-/* ═══════════════════════════════════════
+/* =========================================================
    RESPONSIVE
-   ═══════════════════════════════════════ */
+   ========================================================= */
 
-/* Tablet */
 @media (max-width: 1024px) {
   .perfil-page {
-    padding: 2rem 3rem;
+    padding: 28px;
   }
 }
 
-/* Tablet chica / celular horizontal */
 @media (max-width: 768px) {
   .perfil-page {
-    padding: 1.5rem 1.25rem;
+    padding: 20px;
   }
 
   .perfil-header h1 {
-    font-size: 1.25rem;
+    font-size: 28px;
   }
 
   .perfil-card-titulo {
-    padding: 16px 0px 0px 16px;
-    font-size: 1rem;
+    padding: 20px 20px 0;
+    font-size: 16px;
   }
 
   .perfil-card-body {
-    padding: 5px 12px 12px 16px;
+    padding: 4px 20px 20px;
   }
 
   .perfil-switch-row {
     flex-wrap: wrap;
-  }
-}
-
-/* Celular */
-@media (max-width: 480px) {
-  .perfil-page {
-    padding: 1rem 0.85rem;
-  }
-
-  .perfil-header h1 {
-    font-size: 1.15rem;
-  }
-
-  .perfil-header p {
-    font-size: 0.9rem;
-  }
-
-  .perfil-card-titulo {
-    padding: 14px 0px 0px 14px;
-    gap: 0.5rem;
-  }
-
-  .perfil-card-body {
-    padding: 5px 10px 12px 14px;
-    gap: 0.6rem;
   }
 
   .perfil-toggle-grande {
@@ -371,6 +713,30 @@
   .perfil-toggle-grande button {
     min-width: 0;
   }
+}
+
+@media (max-width: 480px) {
+  .perfil-page {
+    padding: 16px;
+  }
+
+  .perfil-header h1 {
+    font-size: 26px;
+  }
+
+  .perfil-header p {
+    font-size: 14px;
+  }
+
+  .perfil-card-titulo {
+    padding: 18px 16px 0;
+    gap: 0.5rem;
+  }
+
+  .perfil-card-body {
+    padding: 4px 16px 18px;
+    gap: 0.6rem;
+  }
 
   .perfil-color-btn {
     width: 28px;
@@ -378,14 +744,20 @@
   }
 
   .btn-conectar {
-    padding: 0.45rem 0.9rem;
-    font-size: 0.8rem;
+    padding: 7px 14px;
+    font-size: 11px;
   }
 
   .perfil-btn.peligro,
-  .perfil-card-body > button.btn-pildora-acento,
-  .perfil-card-body > button.btn-pildora-secundario {
+  .perfil-card-body>button.btn-pildora-acento,
+  .perfil-card-body>button.btn-pildora-secundario {
     align-self: stretch;
     text-align: center;
   }
+
+  .perfil-page .fila-item {
+    padding: 11px 12px;
+  }
 }
+
+```

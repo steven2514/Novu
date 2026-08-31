@@ -6,6 +6,7 @@ import FormularioSuscripcion from "../components/FormularioSuscripcion/Formulari
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
+import { IconoMarca, buscarMarca } from '../components/IconoMarca';
 import exportarCSV from '../utils/exportarCSV';
 import { useToast } from '../Context/ToastContext';
 
@@ -75,7 +76,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
     }
 
     return (
-        <div className="suscripciones-page contenido-pagina">
+        <div className="suscripciones-page">
             {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
                 { titulo: 'Tus suscripciones', texto: 'Registra pagos recurrentes como Netflix o Spotify.' },
                 { titulo: 'Cuenta regresiva', texto: 'Mira cuántos días faltan para que se renueve cada suscripción.' }
@@ -105,31 +106,38 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                 </div>
             ) : (
                 <div className="suscripciones-lista">
-                    {suscripciones.map((sus, index) => (
-                        <div key={index} className="fila-item">
-                            <div className="icono-circulo" style={{ backgroundColor: (sus.color || '#6C63FF') + '22' }}>
-                                <Icon name={sus.icono} size={20} style={{ color: sus.color || '#6C63FF' }} />
+                    {suscripciones.map((sus, index) => {
+                        const marca = buscarMarca(sus.nombre);
+                        return (
+                            <div key={index} className="fila-item">
+                                {marca ? (
+                                    <IconoMarca nombre={sus.nombre} size={20} />
+                                ) : (
+                                    <div className="icono-circulo" style={{ backgroundColor: (sus.color || '#6C63FF') + '22' }}>
+                                        <Icon name={sus.icono} size={20} style={{ color: sus.color || '#6C63FF' }} />
+                                    </div>
+                                )}
+                                <div className="suscripcion-info">
+                                    <p className="suscripcion-nombre">{sus.nombre}</p>
+                                    <p className="suscripcion-detalle">{FRECUENCIAS[sus.frecuencia] || 'Mensual'} · Próximo cobro: {formatearFecha(sus.fecha_renovacion)}</p>
+                                </div>
+                                <div className="fila-derecha">
+                                    <span className="suscripcion-monto">${Number(sus.monto).toLocaleString('es-CO')}</span>
+                                    <button className="btn-pildora-acento btn-pagar" onClick={() => pagarSuscripcion(sus)}>Pagar</button>
+                                    <button className="btn-fila-eliminar" title="Editar" onClick={() => { setSuscripcionEditar(sus); setModalVisible(true); }}>
+                                        <Icon name="pencil" size={16} />
+                                    </button>
+                                    <button className="btn-fila-eliminar" title="Eliminar" onClick={() => {
+                                        supabase.from('suscripciones').delete().eq('id', sus.id).then(() => { });
+                                        setSuscripciones(prev => prev.filter(s => s.id !== sus.id));
+                                        mostrarToast('Suscripción eliminada', 'exito');
+                                    }}>
+                                        <Icon name="trash-2" size={16} />
+                                    </button>
+                                </div>
                             </div>
-                            <div className="suscripcion-info">
-                                <p className="suscripcion-nombre">{sus.nombre}</p>
-                                <p className="suscripcion-detalle">{FRECUENCIAS[sus.frecuencia] || 'Mensual'} · Próximo cobro: {formatearFecha(sus.fecha_renovacion)}</p>
-                            </div>
-                            <div className="fila-derecha">
-                                <span className="suscripcion-monto">${Number(sus.monto).toLocaleString('es-CO')}</span>
-                                <button className="btn-pildora-acento btn-pagar" onClick={() => pagarSuscripcion(sus)}>Pagar</button>
-                                <button className="btn-fila-eliminar" title="Editar" onClick={() => { setSuscripcionEditar(sus); setModalVisible(true); }}>
-                                    <Icon name="pencil" size={16} />
-                                </button>
-                                <button className="btn-fila-eliminar" title="Eliminar" onClick={() => {
-                                    supabase.from('suscripciones').delete().eq('id', sus.id).then(() => { });
-                                    setSuscripciones(prev => prev.filter(s => s.id !== sus.id));
-                                    mostrarToast('Suscripción eliminada', 'exito');
-                                }}>
-                                    <Icon name="trash-2" size={16} />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
 

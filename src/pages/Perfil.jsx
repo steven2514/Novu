@@ -33,7 +33,6 @@ function Perfil({ sesion, setSesion }) {
   const [cargandoPerfil, setCargandoPerfil] = useState(true);
 
   // ─── Apariencia ───
-  const [temaOscuro, setTemaOscuro] = useState(() => localStorage.getItem('tema') === 'oscuro');
   const [colorAcento, setColorAcento] = useState(() => localStorage.getItem('color-acento') || '#E8CB3D');
   // Nota: el idioma es solo un interruptor visual guardado en localStorage.
   // La app todavía no tiene sistema de traducción (i18n) real implementado.
@@ -60,13 +59,7 @@ function Perfil({ sesion, setSesion }) {
     });
   }, [sesion]);
 
-  // ─── Aplicar tema oscuro ───
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', temaOscuro ? 'dark' : 'light');
-    localStorage.setItem('tema', temaOscuro ? 'oscuro' : 'claro');
-  }, [temaOscuro]);
-
- function aplicarColor(hex) {
+  function aplicarColor(hex) {
     setColorAcento(hex);
     const obj = COLORES_ACENTO.find(c => c.hex === hex);
     document.documentElement.style.setProperty('--principal', hex);
@@ -168,15 +161,6 @@ function Perfil({ sesion, setSesion }) {
                     title={c.name}
                   />
                 ))}
-              </div>
-
-              <div className="perfil-toggle-grande">
-                <button className={temaOscuro ? 'activo' : ''} onClick={() => setTemaOscuro(true)}>
-                  Oscuro
-                </button>
-                <button className={!temaOscuro ? 'activo' : ''} onClick={() => setTemaOscuro(false)}>
-                  Claro
-                </button>
               </div>
 
               <div className="perfil-toggle-grande">

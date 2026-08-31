@@ -1,50 +1,5 @@
 :root {
-  --fondo: #F4F5F7;
-  --tarjeta: #FFFFFF;
-  --principal: #6C63FF;
-  --principal-oscuro: #4338CA;
-  --principal-claro: #EDE9FE;
-  --principal-muy-claro: #EEF2FF;
-  --positivo: #00A878;
-  --positivo-claro: #E6FBF5;
-  --negativo: #E53935;
-  --negativo-claro: #FFEAEA;
-  --ahorro: #FFB347;
-  --ahorro-claro: #FFF4E5;
-  --peligro: #FF6B6B;
-  --peligro-claro: #FEE2E2;
-  --ingreso: #16A34A;
-  --gasto: #DC2626;
-  --texto: #1A1A2E;
-  --texto-gris: #6B7280;
-  --texto-muted: #9CA3AF;
-  --borde: #E5E7EB;
-  --fondo-alt: #F9FAFB;
-  --fondo-hover: #F3F4F6;
-  --sombra: rgba(0, 0, 0, 0.08);
-  --sombra-suave: rgba(0, 0, 0, 0.06);
-  --sombra-fuerte: rgba(0, 0, 0, 0.12);
-  --acento: #DCE05A;
-  --acento-oscuro: #B9C93E;
-  --acento-texto: #22240A;
-  --banner-inicio: #DDE159;
-  --banner-fin: #8FC24A;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-[data-theme="light"] {
-  --borde: #D8DADF;
-  --sombra: rgba(0, 0, 0, 0.10);
-  --sombra-suave: rgba(0, 0, 0, 0.07);
-}
-
-[data-theme="dark"] {
-  --fondo: #000000;
+  --fondo: #0A1526;
   --tarjeta: #121212;
   --principal: #6C63FF;
   --principal-oscuro: #4338CA;
@@ -60,9 +15,9 @@
   --peligro-claro: #2E1A1A;
   --ingreso: #22C55E;
   --gasto: #EF4444;
-  --texto: #E5E7EB;
-  --texto-gris: #9CA3AF;
-  --texto-muted: #6B7280;
+  --texto: #F1F5FB;
+  --texto-gris: #DCE6F5;
+  --texto-muted: #B7C6DE;
   --borde: #262626;
   --fondo-alt: #0A0A0A;
   --fondo-hover: #1C1C1C;
@@ -74,12 +29,42 @@
   --acento-texto: #1A1A2E;
   --banner-inicio: #DDE159;
   --banner-fin: #7CB143;
+
+  --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+  --glass-bg-soft: rgba(255, 255, 255, 0.16);
+  --glass-border: rgba(255, 255, 255, 0.45);
+  --glass-border-soft: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  --glass-blur: blur(24px) saturate(200%);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  background: transparent;
 }
 
 body {
-  background-color: var(--fondo);
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: #0A0E14;
+  background-image:
+    radial-gradient(900px circle at 8% 8%, rgba(20, 184, 166, 0.55), transparent 60%),
+    radial-gradient(900px circle at 92% 92%, rgba(88, 60, 200, 0.55), transparent 60%),
+    radial-gradient(700px circle at 92% 92%, rgba(30, 100, 90, 0.25), transparent 65%),
+    radial-gradient(700px circle at 8% 8%, rgba(20, 100, 150, 0.25), transparent 65%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--texto);
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }
 
 h1,
@@ -95,15 +80,39 @@ b {
   font-weight: 700;
 }
 
-
 .layout {
   display: flex;
-  min-height: 100vh;
+  gap: 20px;
+  height: calc(100vh - 40px);
+  margin: 20px;
 }
 
 .contenido {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border-soft);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 20px 60px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+.glass-soft {
+  background: var(--glass-bg-soft);
+  border: 1px solid var(--glass-border-soft);
+  backdrop-filter: blur(26px) saturate(240%);
+  -webkit-backdrop-filter: blur(26px) saturate(240%);
 }
 
 .btn-cerrar-modal {
@@ -117,6 +126,11 @@ b {
   min-width: unset;
 }
 
+.btn-cerrar-modal:hover {
+  background-color: var(--fondo-hover);
+  color: var(--texto);
+}
+
 .formulario-header,
 .formulario-meta-header,
 .formulario-tarea-header {
@@ -126,7 +140,6 @@ b {
   margin-bottom: 16px;
 }
 
-/* Estilo Kaipo: compartido entre Suscripciones, Metas y Cuentas */
 .btn-pildora-acento {
   background-color: var(--acento);
   color: var(--acento-texto);
@@ -161,10 +174,12 @@ b {
 }
 
 .tarjeta-lista {
-  background: var(--tarjeta);
-  border: 1px solid var(--borde);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border-soft);
   border-radius: 16px;
-  box-shadow: 0 1px 3px var(--sombra), 0 1px 2px var(--sombra-suave);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   overflow: hidden;
 }
 
@@ -173,7 +188,7 @@ b {
   align-items: center;
   gap: 14px;
   padding: 1.1rem 1.4rem;
-  border-bottom: 1px solid var(--borde);
+  border-bottom: 1px solid var(--glass-border-soft);
 }
 
 .fila-item:last-child {
@@ -237,11 +252,6 @@ b {
   width: 100%;
   margin: 0 auto;
 }
-
-/* ══════════════════════════════════════════════════
-   Estilo Kaipo para modales / formularios
-   (Agregar transacción, Nueva meta, Nueva suscripción, Nueva cuenta)
-   ══════════════════════════════════════════════════ */
 
 .campo-pildora {
   width: 100%;
@@ -310,25 +320,6 @@ b {
   color: #1a1a1a;
 }
 
-.btn-cerrar-modal {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--texto-gris);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
-  border-radius: 50%;
-  transition: background 0.2s;
-}
-
-.btn-cerrar-modal:hover {
-  background-color: var(--fondo-hover);
-  color: var(--texto);
-}
-
-/* Selector circular de iconos (metas, suscripciones) */
 .icono-selector-grid {
   display: flex;
   flex-wrap: wrap;
@@ -355,7 +346,6 @@ b {
   color: var(--texto);
 }
 
-/* Selector de color */
 .color-selector-grid {
   display: flex;
   flex-wrap: wrap;
@@ -380,7 +370,6 @@ b {
   box-shadow: 0 0 0 2px var(--tarjeta), 0 0 0 4px var(--texto);
 }
 
-/* Header y body genéricos de modal */
 .modal-kaipo-header {
   display: flex;
   justify-content: space-between;
@@ -402,6 +391,6 @@ b {
 
 .modal-kaipo-body label {
   font-size: 0.85rem;
-  font-weight: 600;
+  fonta-weight: 600;
   color: var(--texto-gris);
 }

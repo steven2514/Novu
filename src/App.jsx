@@ -90,17 +90,6 @@ function App() {
         });
     }, [sesion]);
 
-    // Aplica el tema (oscuro/claro) al arrancar la app, antes de renderizar
-    // cualquier página. Si el usuario nunca eligió uno, arranca en oscuro por defecto.
-    useEffect(() => {
-        const tema = localStorage.getItem('tema');
-        const esOscuro = tema ? tema === 'oscuro' : true;
-        document.documentElement.setAttribute('data-theme', esOscuro ? 'dark' : 'light');
-        if (!tema) {
-            localStorage.setItem('tema', 'oscuro');
-        }
-    }, []);
-
     useEffect(() => {
         const hex = localStorage.getItem('color-acento');
         if (!hex) return;

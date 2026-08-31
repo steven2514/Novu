@@ -32,7 +32,7 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
     }
 
     return (
-        <div className="transacciones-page contenido-pagina">
+        <div className="transacciones-page">
             {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
                 { titulo: 'Tus transacciones', texto: 'Aquí ves todo tu historial de ingresos y gastos.' },
                 { titulo: 'Filtros', texto: 'Filtra por ingresos, gastos o ve todas las transacciones.' }
@@ -78,9 +78,9 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
                         : transaccionesPagina.map((t) => (
                             <div className="transaccion-item" key={t.id}>
                                 <div className="transaccion-icono" style={{
-                                    backgroundColor: t.tipo === 'ingreso' ? '#00D2A022' : '#FF6B6B22'
+                                    backgroundColor: t.tipo === 'ingreso' ? 'rgba(74, 222, 128, 0.16)' : 'rgba(241, 108, 122, 0.16)'
                                 }}>
-                                    <span style={{ color: t.tipo === 'ingreso' ? '#00D2A0' : '#FF6B6B' }}>
+                                    <span style={{ color: t.tipo === 'ingreso' ? '#4ADE80' : '#F16C7A' }}>
                                         <Icon name={t.tipo === 'ingreso' ? 'trending-up' : 'trending-down'} size={16} />
                                     </span>
                                 </div>

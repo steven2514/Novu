@@ -48,6 +48,14 @@ const ICON_MAP = {
   moon: Lucide.Moon,
   pencil: Lucide.Pencil,
   settings: Lucide.Settings,
+  search: Lucide.Search,
+  plus: Lucide.Plus,
+  download: Lucide.Download,
+  send: Lucide.Send,
+  'arrow-up-circle': Lucide.ArrowUpCircle,
+  'chevron-left': Lucide.ChevronLeft,
+  'chevron-right': Lucide.ChevronRight,
+  'piggy-bank': Lucide.PiggyBank,
 };
 
 export function Icon({
