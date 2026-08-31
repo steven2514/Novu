@@ -439,30 +439,267 @@
     z-index: 1;
 }
 
-.tarjeta-total:hover::before
-{
+.tarjeta-total:hover::before {
     left: 130%;
 }
 
 
 /* =========================================================
-   RESPONSIVE
+   RESPONSIVE - MOVIMIENTOS
    ========================================================= */
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .transacciones-page {
-        padding: 20px;
-    }
-
-    .transaccion-item {
-        flex-wrap: wrap;
+        padding: 24px;
     }
 
     .trans-totales {
-        flex-direction: column;
+        gap: 14px;
     }
 
     .tarjeta-total {
-        min-width: 100%;
+        min-width: 180px;
+        padding: 24px;
+    }
+
+    .trans-lista-section {
+        padding: 24px;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    /* CONTENEDOR PRINCIPAL */
+    .transacciones-page {
+        width: 100%;
+        min-width: 0;
+        padding: 16px;
+        gap: 16px;
+        box-sizing: border-box;
+        overflow: visible;
+    }
+
+    /* HEADER */
+    .trans-header {
+        width: 100%;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .trans-header h1 {
+        font-size: 24px;
+        line-height: 1.2;
+        margin: 0;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .btn-exportar {
+        padding: 10px 16px;
+        flex-shrink: 0;
+    }
+
+    /* TOTALES */
+    .trans-totales {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        width: 100%;
+    }
+
+    .tarjeta-total {
+        width: 100%;
+        min-width: 0;
+        padding: 18px;
+        border-radius: 18px;
+        box-sizing: border-box;
+    }
+
+    .tarjeta-total p {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .tarjeta-total h2 {
+        font-size: 22px;
+    }
+
+    /* LISTA */
+    .trans-lista-section {
+        width: 100%;
+        min-width: 0;
+        padding: 18px;
+        border-radius: 18px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        overflow-y: visible;
+    }
+
+    /* FILTROS */
+    .trans-filtros {
+        display: flex;
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 16px;
+        overflow-x: auto;
+        box-sizing: border-box;
+        scrollbar-width: none;
+    }
+
+    .trans-filtros::-webkit-scrollbar {
+        display: none;
+    }
+
+    .trans-filtros button {
+        flex-shrink: 0;
+        padding: 7px 12px;
+    }
+
+    /* GRUPOS */
+    .trans-grupo {
+        gap: 8px;
+    }
+
+    .trans-grupo-fecha {
+        font-size: 11px;
+    }
+
+    .trans-lista {
+        gap: 8px;
+    }
+
+    /* TRANSACCIÓN */
+    .transaccion-item {
+        width: 100%;
+        min-width: 0;
+        display: grid;
+        grid-template-columns: 40px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 12px;
+        box-sizing: border-box;
+    }
+
+    .transaccion-icono {
+        width: 38px;
+        height: 38px;
+    }
+
+    .transaccion-info {
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .transaccion-descripcion {
+        font-size: 13px;
+        max-width: 100%;
+    }
+
+    .transaccion-meta {
+        font-size: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .monto-ingreso,
+    .monto-gasto {
+        font-size: 12px;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    /* ACCIONES */
+    .btn-editar-cuenta,
+    .btn-eliminar {
+        padding: 5px;
+    }
+
+    /* PAGINACIÓN */
+    .trans-paginacion {
+        margin-top: 16px;
+        gap: 5px;
+    }
+
+    .pagina-btn {
+        min-width: 34px;
+        height: 34px;
+        padding: 0 8px;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .transacciones-page {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .trans-header {
+        align-items: stretch;
+    }
+
+    .trans-header h1 {
+        width: 100%;
+        flex: none;
+        font-size: 22px;
+    }
+
+    .btn-exportar {
+        width: 100%;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    .trans-totales {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .tarjeta-total {
+        padding: 16px;
+    }
+
+    .tarjeta-total h2 {
+        font-size: 21px;
+    }
+
+    .trans-lista-section {
+        padding: 14px;
+    }
+
+    .transaccion-item {
+        grid-template-columns: 36px minmax(0, 1fr) auto auto;
+        grid-template-rows: auto auto;
+        gap: 7px 9px;
+    }
+
+    .transaccion-icono {
+        width: 36px;
+        height: 36px;
+    }
+
+    .monto-ingreso,
+    .monto-gasto {
+        grid-column: 2;
+        grid-row: 2;
+        justify-self: start;
+        text-align: left;
+        margin: 0;
+    }
+
+    .btn-editar-cuenta {
+        grid-column: 3;
+        grid-row: 1;
+        position: static;
+    }
+
+    .btn-eliminar {
+        grid-column: 4;
+        grid-row: 1;
+        position: static;
     }
 }

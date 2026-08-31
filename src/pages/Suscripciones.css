@@ -1,324 +1,346 @@
 /* =========================================================
-   SUSCRIPCIONES - LIQUID GLASS
+   RESPONSIVE - SUSCRIPCIONES
    ========================================================= */
 
-.suscripciones-page {
-    padding: 32px;
+@media (max-width: 1024px) {
 
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-
-    width: 100%;
-    box-sizing: border-box;
-}
-
-
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.suscripciones-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-}
-
-.suscripciones-header h1 {
-    font-size: 28px;
-    font-weight: 800;
-
-    color: var(--texto);
-    letter-spacing: -0.01em;
-
-    margin: 0;
-}
-
-.suscripciones-header p {
-    color: var(--texto-gris);
-    font-size: 15px;
-    margin-top: 6px;
-}
-
-
-/* =========================================================
-   TARJETA TOTAL MENSUAL (mismo tratamiento que dashboard-stat-card)
-   ========================================================= */
-
-.tarjeta-total {
-    position: relative;
-    overflow: hidden;
-
-    padding: 28px 32px;
-
-    background: transparent;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 20px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    border-radius: 24px;
-
-    transition: background 0.2s;
-}
-
-.tarjeta-total:hover {
-    background: rgba(255, 255, 255, 0.16);
-}
-
-.tarjeta-total p {
-    position: relative;
-    z-index: 2;
-
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--texto);
-    letter-spacing: -0.01em;
-
-    margin-bottom: 10px;
-}
-
-.tarjeta-total h2 {
-    position: relative;
-    z-index: 2;
-
-    font-size: clamp(24px, 2vw, 32px);
-    line-height: 1.2;
-
-    font-weight: 900;
-    letter-spacing: -0.02em;
-    color: var(--texto);
-}
-
-
-/* Efecto "reluciente" — solo la tarjeta de total */
-.tarjeta-total::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -75%;
-    width: 45%;
-    height: 100%;
-    background: linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.35) 50%, transparent 100%);
-    transform: skewX(-20deg);
-    pointer-events: none;
-    transition: left 0.85s ease;
-    z-index: 1;
-}
-
-.tarjeta-total:hover::before {
-    left: 130%;
-}
-
-
-/* =========================================================
-   SECCIÓN VACÍA (mismo tratamiento que dashboard-caja)
-   ========================================================= */
-
-.seccion-vacia {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-
-    padding: 3.5rem;
-    text-align: center;
-
-    background: transparent;
-    border: 1px solid var(--glass-border-soft);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 20px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    border-radius: 24px;
-}
-
-.seccion-vacia p:first-child {
-    font-size: 1.2rem;
-    font-weight: 750;
-    color: var(--texto);
-    margin: 0;
-}
-
-.seccion-vacia p:last-of-type {
-    color: var(--texto-gris);
-    margin: 0;
-}
-
-
-/* =========================================================
-   INFO DE LA SUSCRIPCIÓN
-   ========================================================= */
-
-.suscripcion-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.suscripcion-nombre {
-    font-weight: 700;
-    color: var(--texto);
-    font-size: 1rem;
-}
-
-.suscripcion-detalle {
-    color: var(--texto-gris);
-    font-size: 0.85rem;
-    margin-top: 2px;
-}
-
-
-/* =========================================================
-   LISTA + FILA DE SUSCRIPCIÓN (mismo tratamiento que transaccion-item)
-   ========================================================= */
-
-.suscripciones-lista {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.suscripciones-lista .fila-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-
-    padding: 12px 16px;
-    border-radius: 14px;
-
-    background: transparent;
-    border: 1px solid var(--glass-border-soft);
-
-    transition: background 0.2s, border-color 0.2s;
-}
-
-.suscripciones-lista .fila-item:hover {
-    background: rgba(255, 255, 255, 0.10);
-    border-color: var(--glass-border);
-}
-
-
-/* =========================================================
-   ICONO (mismo tratamiento que transaccion-icono)
-   ========================================================= */
-
-.icono-circulo {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: transparent;
-    border: 1px solid var(--glass-border-soft);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-
-    color: var(--texto);
-}
-
-
-/* =========================================================
-   ACCIONES A LA DERECHA
-   ========================================================= */
-
-.fila-derecha {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-shrink: 0;
-}
-
-.suscripcion-monto {
-    font-weight: 700;
-    color: var(--texto);
-    font-size: 1rem;
-    min-width: 90px;
-    text-align: right;
-}
-
-.btn-pagar {
-    padding: 0.5rem 1.1rem;
-    font-size: 0.85rem;
-}
-
-
-/* =========================================================
-   BOTÓN ELIMINAR / EDITAR
-   ========================================================= */
-
-.btn-fila-eliminar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 32px;
-    height: 32px;
-
-    border-radius: 10px;
-    border: 1px solid var(--glass-border-soft);
-
-    background: transparent;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    color: var(--texto-gris);
-
-    cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}
-
-.btn-fila-eliminar:hover {
-    background: rgba(255, 255, 255, 0.16);
-    color: var(--negativo);
-    transform: scale(1.05);
-}
-
-
-/* =========================================================
-   BOTONES DEL HEADER
-   ========================================================= */
-
-.suscripciones-header .btn-pildora-secundario {
-    background: transparent;
-    color: var(--texto);
-    border: 1px solid var(--glass-border-soft);
-
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.suscripciones-header .btn-pildora-secundario:hover {
-    background: rgba(255, 255, 255, 0.16);
-}
-
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (max-width: 640px) {
     .suscripciones-page {
-        padding: 20px;
+        padding: 24px;
+        gap: 20px;
     }
 
     .suscripciones-header {
-        align-items: flex-start;
-        flex-direction: column;
+        gap: 16px;
     }
 
-    .fila-item {
-        flex-wrap: wrap;
+    .suscripciones-header h1 {
+        font-size: 26px;
     }
 
-    .fila-derecha {
+    .tarjeta-total {
+        padding: 24px 28px;
+    }
+}
+
+
+/* =========================================================
+   MÓVIL
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .suscripciones-page {
         width: 100%;
-        justify-content: space-between;
-        margin-left: 58px;
+        max-width: 100%;
+        min-width: 0;
+
+        padding: 16px;
+        gap: 16px;
+
+        box-sizing: border-box;
+    }
+
+
+    /* HEADER */
+
+    .suscripciones-header {
+        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+        gap: 14px;
+    }
+
+    .suscripciones-header h1 {
+        font-size: 25px;
+        line-height: 1.2;
+    }
+
+    .suscripciones-header p {
+        font-size: 14px;
+        margin-top: 4px;
+    }
+
+    .suscripciones-header>div:last-child {
+        width: 100%;
+
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+
+        gap: 8px !important;
+    }
+
+    .suscripciones-header>div:last-child button {
+        width: 100%;
+        min-width: 0;
+        min-height: 42px;
+
+        padding: 9px 10px;
+
+        box-sizing: border-box;
+        white-space: nowrap;
+    }
+
+
+    /* TOTAL */
+
+    .tarjeta-total {
+        width: 100%;
+
+        padding: 20px;
+
+        border-radius: 20px;
+
+        box-sizing: border-box;
+    }
+
+    .tarjeta-total p {
+        font-size: 14px;
+        margin-bottom: 7px;
+    }
+
+    .tarjeta-total h2 {
+        font-size: 27px;
+    }
+
+
+    /* LISTA */
+
+    .suscripciones-lista {
+        width: 100%;
+        min-width: 0;
+
+        display: flex;
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+
+    /* TARJETA DE SUSCRIPCIÓN */
+
+    .suscripciones-lista .fila-item {
+        width: 100%;
+        min-width: 0;
+
+        display: grid;
+
+        grid-template-columns: 46px minmax(0, 1fr);
+
+        grid-template-rows: auto auto;
+
+        column-gap: 12px;
+        row-gap: 12px;
+
+        padding: 14px;
+
+        box-sizing: border-box;
+
+        border-radius: 18px;
+    }
+
+
+    /* ICONO */
+
+    .suscripciones-lista .fila-item>.icono-circulo {
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    /* Si usa IconoMarca */
+    .suscripciones-lista .fila-item>div:first-child {
+        grid-column: 1;
+        grid-row: 1;
+
+        width: 46px;
+        height: 46px;
+
+        min-width: 46px;
+    }
+
+
+    /* INFORMACIÓN */
+
+    .suscripcion-info {
+        width: 100%;
+        min-width: 0;
+
+        grid-column: 2;
+        grid-row: 1;
+
+        align-self: center;
+    }
+
+    .suscripcion-nombre {
+        max-width: 100%;
+
+        font-size: 16px;
+        line-height: 1.2;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .suscripcion-detalle {
+        font-size: 12px;
+        line-height: 1.4;
+
+        white-space: normal;
+    }
+
+
+    /* ACCIONES */
+
+    .suscripciones-lista .fila-item .fila-derecha {
+        width: 100%;
+        min-width: 0;
+
+        grid-column: 1 / -1;
+        grid-row: 2;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        margin: 0;
+
+        padding-top: 10px;
+
+        border-top: 1px solid rgba(255, 255, 255, 0.10);
+    }
+
+
+    /* MONTO */
+
+    .suscripcion-monto {
+        min-width: 0;
+
+        margin-right: auto;
+
+        font-size: 16px;
+
+        text-align: left;
+
+        white-space: nowrap;
+    }
+
+
+    /* PAGAR */
+
+    .btn-pagar {
+        flex-shrink: 0;
+
+        padding: 9px 16px;
+
+        font-size: 13px;
+
+        border-radius: 999px;
+
+        white-space: nowrap;
+    }
+
+
+    /* EDITAR / ELIMINAR */
+
+    .suscripciones-lista .btn-fila-eliminar {
+        width: 36px;
+        height: 36px;
+
+        min-width: 36px;
+
+        flex-shrink: 0;
+
+        border-radius: 10px;
+    }
+
+
+    /* ESTADO VACÍO */
+
+    .seccion-vacia {
+        width: 100%;
+
+        padding: 32px 20px;
+
+        border-radius: 20px;
+
+        box-sizing: border-box;
+    }
+}
+
+
+/* =========================================================
+   MÓVIL PEQUEÑO
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .suscripciones-page {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .suscripciones-header h1 {
+        font-size: 23px;
+    }
+
+    .suscripciones-header>div:last-child {
+        grid-template-columns: 1fr;
+    }
+
+    .suscripciones-header>div:last-child button {
+        min-height: 42px;
+    }
+
+    .tarjeta-total {
+        padding: 18px;
+    }
+
+    .tarjeta-total h2 {
+        font-size: 25px;
+    }
+
+    .suscripciones-lista .fila-item {
+        padding: 13px;
+        grid-template-columns: 42px minmax(0, 1fr);
+        column-gap: 10px;
+    }
+
+    .suscripciones-lista .fila-item>.icono-circulo,
+    .suscripciones-lista .fila-item>div:first-child {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+    }
+
+    .suscripcion-nombre {
+        font-size: 15px;
+    }
+
+    .suscripcion-detalle {
+        font-size: 11px;
+    }
+
+    .suscripcion-monto {
+        font-size: 14px;
+    }
+
+    .btn-pagar {
+        padding: 8px 13px;
+        font-size: 12px;
+    }
+
+    .suscripciones-lista .btn-fila-eliminar {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
     }
 }
