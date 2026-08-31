@@ -1,434 +1,331 @@
-/* === RESPONSIVE MOBILE === */
-/* Archivo separado para no modificar CSS existente */
+/* =========================================
+   RESPONSIVE GLOBAL - NOVU
+   ========================================= */
 
-/* Ocultar hamburguesa en desktop */
-.btn-hamburguesa {
-  display: none !important;
+/* Evita desbordamiento horizontal */
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-/* === LAYOUT === */
+/* Imágenes y elementos multimedia */
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 1024px) {
+
+  /* Layout principal */
+  .main-content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Grids */
+  .grid,
+  .cards-grid,
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Contenedores */
+  .container,
+  .page-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Tablas */
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+
+/* =========================================
+   MÓVIL
+   ========================================= */
+
 @media (max-width: 768px) {
-  .layout {
-    flex-direction: column !important;
+
+  /* -----------------------------------------
+     LAYOUT
+     ----------------------------------------- */
+
+  body {
+    min-width: 0;
   }
 
-  .contenido {
-    width: 100% !important;
-    padding: 16px !important;
-    padding-top: 64px !important;
+  #root {
+    min-width: 0;
   }
 
-  /* === SIDEBAR === */
+  .main-content {
+    width: 100%;
+    min-width: 0;
+    margin-left: 0;
+    padding: 16px;
+  }
+
+  .container,
+  .page-container {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+
+  /* -----------------------------------------
+     SIDEBAR
+     ----------------------------------------- */
+
   .sidebar {
-    display: none !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    height: 100vh !important;
-    z-index: 999 !important;
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15) !important;
+    width: 280px;
+    max-width: 85vw;
+    position: fixed;
+    z-index: 1000;
   }
 
-  .sidebar.sidebar-abierto {
-    display: flex !important;
+  .sidebar.closed {
+    transform: translateX(-100%);
   }
 
-  .btn-hamburguesa {
-    display: flex !important;
-    position: fixed !important;
-    top: 16px !important;
-    left: 16px !important;
-    z-index: 1000 !important;
-    background-color: var(--principal) !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 8px !important;
-    padding: 8px 12px !important;
-    font-size: 20px !important;
-    cursor: pointer !important;
-  }
-
-  /* === DASHBOARD / INICIO === */
-  .dashboard {
-    padding: 0 !important;
-    gap: 16px !important;
-  }
-
-  .dashboard h1 {
-    font-size: 22px !important;
-  }
-
-  .tarjetas-grid {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 10px !important;
-  }
-
-  .dashboard-fila {
-    flex-direction: column !important;
-    margin-top: 16px !important;
-  }
-
-  .dashboard-caja {
-    width: 100% !important;
-    padding: 16px !important;
-  }
-
-  .dashboard-caja p {
-    padding: 20px 0 !important;
-  }
-
-  /* === CUENTAS === */
-  .cuentas-page {
-    padding: 0 !important;
-    gap: 1rem !important;
-  }
-
-  .cuentas-header {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 12px !important;
-  }
-
-  .cuentas-header h1 {
-    font-size: 1.4rem !important;
-  }
-
-  .cuentas-header button {
-    width: 100% !important;
-  }
-
-  .cuentas-balance {
-    padding: 1.5rem !important;
-  }
-
-  .cuentas-balance h2 {
-    font-size: 2rem !important;
-  }
-
-  .cuentas-lista {
-    justify-content: center !important;
-  }
-
-  .cuenta-tarjeta {
-    width: 100% !important;
-  }
-
-  /* === TRANSACCIONES === */
-  .transacciones-page {
-    padding: 0 !important;
-    gap: 16px !important;
-  }
-
-  .trans-header {
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
-
-  .trans-header h1 {
-    font-size: 22px !important;
-  }
-
-  .trans-botones-header {
-    width: 100% !important;
-  }
-
-  .trans-botones-header button {
-    flex: 1 !important;
-    text-align: center !important;
-    padding: 10px 12px !important;
-    font-size: 13px !important;
-  }
-
-  .trans-totales {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 10px !important;
-  }
 
-  .tarjeta-total {
-    padding: 16px !important;
-  }
-
-  .trans-lista-section {
-    padding: 16px !important;
-  }
-
-  .trans-filtros {
-    gap: 6px !important;
-  }
-
-  .trans-filtros button {
-    padding: 6px 12px !important;
-    font-size: 13px !important;
-    flex: 1 !important;
-  }
-
-  .transaccion-item {
-    flex-wrap: wrap !important;
-    gap: 8px !important;
-    padding: 12px 0 !important;
-  }
-
-  .transaccion-info {
-    min-width: 0 !important;
-    flex: 1 1 calc(100% - 90px) !important;
-  }
-
-  .transaccion-descripcion {
-    font-size: 14px !important;
-  }
-
-  .transaccion-meta {
-    font-size: 12px !important;
-  }
-
-  /* === SUSCRIPCIONES === */
-  .suscripciones-page {
-    padding: 0 !important;
-    gap: 1rem !important;
-  }
-
-  .suscripciones-header {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 12px !important;
-  }
-
-  .suscripciones-header h1 {
-    font-size: 1.4rem !important;
-  }
+  /* -----------------------------------------
+     NAVBAR
+     ----------------------------------------- */
 
-  .suscripciones-header button {
-    width: 100% !important;
+  .navbar {
+    width: 100%;
+    min-width: 0;
   }
 
-  .tarjeta-gasto {
-    padding: 1.5rem !important;
+  .navbar-content {
+    width: 100%;
+    min-width: 0;
+    padding: 0 16px;
   }
 
-  .tarjeta-gasto h2 {
-    font-size: 2rem !important;
+  .menu-toggle,
+  .hamburger,
+  .mobile-menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .suscripciones-lista {
-    grid-template-columns: 1fr !important;
-  }
 
-  .seccion-vacia {
-    padding: 2rem 1.5rem !important;
-  }
+  /* -----------------------------------------
+     GRID
+     ----------------------------------------- */
 
-  /* === METAS === */
-  .metas-page {
-    padding: 0 !important;
+  .grid,
+  .cards-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
-  .metas-header {
-    flex-direction: column !important;
-    gap: 12px !important;
+  .two-columns,
+  .three-columns,
+  .four-columns {
+    grid-template-columns: 1fr;
   }
 
-  .metas-header h1 {
-    font-size: 20px !important;
-  }
 
-  .metas-header button {
-    width: 100% !important;
-  }
+  /* -----------------------------------------
+     FLEX
+     ----------------------------------------- */
 
-  .resumen-metas {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 12px !important;
-    padding: 16px !important;
+  .row,
+  .flex-row {
+    flex-wrap: wrap;
   }
 
-  .resumen-item h2 {
-    font-size: 20px !important;
+  .responsive-row {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .metas-lista {
-    grid-template-columns: 1fr !important;
-  }
 
-  .meta-tarjeta {
-    padding: 16px !important;
-  }
+  /* -----------------------------------------
+     HEADERS
+     ----------------------------------------- */
 
-  /* === CALENDARIO === */
-  .calendario-page {
-    padding: 0 !important;
+  .page-header,
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 
-  .calendario-header {
-    flex-direction: column !important;
-    gap: 12px !important;
+  .page-title {
+    font-size: 24px;
+    line-height: 1.2;
   }
 
-  .calendario-header h1 {
-    font-size: 20px !important;
+  .section-title {
+    font-size: 20px;
   }
 
-  .calendario-header button {
-    width: 100% !important;
-  }
 
-  .calendario-card {
-    padding: 16px !important;
-  }
+  /* -----------------------------------------
+     BOTONES
+     ----------------------------------------- */
 
-  .calendario-mes-header h2 {
-    font-size: 18px !important;
+  .actions,
+  .button-group {
+    width: 100%;
+    flex-wrap: wrap;
   }
 
-  .celda-dia {
-    padding: 4px !important;
-    font-size: 12px !important;
-    aspect-ratio: auto !important;
-    min-height: 36px !important;
+  .actions button,
+  .button-group button {
+    max-width: 100%;
   }
 
-  .dia-semana-nombre {
-    font-size: 12px !important;
-    padding: 4px 0 !important;
-  }
 
-  .calendario-grid {
-    gap: 4px !important;
-  }
+  /* -----------------------------------------
+     FORMULARIOS
+     ----------------------------------------- */
 
-  .punto-meta,
-  .punto-tarea {
-    width: 6px !important;
-    height: 6px !important;
-    margin-top: 2px !important;
-    margin-right: 2px !important;
+  .form-row {
+    grid-template-columns: 1fr;
   }
 
-  .calendario-inferior {
-    grid-template-columns: 1fr !important;
+  .form-group {
+    width: 100%;
+    min-width: 0;
   }
 
-  .leyenda-card,
-  .estadisticas-card {
-    padding: 16px !important;
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
-  /* === APRENDIZAJE === */
-  .aprendizaje-page {
-    padding: 0 !important;
-  }
 
-  .aprendizaje-header {
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
+  /* -----------------------------------------
+     TABLAS
+     ----------------------------------------- */
 
-  .aprendizaje-header h1 {
-    font-size: 20px !important;
+  .table-container,
+  .table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .aprendizaje-header button {
-    width: 100% !important;
+  table {
+    min-width: 600px;
   }
 
-  .aprendizaje-resumen {
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-  }
 
-  .aprendizaje-lista-card {
-    padding: 16px !important;
-  }
+  /* -----------------------------------------
+     MODALES
+     ----------------------------------------- */
 
-  .filtros-tabs {
-    gap: 6px !important;
-    overflow-x: auto !important;
+  .modal {
+    width: calc(100% - 32px);
+    max-width: calc(100% - 32px);
+    margin: 16px;
   }
 
-  .filtros-tabs button {
-    padding: 6px 12px !important;
-    font-size: 13px !important;
-    white-space: nowrap !important;
+  .modal-content {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
-  .tarea-item {
-    flex-wrap: wrap !important;
-    gap: 8px !important;
-  }
 
-  .tarea-info {
-    min-width: 0 !important;
-    flex: 1 1 calc(100% - 36px) !important;
-  }
+  /* -----------------------------------------
+     CALENDARIO
+     ----------------------------------------- */
 
-  .tarea-meta {
-    flex-wrap: wrap !important;
-    gap: 6px !important;
+  .calendar {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
   }
 
-  .tareas-vacio {
-    padding: 40px 16px !important;
+  .calendar-grid {
+    min-width: 600px;
   }
 
-  /* === MODAL === */
-  .modal-contenido {
-    width: 92% !important;
-    max-width: 92% !important;
-    padding: 24px 20px !important;
-    max-height: 90vh !important;
-    overflow-y: auto !important;
-  }
 
-  /* === FORMULARIOS === */
-  .formulario {
-    min-width: 0 !important;
-  }
+  /* -----------------------------------------
+     TARJETAS
+     ----------------------------------------- */
 
-  .formulario-cuenta {
-    min-width: 0 !important;
-    padding: 0 !important;
+  .card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
-  .formulario-suscripcion {
-    padding: 16px !important;
-  }
 
-  .formulario-suscripcion .iconos-opciones {
-    grid-template-columns: repeat(5, 1fr) !important;
-  }
+  /* -----------------------------------------
+     TEXTO
+     ----------------------------------------- */
 
-  .formulario-meta {
-    padding: 16px !important;
+  .text-large {
+    font-size: 24px;
   }
 
-  .formulario-meta .iconos-opciones {
-    grid-template-columns: repeat(5, 1fr) !important;
+  .text-medium {
+    font-size: 18px;
   }
 
-  .formulario-tarea {
-    padding: 16px !important;
+  .text-small {
+    font-size: 14px;
   }
 }
+
+
+/* =========================================
+   MÓVILES PEQUEÑOS
+   ========================================= */
 
 @media (max-width: 480px) {
-  .tarjetas-grid {
-    grid-template-columns: 1fr !important;
+
+  .main-content {
+    padding: 12px;
   }
 
-  .meta-dashboard-header {
-    flex-direction: column !important;
-    gap: 4px !important;
+  .page-title {
+    font-size: 21px;
   }
 
-  .resumen-metas {
-    grid-template-columns: 1fr !important;
+  .section-title {
+    font-size: 18px;
   }
 
-  .meta-detalle-grid {
-    grid-template-columns: 1fr !important;
+  .card {
+    padding: 14px;
   }
 
-  .modal-contenido {
-    padding: 20px 16px !important;
-    border-radius: 8px !important;
+  button {
+    max-width: 100%;
+  }
+
+  .modal {
+    width: calc(100% - 24px);
+    max-width: calc(100% - 24px);
+    margin: 12px;
   }
 }
