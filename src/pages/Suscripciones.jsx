@@ -12,11 +12,46 @@ import { useToast } from '../Context/ToastContext';
 
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 const FRECUENCIAS = { diario: 'Diario', semanal: 'Semanal', mensual: 'Mensual' };
+const PERIODO_CORTO = { diario: '/día', semanal: '/sem', mensual: '/mes' };
+const DIAS_CICLO = { diario: 1, semanal: 7, mensual: 30 };
+
+// Colores de acento para marcas conocidas. Si la suscripción no
+// coincide con ninguna, se usa sus.color (definido al crearla) o
+// el morado por defecto de la app.
+const ACENTOS_MARCA = {
+    netflix: '#e50914',
+    spotify: '#1db954',
+    'disney+': '#1f6feb',
+    disney: '#1f6feb',
+    'apple music': '#fa233b',
+    'apple tv': '#a2a2a2',
+    icloud: '#3693f3',
+    youtube: '#ff0000',
+    'youtube premium': '#ff0000',
+    'hbo max': '#8b2cf5',
+    'prime video': '#00a8e1',
+    deezer: '#a238ff',
+    tidal: '#000000',
+    notion: '#ffffff',
+    'google drive': '#34a853',
+    'google play': '#00c853',
+    dropbox: '#0061ff',
+    twitch: '#9146ff',
+    playstation: '#0070d1',
+    steam: '#1b2838',
+    'crunchyroll': '#f47521',
+    paramount: '#0064ff',
+};
 
 function formatearFecha(fecha) {
     if (!fecha) return '';
     const d = new Date(`${fecha}T00:00:00`);
     return `${d.getDate()}-${MESES[d.getMonth()]}`;
+}
+
+function formatearFechaLarga(fecha) {
+    if (!fecha) return '';
+    return fecha; // ya viene como YYYY-MM-DD desde supabase
 }
 
 function sumarCiclo(fecha, frecuencia) {
@@ -25,6 +60,19 @@ function sumarCiclo(fecha, frecuencia) {
     else if (frecuencia === 'semanal') d.setDate(d.getDate() + 7);
     else d.setMonth(d.getMonth() + 1);
     return d.toISOString().slice(0, 10);
+}
+
+function diasRestantes(fecha) {
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const objetivo = new Date(`${fecha}T00:00:00`);
+    return Math.round((objetivo - hoy) / (1000 * 60 * 60 * 24));
+}
+
+function accentDeSuscripcion(sus) {
+    const marca = buscarMarca(sus.nombre);
+    const clave = (marca?.nombre || sus.nombre || '').toLowerCase().trim();
+    return ACENTOS_MARCA[clave] || sus.color || '#6C63FF';
 }
 
 function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, setTransacciones, sesion }) {
@@ -75,6 +123,12 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
         mostrarToast('Suscripción pagada correctamente', 'exito');
     }
 
+    function eliminarSuscripcion(sus) {
+        supabase.from('suscripciones').delete().eq('id', sus.id).then(() => { });
+        setSuscripciones(prev => prev.filter(s => s.id !== sus.id));
+        mostrarToast('Suscripción eliminada', 'exito');
+    }
+
     return (
         <div className="suscripciones-page">
             {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
@@ -108,33 +162,82 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                 <div className="suscripciones-lista">
                     {suscripciones.map((sus, index) => {
                         const marca = buscarMarca(sus.nombre);
+                        const accent = accentDeSuscripcion(sus);
+                        const dias = diasRestantes(sus.fecha_renovacion);
+                        const cicloDias = DIAS_CICLO[sus.frecuencia] || 30;
+                        const progreso = Math.min(100, Math.max(0, ((cicloDias - dias) / cicloDias) * 100));
+                        const vencida = dias < 0;
+                        const etiquetaDias = vencida
+                            ? `Vencida hace ${Math.abs(dias)} día${Math.abs(dias) === 1 ? '' : 's'}`
+                            : dias === 0
+                                ? 'Hoy'
+                                : `${dias} día${dias === 1 ? '' : 's'}`;
+
                         return (
-                            <div key={index} className="fila-item">
-                                {marca ? (
-                                    <IconoMarca nombre={sus.nombre} size={20} />
-                                ) : (
-                                    <div className="icono-circulo" style={{ backgroundColor: (sus.color || '#6C63FF') + '22' }}>
-                                        <Icon name={sus.icono} size={20} style={{ color: sus.color || '#6C63FF' }} />
+                            <div
+                                key={sus.id ?? index}
+                                className="sub-card"
+                                style={{ '--accent': accent }}
+                            >
+                                <div className="sub-card-header">
+                                    {marca ? (
+                                        <div className="sub-card-icono">
+                                            <IconoMarca nombre={sus.nombre} size={24} />
+                                        </div>
+                                    ) : (
+                                        <div className="sub-card-icono">
+                                            <Icon name={sus.icono} size={24} style={{ color: '#fff' }} />
+                                        </div>
+                                    )}
+
+                                    <div className="sub-card-header-derecha">
+                                        <span className="badge-estado" style={vencida ? { '--accent': '#ef4444' } : undefined}>
+                                            <span className="punto"></span> {vencida ? 'Vencida' : 'Activa'}
+                                        </span>
+                                        <button
+                                            className="sub-card-editar"
+                                            title="Editar"
+                                            onClick={() => { setSuscripcionEditar(sus); setModalVisible(true); }}
+                                        >
+                                            <Icon name="pencil" size={14} />
+                                        </button>
+                                        <button
+                                            className="sub-card-cerrar"
+                                            title="Eliminar"
+                                            onClick={() => eliminarSuscripcion(sus)}
+                                        >
+                                            <Icon name="x" size={16} />
+                                        </button>
                                     </div>
-                                )}
-                                <div className="suscripcion-info">
-                                    <p className="suscripcion-nombre">{sus.nombre}</p>
-                                    <p className="suscripcion-detalle">{FRECUENCIAS[sus.frecuencia] || 'Mensual'} · Próximo cobro: {formatearFecha(sus.fecha_renovacion)}</p>
                                 </div>
-                                <div className="fila-derecha">
-                                    <span className="suscripcion-monto">${Number(sus.monto).toLocaleString('es-CO')}</span>
-                                    <button className="btn-pildora-acento btn-pagar" onClick={() => pagarSuscripcion(sus)}>Pagar</button>
-                                    <button className="btn-fila-eliminar" title="Editar" onClick={() => { setSuscripcionEditar(sus); setModalVisible(true); }}>
-                                        <Icon name="pencil" size={16} />
-                                    </button>
-                                    <button className="btn-fila-eliminar" title="Eliminar" onClick={() => {
-                                        supabase.from('suscripciones').delete().eq('id', sus.id).then(() => { });
-                                        setSuscripciones(prev => prev.filter(s => s.id !== sus.id));
-                                        mostrarToast('Suscripción eliminada', 'exito');
-                                    }}>
-                                        <Icon name="trash-2" size={16} />
-                                    </button>
+
+                                <div>
+                                    <h3 className="sub-card-nombre">{sus.nombre}</h3>
+                                    <span className="sub-card-categoria">{FRECUENCIAS[sus.frecuencia] || 'Mensual'}</span>
                                 </div>
+
+                                <div className="sub-card-precio">
+                                    <span className="monto">${Number(sus.monto).toLocaleString('es-CO')}</span>
+                                    <span className="periodo">{PERIODO_CORTO[sus.frecuencia] || '/mes'}</span>
+                                </div>
+
+                                <hr className="sub-card-divisor" />
+
+                                <div className="sub-card-pago">
+                                    <div className="pago-anillo" style={{ '--dias-progreso': progreso }}>
+                                        <span>{vencida ? '!' : dias}</span>
+                                    </div>
+                                    <div className="pago-info">
+                                        <span className="etiqueta">Próximo pago</span>
+                                        <span className="dias">{etiquetaDias}</span>
+                                        <span className="fecha">{formatearFechaLarga(sus.fecha_renovacion)}</span>
+                                    </div>
+                                </div>
+
+                                <button className="sub-card-btn-pagar" onClick={() => pagarSuscripcion(sus)}>
+                                    <Icon name="credit-card" size={16} />
+                                    Pagar ${Number(sus.monto).toLocaleString('es-CO')}
+                                </button>
                             </div>
                         );
                     })}

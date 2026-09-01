@@ -1,24 +1,536 @@
 /* =========================================================
-   RESPONSIVE - SUSCRIPCIONES
+   SUSCRIPCIONES — LIQUID GLASS (layout tipo tarjeta vertical)
+   ========================================================= */
+
+.suscripciones-page {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 28px 32px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.suscripciones-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.suscripciones-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--texto);
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+}
+
+.suscripciones-header p {
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--texto-gris);
+}
+
+.suscripciones-header .btn-pildora-secundario {
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--texto);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    transition: all 0.25s ease;
+}
+
+.suscripciones-header .btn-pildora-secundario:hover {
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   TARJETA TOTAL MENSUAL
+   ========================================================= */
+
+.tarjeta-total {
+    position: relative;
+    overflow: hidden;
+
+    padding: 24px 28px;
+
+    border-radius: 22px;
+
+    border: 1px solid rgba(255, 255, 255, 0.20);
+
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.13),
+            rgba(255, 255, 255, 0.045)) !important;
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.38),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+        0 15px 35px rgba(0, 0, 0, 0.18);
+}
+
+.tarjeta-total p {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: var(--texto-gris);
+}
+
+.tarjeta-total h2 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--texto);
+}
+
+
+/* =========================================================
+   SECCIÓN VACÍA
+   ========================================================= */
+
+.seccion-vacia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    padding: 3.5rem;
+    text-align: center;
+
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.20);
+
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.13),
+            rgba(255, 255, 255, 0.045));
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.38),
+        0 15px 35px rgba(0, 0, 0, 0.18);
+}
+
+.seccion-vacia p:first-child {
+    font-size: 1.2rem;
+    font-weight: 750;
+    color: var(--texto);
+    margin: 0;
+}
+
+.seccion-vacia p:last-of-type {
+    color: var(--texto-gris);
+    margin: 0;
+}
+
+
+/* =========================================================
+   LISTA (grid de tarjetas)
+   ========================================================= */
+
+.suscripciones-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    align-items: stretch;
+}
+
+
+/* =========================================================
+   SUB-CARD — LIQUID GLASS
+   ========================================================= */
+
+.sub-card {
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    padding: 22px;
+
+    border-radius: 24px;
+
+    border: 1px solid rgba(255, 255, 255, 0.20);
+
+    background:
+        linear-gradient(160deg,
+            rgba(255, 255, 255, 0.13),
+            rgba(255, 255, 255, 0.045));
+
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.38),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+        0 15px 35px rgba(0, 0, 0, 0.18);
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+/* halo de color de la marca, muy sutil, arriba a la izquierda */
+.sub-card::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    left: -40px;
+    width: 60%;
+    height: 140px;
+
+    background: var(--accent, #6C63FF);
+    opacity: 0.18;
+    filter: blur(50px);
+
+    pointer-events: none;
+}
+
+/* brillo superior tipo vidrio */
+.sub-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+
+    background:
+        linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.65),
+            transparent);
+
+    opacity: 0.7;
+}
+
+.sub-card:hover {
+    transform: translateY(-3px);
+
+    background:
+        linear-gradient(160deg,
+            rgba(255, 255, 255, 0.17),
+            rgba(255, 255, 255, 0.06));
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        0 18px 38px rgba(0, 0, 0, 0.24);
+}
+
+.sub-card>* {
+    position: relative;
+    z-index: 2;
+}
+
+
+/* =========================================================
+   HEADER DE LA TARJETA (icono + badge + acciones)
+   ========================================================= */
+
+.sub-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.sub-card-icono {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: color-mix(in srgb, var(--accent, #6C63FF) 30%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent, #6C63FF) 45%, transparent);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.sub-card-header-derecha {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.badge-estado {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 5px 12px;
+
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent, #22C55E);
+
+    border-radius: 999px;
+
+    background: color-mix(in srgb, var(--accent, #22C55E) 20%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent, #22C55E) 40%, transparent);
+
+    white-space: nowrap;
+}
+
+.badge-estado .punto {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent, #22C55E);
+    flex-shrink: 0;
+}
+
+.sub-card-editar,
+.sub-card-cerrar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    border-radius: 8px;
+
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.06);
+
+    color: var(--texto-gris);
+
+    cursor: pointer;
+
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.sub-card-editar:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: var(--texto);
+}
+
+.sub-card-cerrar:hover {
+    background: rgba(241, 108, 122, 0.18);
+    color: #F16C7A;
+    transform: scale(1.05);
+}
+
+
+/* =========================================================
+   NOMBRE + CATEGORÍA
+   ========================================================= */
+
+.sub-card-nombre {
+    margin: 0 0 6px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--texto);
+}
+
+.sub-card-categoria {
+    display: inline-block;
+
+    padding: 3px 10px;
+
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent, #6C63FF);
+
+    border-radius: 999px;
+
+    background: color-mix(in srgb, var(--accent, #6C63FF) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent, #6C63FF) 35%, transparent);
+}
+
+
+/* =========================================================
+   PRECIO
+   ========================================================= */
+
+.sub-card-precio {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.sub-card-precio .monto {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--texto);
+    letter-spacing: -0.02em;
+}
+
+.sub-card-precio .periodo {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--texto-gris);
+}
+
+
+/* =========================================================
+   DIVISOR
+   ========================================================= */
+
+.sub-card-divisor {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    margin: 0;
+}
+
+
+/* =========================================================
+   PRÓXIMO PAGO (anillo + info)
+   ========================================================= */
+
+.sub-card-pago {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.pago-anillo {
+    position: relative;
+
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+
+    border-radius: 50%;
+
+    background: conic-gradient(var(--accent, #6C63FF) calc(var(--dias-progreso, 0) * 1%),
+            rgba(255, 255, 255, 0.14) 0);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pago-anillo::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+
+    border-radius: 50%;
+
+    background: rgba(18, 20, 30, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.pago-anillo span {
+    position: relative;
+    z-index: 2;
+
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--texto);
+}
+
+.pago-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.pago-info .etiqueta {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--texto-gris);
+}
+
+.pago-info .dias {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--texto);
+}
+
+.pago-info .fecha {
+    font-size: 11px;
+    color: var(--texto-gris);
+}
+
+
+/* =========================================================
+   BOTÓN PAGAR
+   ========================================================= */
+
+.sub-card-btn-pagar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid color-mix(in srgb, var(--accent, #6C63FF) 55%, transparent);
+    border-radius: 14px;
+
+    background:
+        linear-gradient(135deg,
+            color-mix(in srgb, var(--accent, #6C63FF) 85%, white 0%),
+            color-mix(in srgb, var(--accent, #6C63FF) 55%, black 15%));
+
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+
+    cursor: pointer;
+
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.35),
+        0 8px 20px color-mix(in srgb, var(--accent, #6C63FF) 35%, transparent);
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.sub-card-btn-pagar:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+
+    box-shadow:
+        inset 0 1px 1px rgba(255, 255, 255, 0.45),
+        0 10px 26px color-mix(in srgb, var(--accent, #6C63FF) 45%, transparent);
+}
+
+
+/* =========================================================
+   TABLET
    ========================================================= */
 
 @media (max-width: 1024px) {
-
     .suscripciones-page {
+        max-width: 100%;
         padding: 24px;
-        gap: 20px;
     }
 
-    .suscripciones-header {
-        gap: 16px;
-    }
-
-    .suscripciones-header h1 {
-        font-size: 26px;
-    }
-
-    .tarjeta-total {
-        padding: 24px 28px;
+    .suscripciones-lista {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     }
 }
 
@@ -28,319 +540,47 @@
    ========================================================= */
 
 @media (max-width: 768px) {
-
     .suscripciones-page {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-
-        padding: 16px;
-        gap: 16px;
-
-        box-sizing: border-box;
+        padding: 16px 14px;
     }
-
-
-    /* HEADER */
 
     .suscripciones-header {
-        width: 100%;
-
-        display: flex;
+        align-items: flex-start;
         flex-direction: column;
-        align-items: stretch;
-
-        gap: 14px;
-    }
-
-    .suscripciones-header h1 {
-        font-size: 25px;
-        line-height: 1.2;
-    }
-
-    .suscripciones-header p {
-        font-size: 14px;
-        margin-top: 4px;
-    }
-
-    .suscripciones-header>div:last-child {
-        width: 100%;
-
-        display: grid !important;
-        grid-template-columns: 1fr 1fr;
-
-        gap: 8px !important;
-    }
-
-    .suscripciones-header>div:last-child button {
-        width: 100%;
-        min-width: 0;
-        min-height: 42px;
-
-        padding: 9px 10px;
-
-        box-sizing: border-box;
-        white-space: nowrap;
-    }
-
-
-    /* TOTAL */
-
-    .tarjeta-total {
-        width: 100%;
-
-        padding: 20px;
-
-        border-radius: 20px;
-
-        box-sizing: border-box;
-    }
-
-    .tarjeta-total p {
-        font-size: 14px;
-        margin-bottom: 7px;
-    }
-
-    .tarjeta-total h2 {
-        font-size: 27px;
-    }
-
-
-    /* LISTA */
-
-    .suscripciones-lista {
-        width: 100%;
-        min-width: 0;
-
-        display: flex;
-        flex-direction: column;
-
         gap: 12px;
     }
 
+    .suscripciones-header h1 {
+        font-size: 24px;
+    }
 
-    /* TARJETA DE SUSCRIPCIÓN */
-
-    .suscripciones-lista .fila-item {
-        width: 100%;
-        min-width: 0;
-
-        display: grid;
-
-        grid-template-columns: 46px minmax(0, 1fr);
-
-        grid-template-rows: auto auto;
-
-        column-gap: 12px;
-        row-gap: 12px;
-
-        padding: 14px;
-
-        box-sizing: border-box;
-
+    .tarjeta-total {
+        padding: 19px;
         border-radius: 18px;
     }
 
-
-    /* ICONO */
-
-    .suscripciones-lista .fila-item>.icono-circulo {
-        width: 46px;
-        height: 46px;
-        min-width: 46px;
-
-        grid-column: 1;
-        grid-row: 1;
-    }
-
-    /* Si usa IconoMarca */
-    .suscripciones-lista .fila-item>div:first-child {
-        grid-column: 1;
-        grid-row: 1;
-
-        width: 46px;
-        height: 46px;
-
-        min-width: 46px;
-    }
-
-
-    /* INFORMACIÓN */
-
-    .suscripcion-info {
-        width: 100%;
-        min-width: 0;
-
-        grid-column: 2;
-        grid-row: 1;
-
-        align-self: center;
-    }
-
-    .suscripcion-nombre {
-        max-width: 100%;
-
-        font-size: 16px;
-        line-height: 1.2;
-
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .suscripcion-detalle {
-        font-size: 12px;
-        line-height: 1.4;
-
-        white-space: normal;
-    }
-
-
-    /* ACCIONES */
-
-    .suscripciones-lista .fila-item .fila-derecha {
-        width: 100%;
-        min-width: 0;
-
-        grid-column: 1 / -1;
-        grid-row: 2;
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 8px;
-
-        margin: 0;
-
-        padding-top: 10px;
-
-        border-top: 1px solid rgba(255, 255, 255, 0.10);
-    }
-
-
-    /* MONTO */
-
-    .suscripcion-monto {
-        min-width: 0;
-
-        margin-right: auto;
-
-        font-size: 16px;
-
-        text-align: left;
-
-        white-space: nowrap;
-    }
-
-
-    /* PAGAR */
-
-    .btn-pagar {
-        flex-shrink: 0;
-
-        padding: 9px 16px;
-
-        font-size: 13px;
-
-        border-radius: 999px;
-
-        white-space: nowrap;
-    }
-
-
-    /* EDITAR / ELIMINAR */
-
-    .suscripciones-lista .btn-fila-eliminar {
-        width: 36px;
-        height: 36px;
-
-        min-width: 36px;
-
-        flex-shrink: 0;
-
-        border-radius: 10px;
-    }
-
-
-    /* ESTADO VACÍO */
-
-    .seccion-vacia {
-        width: 100%;
-
-        padding: 32px 20px;
-
-        border-radius: 20px;
-
-        box-sizing: border-box;
-    }
-}
-
-
-/* =========================================================
-   MÓVIL PEQUEÑO
-   ========================================================= */
-
-@media (max-width: 480px) {
-
-    .suscripciones-page {
-        padding: 12px;
-        gap: 12px;
-    }
-
-    .suscripciones-header h1 {
-        font-size: 23px;
-    }
-
-    .suscripciones-header>div:last-child {
-        grid-template-columns: 1fr;
-    }
-
-    .suscripciones-header>div:last-child button {
-        min-height: 42px;
-    }
-
-    .tarjeta-total {
-        padding: 18px;
-    }
-
     .tarjeta-total h2 {
-        font-size: 25px;
+        font-size: 24px;
     }
 
-    .suscripciones-lista .fila-item {
-        padding: 13px;
-        grid-template-columns: 42px minmax(0, 1fr);
-        column-gap: 10px;
+    .suscripciones-lista {
+        grid-template-columns: 1fr;
+        gap: 14px;
     }
 
-    .suscripciones-lista .fila-item>.icono-circulo,
-    .suscripciones-lista .fila-item>div:first-child {
-        width: 42px;
-        height: 42px;
-        min-width: 42px;
+    .sub-card {
+        padding: 18px;
+        border-radius: 20px;
     }
 
-    .suscripcion-nombre {
-        font-size: 15px;
+    .sub-card-icono {
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
+        border-radius: 14px;
     }
 
-    .suscripcion-detalle {
-        font-size: 11px;
-    }
-
-    .suscripcion-monto {
-        font-size: 14px;
-    }
-
-    .btn-pagar {
-        padding: 8px 13px;
-        font-size: 12px;
-    }
-
-    .suscripciones-lista .btn-fila-eliminar {
-        width: 34px;
-        height: 34px;
-        min-width: 34px;
+    .sub-card-precio .monto {
+        font-size: 24px;
     }
 }
