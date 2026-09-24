@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import './FormularioTarea.css';
+import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
 import { useToast } from '../../Context/ToastContext';
+import { useIdioma } from '../../i18n/idioma';
+import { aInputFecha } from '../../utils/fechas';
 
 function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
     const [titulo, setTitulo] = useState('');
@@ -11,6 +14,7 @@ function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
     const [fechaLimite, setFechaLimite] = useState('');
     const [guardando, setGuardando] = useState(false);
     const { mostrarToast } = useToast();
+    const { t } = useIdioma();
 
     useEffect(() => {
         if (tareaEditar) {
@@ -18,7 +22,7 @@ function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
             setDescripcion(tareaEditar.descripcion || '');
             setCategoria(tareaEditar.categoria);
             setPrioridad(tareaEditar.prioridad);
-            setFechaLimite(tareaEditar.fecha_limite || '');
+            setFechaLimite(aInputFecha(tareaEditar.fecha_limite));
         }
     }, [tareaEditar]);
 
@@ -27,15 +31,15 @@ function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
         setGuardando(true);
         if (tareaEditar) {
             const { error } = await supabase.from('tareas').update({ titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite }).eq('id', tareaEditar.id);
-            if (error) { mostrarToast('No se pudo actualizar la tarea', 'error'); setGuardando(false); return; }
-            setTareas(prev => prev.map(t => t.id === tareaEditar.id ? { ...t, titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite } : t));
-            mostrarToast('Tarea actualizada correctamente', 'exito');
+            if (error) { mostrarToast(t('formularios.tareaNoActualizada'), 'error'); setGuardando(false); return; }
+            setTareas(prev => prev.map(tarea => tarea.id === tareaEditar.id ? { ...tarea, titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite } : tarea));
+            mostrarToast(t('formularios.tareaActualizada'), 'exito');
         } else {
             const nuevaTarea = { titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite, completada: false, user_id: sesion.user.id };
-            const { error } = await supabase.from('tareas').insert([nuevaTarea]);
-            if (error) { mostrarToast('No se pudo crear la tarea', 'error'); setGuardando(false); return; }
-            setTareas(prev => [...prev, nuevaTarea]);
-            mostrarToast('Tarea creada correctamente', 'exito');
+            const { data, error } = await supabase.from('tareas').insert([nuevaTarea]).select().single();
+            if (error) { mostrarToast(t('formularios.tareaNoCreada'), 'error'); setGuardando(false); return; }
+            setTareas(prev => [...prev, data]);
+            mostrarToast(t('formularios.tareaCreada'), 'exito');
         }
         setGuardando(false);
         onClose();
@@ -44,29 +48,29 @@ function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
     return (
         <div className="formulario-tarea">
             <div className="formulario-tarea-header">
-                <h2>{tareaEditar ? 'Editar Tarea' : 'Nueva Tarea'}</h2>
-                <button className="btn-cerrar-modal" onClick={onClose}>X</button>
+                <h2>{tareaEditar ? t('formularios.editarTarea') : t('formularios.nuevaTarea')}</h2>
+                <button className="btn-cerrar-modal" onClick={onClose} aria-label={t('comun.cerrar')}><Icon name="x" /></button>
             </div>
-            <label>Título</label>
-            <input type="text" placeholder="Ej: Estudiar matemáticas" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
-            <label>Descripción (opcional)</label>
-            <textarea placeholder="Detalles adicionales..." value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
-            <label>Categoría</label>
+            <label>{t('formularios.tituloTarea')}</label>
+            <input type="text" placeholder={t('formularios.ejTarea')} value={titulo} onChange={(e) => setTitulo(e.target.value)} />
+            <label>{t('formularios.descripcion')}</label>
+            <textarea placeholder={t('formularios.detalles')} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+            <label>{t('comun.categoria')}</label>
             <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
-                <option value="Actividad Diaria">Actividad Diaria</option>
-                <option value="Tarea">Tarea</option>
-                <option value="Compromiso">Compromiso</option>
+                <option value="Actividad Diaria">{t('tareas.categorias.Actividad Diaria')}</option>
+                <option value="Tarea">{t('tareas.categorias.Tarea')}</option>
+                <option value="Compromiso">{t('tareas.categorias.Compromiso')}</option>
             </select>
-            <label>Prioridad</label>
+            <label>{t('formularios.prioridad')}</label>
             <select value={prioridad} onChange={(e) => setPrioridad(e.target.value)}>
-                <option value="alta">Alta</option>
-                <option value="media">Media</option>
-                <option value="baja">Baja</option>
+                <option value="alta">{t('tareas.prioridades.alta')}</option>
+                <option value="media">{t('tareas.prioridades.media')}</option>
+                <option value="baja">{t('tareas.prioridades.baja')}</option>
             </select>
-            <label>Fecha límite (opcional)</label>
+            <label>{t('formularios.fechaLimiteOpcional')}</label>
             <input type="date" value={fechaLimite} onChange={(e) => setFechaLimite(e.target.value)} />
             <button className="btn-crear-tarea" onClick={guardar} disabled={guardando}>
-                {guardando ? 'Guardando...' : tareaEditar ? 'Guardar Cambios' : 'Crear Tarea'}
+                {guardando ? t('comun.guardando') : tareaEditar ? t('comun.guardarCambios') : t('formularios.crearTarea')}
             </button>
         </div>
     );

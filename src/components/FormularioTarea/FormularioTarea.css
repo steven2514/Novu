@@ -1,72 +1,52 @@
+/* Formulario con campos nativos (sin clases propias en cada input) */
 .formulario-tarea {
-    background: var(--tarjeta);
-    border-radius: 16px;
-    padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    max-width: 420px;
-}
-
-.formulario-tarea-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.formulario-tarea-header h2 {
-    font-size: 20px;
-    color: var(--texto);
-}
-
-.btn-cerrar-modal {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: var(--texto-gris);
-}
-
-.formulario-tarea label {
-    font-size: 13px;
-    color: var(--texto);
-    font-weight: 600;
-    margin-top: 10px;
+    gap: 8px;
 }
 
 .formulario-tarea input,
-.formulario-tarea textarea,
-.formulario-tarea select {
+.formulario-tarea select,
+.formulario-tarea textarea {
+    width: 100%;
+    padding: 12px 14px;
     border: 1px solid var(--borde);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 14px;
+    border-radius: var(--radio-sm);
+    background: var(--tarjeta);
     color: var(--texto);
+    font-size: 15px;
     outline: none;
-    font-family: inherit;
-}
-
-.formulario-tarea input:focus,
-.formulario-tarea textarea:focus,
-.formulario-tarea select:focus {
-    border-color: var(--principal);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .formulario-tarea textarea {
+    min-height: 90px;
     resize: vertical;
-    min-height: 70px;
+}
+
+.formulario-tarea input:focus,
+.formulario-tarea select:focus,
+.formulario-tarea textarea:focus {
+    border-color: var(--principal);
+    box-shadow: 0 0 0 4px var(--principal-claro);
 }
 
 .btn-crear-tarea {
     margin-top: 18px;
-    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
-    color: #FFFFFF;
+    padding: 14px 20px;
     border: none;
-    border-radius: 10px;
-    padding: 12px;
-    font-weight: 600;
-    cursor: pointer;
+    border-radius: var(--radio-sm);
+    background: var(--acento);
+    color: #fff;
     font-size: 15px;
+    font-weight: 700;
+    box-shadow: var(--sombra-coral);
+}
+
+.btn-crear-tarea:hover {
+    background: var(--acento-oscuro);
+}
+
+.btn-crear-tarea:disabled {
+    opacity: 0.6;
 }

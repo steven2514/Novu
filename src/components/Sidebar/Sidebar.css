@@ -1,165 +1,182 @@
-.sidebar {
-    --sb-accent-1: var(--principal);
-    --sb-accent-2: var(--principal-oscuro);
-    --sb-activo-fondo: rgba(255, 255, 255, 0.22);
-    --sb-activo-texto: #ffffff;
+/* =========================================================
+   SIDEBAR — panel teal oscuro, igual que el hero de la landing
+   ========================================================= */
 
-    width: 280px;
-    min-height: 100%;
-    height: 100%;
-    position: sticky;
-    top: 0;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    border-radius: 28px;
-    padding: 26px 14px;
+.sidebar {
+    width: 264px;
+    flex-shrink: 0;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 20px;
+    padding: 24px 16px 20px;
     overflow-y: auto;
+    color: #fff;
+    background:
+        radial-gradient(420px 320px at 0% 100%, color-mix(in srgb, var(--acento) 14%, transparent), transparent 70%),
+        linear-gradient(180deg, var(--sidebar-fondo) 0%, var(--sidebar-fondo-fin) 100%);
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
-.sidebar-logo {
+.sidebar-cabecera {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 8px 10px;
-    margin-bottom: 22px;
+    justify-content: space-between;
+    padding: 0 8px;
 }
 
-.sidebar-logo-icono {
-    width: 38px;
-    height: 38px;
-    background: linear-gradient(135deg, var(--sb-accent-1), var(--sb-accent-2));
-    border-radius: 50%;
+.sidebar-marca {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--fuente-titulo);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+    text-decoration: none;
+}
+
+.sidebar-marca-icono {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: #fff;
+    color: var(--sidebar-fondo);
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.sidebar-marca-app {
+    margin-left: -10px;
+    color: var(--marca-brillo);
+}
+
+.sidebar-btn-agregar {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
-    flex-shrink: 0;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    gap: 8px;
+    width: 100%;
+    padding: 13px 16px;
+    border: none;
+    border-radius: 12px;
+    background: var(--acento);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: var(--sombra-coral);
+    transition: background 0.15s ease, transform 0.15s ease;
 }
 
-.sidebar-logo-texto h2 {
-    font-size: 19px;
-    font-weight: 800;
-    color: var(--texto);
+.sidebar-btn-agregar:hover {
+    background: var(--acento-oscuro);
+    transform: translateY(-1px);
 }
 
 .sidebar-nav {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 18px;
 }
 
-.sidebar a {
+.sidebar-seccion {
     display: flex;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    padding: 16px 18px;
-    border-radius: 16px;
-    text-decoration: none;
-    color: var(--texto-gris);
-    font-size: 15px;
-    font-weight: 600;
-    background: transparent;
-    border: 1px solid transparent;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.sidebar a:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--glass-border-soft);
-    color: var(--texto);
+.sidebar-seccion-titulo {
+    padding: 0 12px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
 }
 
-.sidebar a.active {
-    background: transparent;
-    border: 1px solid var(--glass-border-soft);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 20px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: var(--sb-activo-texto);
-    font-weight: 800;
-}
-
+.sidebar-nav a,
 .sidebar-nav-btn {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     width: 100%;
-    padding: 16px 18px;
-    border-radius: 16px;
-    border: 1px solid transparent;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 10px;
     background: transparent;
-    color: var(--texto-gris);
-    font-size: 15px;
+    color: var(--sidebar-texto);
+    font-size: 14.5px;
     font-weight: 600;
-    font-family: inherit;
     text-align: left;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease;
 }
 
+.sidebar-nav a:hover,
 .sidebar-nav-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--glass-border-soft);
-    color: var(--texto);
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
 }
 
-.sidebar-nav-btn-proximamente {
-    opacity: 0.6;
+.sidebar-nav a.active {
+    position: relative;
+    background: var(--sidebar-activo);
+    color: #fff;
 }
 
-.sidebar-nav-btn-proximamente:hover {
-    opacity: 0.85;
+.sidebar-nav a.active::before {
+    content: '';
+    position: absolute;
+    left: -16px;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--acento);
 }
 
-.sidebar-separador {
-    height: 1px;
-    background: var(--glass-border-soft);
-    margin: 14px 8px;
+.sidebar-nav a.active svg {
+    color: var(--marca-brillo);
 }
 
 .sidebar-inferior {
     margin-top: auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-perfil-chip {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 12px 14px;
-    border-radius: 18px;
-    background: transparent;
-    border: 1px solid var(--glass-border-soft);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    gap: 12px;
+    padding: 10px;
+    border-radius: 12px;
+    color: #fff;
     text-decoration: none;
-    transition: background 0.2s;
+    transition: background 0.15s ease;
 }
 
-.sidebar-perfil-chip:hover {
+.sidebar-perfil-chip:hover,
+.sidebar-perfil-chip.active {
     background: rgba(255, 255, 255, 0.08);
 }
 
 .sidebar-perfil-avatar {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--sb-accent-1), var(--sb-accent-2));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 15px;
+    background: color-mix(in srgb, var(--marca-brillo) 70%, #fff);
+    color: var(--sidebar-fondo);
+    font-weight: 800;
 }
 
 .sidebar-perfil-info {
@@ -170,70 +187,51 @@
 
 .sidebar-perfil-info b {
     font-size: 14px;
-    color: var(--texto);
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .sidebar-perfil-info small {
     font-size: 12px;
-    color: var(--texto-gris);
-    white-space: nowrap;
+    color: rgba(255, 255, 255, 0.55);
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.sidebar-btn-agregar {
-    width: 100%;
-    border: 1px solid var(--glass-border-soft);
-    border-radius: 16px;
-    padding: 16px;
-    background: transparent;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: var(--texto);
-    font-weight: 700;
-    font-size: 15px;
-    cursor: pointer;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.sidebar-btn-agregar:hover {
-    background: rgba(255, 255, 255, 0.08);
+    white-space: nowrap;
 }
 
 .sidebar-btn-salir {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: none;
+    padding: 9px 12px;
     border: none;
-    padding: 12px 8px;
-    color: var(--texto-gris);
-    font-size: 14px;
+    border-radius: 10px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13.5px;
     font-weight: 600;
-    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
 }
 
 .sidebar-btn-salir:hover {
-    color: var(--gasto);
+    background: color-mix(in srgb, var(--acento) 16%, transparent);
+    color: color-mix(in srgb, var(--acento) 55%, #fff);
 }
 
 .sidebar-legal-links {
     display: flex;
-    gap: 12px;
-    font-size: 11px;
-    padding: 0 4px;
+    gap: 6px;
+    padding: 4px 12px 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.35);
 }
 
 .sidebar-legal-links a {
-    color: var(--texto-muted);
+    color: rgba(255, 255, 255, 0.45);
     text-decoration: none;
 }
 
 .sidebar-legal-links a:hover {
-    color: var(--texto-gris);
+    color: #fff;
 }
-
-/* El comportamiento en móvil (sidebar oculto + hamburguesa) ya lo controla src/responsive.css */

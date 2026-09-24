@@ -1,0 +1,110 @@
+/* =========================================================
+   NOVU — PALETAS DE COLOR
+   Cada paleta define solo sus colores base; los tonos claros,
+   superficies y bordes se derivan en index.css con color-mix().
+   Se activan con <html data-paleta="..."> (ver utils/tema.js).
+   ========================================================= */
+
+/* Teal y coral (por defecto) — los valores base están en index.css */
+
+:root[data-paleta='oceano'] {
+  --principal: #1D4E89;
+  --principal-oscuro: #102A4C;
+  --acento: #F08A2C;
+  --acento-oscuro: #D9711A;
+  --marca-brillo: #8EC5FF;
+  --sidebar-base: #0F2744;
+  --sidebar-base-fin: #173A63;
+  --fondo-claro: #F4F6FA;
+  --borde-claro: #E1E6EE;
+  --texto-claro: #0F1E33;
+}
+
+:root[data-paleta='bosque'] {
+  --principal: #2F6B4F;
+  --principal-oscuro: #1B3F2F;
+  --acento: #D9653B;
+  --acento-oscuro: #C04F27;
+  --marca-brillo: #A7E0C1;
+  --sidebar-base: #173826;
+  --sidebar-base-fin: #22503A;
+  --fondo-claro: #F5F4EC;
+  --borde-claro: #E4E2D6;
+  --texto-claro: #14261C;
+}
+
+:root[data-paleta='uva'] {
+  --principal: #5B3FA0;
+  --principal-oscuro: #33226A;
+  --acento: #E94E86;
+  --acento-oscuro: #D1346D;
+  --marca-brillo: #CDB9FF;
+  --sidebar-base: #26184F;
+  --sidebar-base-fin: #3A2677;
+  --fondo-claro: #F7F5FB;
+  --borde-claro: #E7E2F1;
+  --texto-claro: #1D1433;
+}
+
+:root[data-paleta='medianoche'] {
+  --principal: #3730A3;
+  --principal-oscuro: #1E1B4B;
+  --acento: #0EA5E9;
+  --acento-oscuro: #0284C7;
+  --marca-brillo: #A5B4FC;
+  --sidebar-base: #16143A;
+  --sidebar-base-fin: #26236A;
+  --fondo-claro: #F5F6FB;
+  --borde-claro: #E2E4F0;
+  --texto-claro: #14132E;
+}
+
+:root[data-paleta='cereza'] {
+  --principal: #8C1D40;
+  --principal-oscuro: #561127;
+  --acento: #D98A2B;
+  --acento-oscuro: #BF7317;
+  --marca-brillo: #F6B8C9;
+  --sidebar-base: #3F0C1D;
+  --sidebar-base-fin: #5C1530;
+  --fondo-claro: #FAF5F3;
+  --borde-claro: #EEE2DF;
+  --texto-claro: #2A0E17;
+}
+
+:root[data-paleta='cacao'] {
+  --principal: #7A4A2A;
+  --principal-oscuro: #4A2B17;
+  --acento: #E07A5F;
+  --acento-oscuro: #C9614A;
+  --marca-brillo: #F2C9A0;
+  --sidebar-base: #3A2314;
+  --sidebar-base-fin: #53331E;
+  --fondo-claro: #F8F3EC;
+  --borde-claro: #EBE1D4;
+  --texto-claro: #2A1A10;
+}
+
+:root[data-paleta='grafito'] {
+  --principal: #334155;
+  --principal-oscuro: #1E293B;
+  --acento: #F97316;
+  --acento-oscuro: #EA580C;
+  --marca-brillo: #CBD5E1;
+  --sidebar-base: #111827;
+  --sidebar-base-fin: #1F2937;
+  --fondo-claro: #F5F5F4;
+  --borde-claro: #E4E4E2;
+  --texto-claro: #111827;
+}
+
+/* ---------- Ajustes de cada paleta en modo oscuro ----------
+   El color principal se aclara para que textos e iconos tengan contraste. */
+
+:root[data-theme='dark'][data-paleta='oceano'] { --principal: #6FA8F5; --principal-solido: #2A63A8; --tinte: #1D4E89; }
+:root[data-theme='dark'][data-paleta='bosque'] { --principal: #5CC08F; --principal-solido: #2F7A57; --tinte: #2F6B4F; }
+:root[data-theme='dark'][data-paleta='uva'] { --principal: #A58BF0; --principal-solido: #6A4DB8; --tinte: #5B3FA0; }
+:root[data-theme='dark'][data-paleta='medianoche'] { --principal: #8B8FF5; --principal-solido: #4B44C4; --tinte: #3730A3; }
+:root[data-theme='dark'][data-paleta='cereza'] { --principal: #EE7FA0; --principal-solido: #A6274F; --tinte: #8C1D40; }
+:root[data-theme='dark'][data-paleta='cacao'] { --principal: #D9A071; --principal-solido: #8E5A34; --tinte: #7A4A2A; }
+:root[data-theme='dark'][data-paleta='grafito'] { --principal: #A7B4C8; --principal-solido: #475569; --tinte: #334155; }

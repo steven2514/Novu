@@ -1,219 +1,254 @@
+/* =========================================================
+   CALENDARIO
+   ========================================================= */
+
 .calendario-page {
-    padding: 24px;
+    max-width: 1180px;
+    margin: 0 auto;
 }
 
-.calendario-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 24px;
-}
-
-.calendario-header h1 {
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--texto);
-}
-
-.calendario-header p {
-    color: var(--texto-gris);
-    font-size: 14px;
-}
-
-.calendario-header button {
-    background: var(--principal-muy-claro);
-    color: var(--principal);
-    border: none;
-    border-radius: 10px;
-    padding: 10px 20px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-/* Tarjeta principal */
 .calendario-card {
-    background: var(--tarjeta);
-    border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 1px 3px var(--sombra-suave);
+    margin-bottom: 20px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--tarjeta);
+    box-shadow: var(--sombra-card);
 }
 
 .calendario-mes-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--borde);
-    margin-bottom: 16px;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 .calendario-mes-header h2 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--texto);
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+}
+
+.calendario-mes-header h2 span {
+    color: var(--texto-muted);
 }
 
 .calendario-flechas {
     display: flex;
-    gap: 12px;
+    gap: 6px;
 }
 
 .calendario-flechas button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    color: var(--texto);
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--tarjeta);
+    color: var(--texto-gris);
 }
 
 .calendario-flechas button:hover {
-    background: var(--fondo-hover);
+    border-color: var(--borde-fuerte);
+    color: var(--texto);
 }
 
-/* Nombres de los días */
-.calendario-dias-semana {
+.calendario-dias-semana,
+.calendario-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    margin-bottom: 8px;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
 }
 
 .dia-semana-nombre {
-    text-align: center;
-    color: var(--texto-gris);
-    font-size: 14px;
-    font-weight: 600;
     padding: 8px 0;
-}
-
-/* Grilla de días */
-.calendario-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
+    text-align: center;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--texto-muted);
 }
 
 .celda-dia {
-    aspect-ratio: 1 / 1;
-    background: var(--fondo-alt);
-    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 86px;
     padding: 10px;
-    font-size: 14px;
-    color: var(--texto);
-    border: 2px solid transparent;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    background: var(--tarjeta);
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.celda-dia:not(.celda-vacia):hover {
+    border-color: var(--borde-fuerte);
+    background: var(--fondo-hover);
 }
 
 .celda-vacia {
+    border-color: transparent;
     background: transparent;
 }
 
-.celda-dia.dia-hoy {
-    background: var(--principal-muy-claro);
-    border-color: var(--principal);
-    color: var(--principal);
+.celda-numero {
+    font-size: 14px;
     font-weight: 700;
+    color: var(--texto-gris);
 }
 
-.punto-meta {
-    display: inline-block;
+.dia-hoy {
+    border-color: var(--principal);
+    background: var(--principal-muy-claro);
+}
+
+.dia-hoy .celda-numero {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin: -4px 0 0 -4px;
+    border-radius: 50%;
+    background: var(--principal-solido);
+    color: #fff;
+}
+
+.celda-puntos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.celda-puntos span {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    margin-top: 6px;
-    margin-right: 4px;
 }
 
-/* Leyenda y estadisticas */
+.punto-ingreso,
+.leyenda-ingreso { background: var(--positivo); }
+.punto-gasto,
+.leyenda-gasto { background: var(--acento); }
+.punto-suscripcion,
+.leyenda-suscripcion { background: #5B4FD6; }
+.punto-meta,
+.leyenda-meta { background: var(--ahorro); }
+.punto-tarea,
+.leyenda-tarea { background: var(--info); }
+
+/* ---------- Leyenda y estadísticas ---------- */
+
 .calendario-inferior {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 16px;
+    gap: 20px;
 }
 
 .leyenda-card,
 .estadisticas-card {
+    padding: 22px 24px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
     background: var(--tarjeta);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 1px 3px var(--sombra-suave);
+    box-shadow: var(--sombra-card);
 }
 
 .leyenda-card h3,
 .estadisticas-card h3 {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--texto);
-    margin-bottom: 14px;
+    margin-bottom: 16px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.leyenda-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: start;
+    gap: 12px;
+}
+
+.leyenda-card h3 {
+    grid-column: 1 / -1;
+    margin-bottom: 4px;
 }
 
 .leyenda-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: var(--texto);
     font-size: 14px;
-    margin-bottom: 10px;
+    color: var(--texto-gris);
 }
 
 .leyenda-color {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
 }
 
 .leyenda-dia-actual {
-    background: var(--principal-muy-claro);
-    border: 2px solid var(--principal);
-}
-
-.leyenda-ingreso {
-    background: var(--positivo-claro);
-}
-
-.leyenda-gasto {
-    background: var(--negativo-claro);
-}
-
-.leyenda-suscripcion {
+    border-radius: 4px;
     background: var(--principal);
 }
 
 .estadistica-fila {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    color: var(--texto);
+    padding: 12px 0;
+    border-bottom: 1px solid var(--borde);
     font-size: 14px;
+    color: var(--texto-gris);
+}
+
+.estadistica-fila:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
 .estadistica-valor {
     font-weight: 700;
+    color: var(--texto);
 }
 
-.valor-ingreso {
-    color: var(--positivo);
-}
+.valor-ingreso { color: var(--positivo); }
+.valor-gasto { color: var(--acento); }
+.valor-suscripcion { color: #5B4FD6; }
 
-.valor-gasto {
-    color: var(--peligro);
-}
+/* ---------- Responsive ---------- */
 
-.valor-suscripcion {
-    color: var(--principal);
-}
+@media (max-width: 760px) {
+    .calendario-card {
+        padding: 16px 12px;
+    }
 
-.punto-tarea {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin: 1px;
+    .calendario-dias-semana,
+    .calendario-grid {
+        gap: 3px;
+    }
+
+    .celda-dia {
+        min-height: 56px;
+        padding: 6px;
+        border-radius: 8px;
+    }
+
+    .celda-numero {
+        font-size: 12px;
+    }
+
+    .celda-puntos span {
+        width: 6px;
+        height: 6px;
+    }
+
+    .dia-semana-nombre {
+        font-size: 10px;
+        letter-spacing: 0.04em;
+    }
+
+    .calendario-inferior {
+        grid-template-columns: 1fr;
+    }
 }

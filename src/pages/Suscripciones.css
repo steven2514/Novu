@@ -1,374 +1,180 @@
 /* =========================================================
-   SUSCRIPCIONES — LIQUID GLASS (layout tipo tarjeta vertical)
+   SUSCRIPCIONES
    ========================================================= */
 
-.suscripciones-page {
-    width: 100%;
-    max-width: 1440px;
-    margin: 0 auto;
-    padding: 28px 32px;
-    box-sizing: border-box;
+.suscripciones-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 24px;
+    align-items: start;
+}
 
+.suscripciones-col-lista {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    min-width: 0;
 }
 
+/* ---------- Resumen ---------- */
 
-/* =========================================================
-   HEADER
-   ========================================================= */
-
-.suscripciones-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.subs-total {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
     gap: 20px;
-}
-
-.suscripciones-header h1 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--texto);
-    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
-}
-
-.suscripciones-header p {
-    margin-top: 6px;
-    font-size: 14px;
-    color: var(--texto-gris);
-}
-
-.suscripciones-header .btn-pildora-secundario {
-    background: rgba(255, 255, 255, 0.07);
-    color: var(--texto);
-    border: 1px solid rgba(255, 255, 255, 0.20);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35);
-    transition: all 0.25s ease;
-}
-
-.suscripciones-header .btn-pildora-secundario:hover {
-    background: rgba(255, 255, 255, 0.14);
-    transform: translateY(-2px);
-}
-
-
-/* =========================================================
-   TARJETA TOTAL MENSUAL
-   ========================================================= */
-
-.tarjeta-total {
-    position: relative;
-    overflow: hidden;
-
-    padding: 24px 28px;
-
-    border-radius: 22px;
-
-    border: 1px solid rgba(255, 255, 255, 0.20);
-
+    padding: 22px 24px;
+    border-radius: var(--radio);
+    color: #fff;
     background:
-        linear-gradient(135deg,
-            rgba(255, 255, 255, 0.13),
-            rgba(255, 255, 255, 0.045)) !important;
-
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.38),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.05),
-        0 15px 35px rgba(0, 0, 0, 0.18);
+        radial-gradient(300px 200px at 100% 0%, color-mix(in srgb, var(--marca-brillo) 30%, transparent), transparent 70%),
+        linear-gradient(135deg, var(--principal-solido) 0%, var(--principal-oscuro) 100%);
+    box-shadow: var(--sombra-principal);
 }
 
-.tarjeta-total p {
-    margin: 0 0 6px;
-    font-size: 13px;
-    color: var(--texto-gris);
+.subs-total p {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.75);
 }
 
-.tarjeta-total h2 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--texto);
+.subs-total h2 {
+    margin-top: 4px;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #fff;
 }
 
-
-/* =========================================================
-   SECCIÓN VACÍA
-   ========================================================= */
-
-.seccion-vacia {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-
-    padding: 3.5rem;
-    text-align: center;
-
-    border-radius: 22px;
-    border: 1px solid rgba(255, 255, 255, 0.20);
-
-    background:
-        linear-gradient(135deg,
-            rgba(255, 255, 255, 0.13),
-            rgba(255, 255, 255, 0.045));
-
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.38),
-        0 15px 35px rgba(0, 0, 0, 0.18);
+.subs-total-dato {
+    padding-left: 20px;
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.seccion-vacia p:first-child {
-    font-size: 1.2rem;
-    font-weight: 750;
-    color: var(--texto);
-    margin: 0;
+.subs-total-dato h2 {
+    font-size: 22px;
 }
 
-.seccion-vacia p:last-of-type {
-    color: var(--texto-gris);
-    margin: 0;
-}
-
-
-/* =========================================================
-   LISTA (grid de tarjetas)
-   ========================================================= */
+/* ---------- Tarjetas ---------- */
 
 .suscripciones-lista {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 18px;
-    align-items: stretch;
 }
-
-
-/* =========================================================
-   SUB-CARD — LIQUID GLASS
-   ========================================================= */
 
 .sub-card {
     position: relative;
-    overflow: hidden;
-
     display: flex;
     flex-direction: column;
     gap: 14px;
-
-    padding: 22px;
-
-    border-radius: 24px;
-
-    border: 1px solid rgba(255, 255, 255, 0.20);
-
-    background:
-        linear-gradient(160deg,
-            rgba(255, 255, 255, 0.13),
-            rgba(255, 255, 255, 0.045));
-
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
-
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.38),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.05),
-        0 15px 35px rgba(0, 0, 0, 0.18);
-
-    transition:
-        transform 0.25s ease,
-        background 0.25s ease,
-        box-shadow 0.25s ease;
+    padding: 20px;
+    overflow: hidden;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--tarjeta);
+    box-shadow: var(--sombra-card);
 }
 
-/* halo de color de la marca, muy sutil, arriba a la izquierda */
+/* Franja superior con el color de la marca */
 .sub-card::before {
-    content: "";
+    content: '';
     position: absolute;
-    top: -60px;
-    left: -40px;
-    width: 60%;
-    height: 140px;
-
-    background: var(--accent, #6C63FF);
-    opacity: 0.18;
-    filter: blur(50px);
-
-    pointer-events: none;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: var(--accent);
 }
-
-/* brillo superior tipo vidrio */
-.sub-card::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-
-    background:
-        linear-gradient(90deg,
-            transparent,
-            rgba(255, 255, 255, 0.65),
-            transparent);
-
-    opacity: 0.7;
-}
-
-.sub-card:hover {
-    transform: translateY(-3px);
-
-    background:
-        linear-gradient(160deg,
-            rgba(255, 255, 255, 0.17),
-            rgba(255, 255, 255, 0.06));
-
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        0 18px 38px rgba(0, 0, 0, 0.24);
-}
-
-.sub-card>* {
-    position: relative;
-    z-index: 2;
-}
-
-
-/* =========================================================
-   HEADER DE LA TARJETA (icono + badge + acciones)
-   ========================================================= */
 
 .sub-card-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
 }
 
 .sub-card-icono {
-    width: 52px;
-    height: 52px;
-    min-width: 52px;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: var(--accent);
+    overflow: hidden;
+}
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 16px;
-
-    background: color-mix(in srgb, var(--accent, #6C63FF) 30%, transparent);
-    border: 1px solid color-mix(in srgb, var(--accent, #6C63FF) 45%, transparent);
-
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        0 6px 15px rgba(0, 0, 0, 0.2);
+.sub-card-icono .icono-marca {
+    width: 46px !important;
+    height: 46px !important;
 }
 
 .sub-card-header-derecha {
     display: flex;
     align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
+    gap: 4px;
 }
 
 .badge-estado {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
-
-    padding: 5px 12px;
-
-    font-size: 11px;
+    margin-right: 4px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 12px;
     font-weight: 700;
-    color: var(--accent, #22C55E);
-
-    border-radius: 999px;
-
-    background: color-mix(in srgb, var(--accent, #22C55E) 20%, transparent);
-    border: 1px solid color-mix(in srgb, var(--accent, #22C55E) 40%, transparent);
-
-    white-space: nowrap;
+    background: var(--positivo-claro);
+    color: var(--positivo);
 }
 
 .badge-estado .punto {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background: var(--accent, #22C55E);
-    flex-shrink: 0;
+    background: currentColor;
+}
+
+/* Cuando está vencida, el JSX sobrescribe --accent con rojo */
+.badge-estado[style] {
+    background: var(--negativo-claro);
+    color: var(--negativo);
 }
 
 .sub-card-editar,
 .sub-card-cerrar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 28px;
-    height: 28px;
-
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: none;
     border-radius: 8px;
-
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.06);
-
-    color: var(--texto-gris);
-
-    cursor: pointer;
-
-    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    background: transparent;
+    color: var(--texto-muted);
+    transition: background 0.15s ease, color 0.15s ease;
 }
 
-.sub-card-editar:hover {
-    background: rgba(255, 255, 255, 0.16);
-    color: var(--texto);
+.sub-card-editar:hover,
+.sub-card-editando {
+    background: var(--principal-claro);
+    color: var(--principal);
 }
 
 .sub-card-cerrar:hover {
-    background: rgba(241, 108, 122, 0.18);
-    color: #F16C7A;
-    transform: scale(1.05);
+    background: var(--peligro-claro);
+    color: var(--peligro);
 }
 
-
-/* =========================================================
-   NOMBRE + CATEGORÍA
-   ========================================================= */
-
 .sub-card-nombre {
-    margin: 0 0 6px;
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--texto);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
 }
 
 .sub-card-categoria {
-    display: inline-block;
-
-    padding: 3px 10px;
-
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 600;
-    color: var(--accent, #6C63FF);
-
-    border-radius: 999px;
-
-    background: color-mix(in srgb, var(--accent, #6C63FF) 18%, transparent);
-    border: 1px solid color-mix(in srgb, var(--accent, #6C63FF) 35%, transparent);
+    color: var(--texto-muted);
 }
-
-
-/* =========================================================
-   PRECIO
-   ========================================================= */
 
 .sub-card-precio {
     display: flex;
@@ -377,33 +183,24 @@
 }
 
 .sub-card-precio .monto {
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--texto);
-    letter-spacing: -0.02em;
+    font-family: var(--fuente-titulo);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
 }
 
 .sub-card-precio .periodo {
     font-size: 13px;
-    font-weight: 600;
-    color: var(--texto-gris);
+    color: var(--texto-muted);
 }
-
-
-/* =========================================================
-   DIVISOR
-   ========================================================= */
 
 .sub-card-divisor {
-    border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    width: 100%;
+    height: 1px;
     margin: 0;
+    border: none;
+    background: var(--borde);
 }
-
-
-/* =========================================================
-   PRÓXIMO PAGO (anillo + info)
-   ========================================================= */
 
 .sub-card-pago {
     display: flex;
@@ -412,175 +209,118 @@
 }
 
 .pago-anillo {
+    --progreso: calc(var(--dias-progreso, 0) * 1%);
     position: relative;
-
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
     border-radius: 50%;
-
-    background: conic-gradient(var(--accent, #6C63FF) calc(var(--dias-progreso, 0) * 1%),
-            rgba(255, 255, 255, 0.14) 0);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: conic-gradient(var(--accent) var(--progreso), var(--superficie-suave) 0);
 }
 
 .pago-anillo::before {
-    content: "";
+    content: '';
     position: absolute;
-    inset: 4px;
-
+    inset: 5px;
     border-radius: 50%;
-
-    background: rgba(18, 20, 30, 0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: var(--tarjeta);
 }
 
 .pago-anillo span {
     position: relative;
-    z-index: 2;
-
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--texto);
+    font-weight: 800;
+    font-size: 14px;
 }
 
 .pago-info {
     display: flex;
     flex-direction: column;
-    gap: 1px;
-    min-width: 0;
+    line-height: 1.35;
 }
 
 .pago-info .etiqueta {
     font-size: 11px;
-    font-weight: 600;
-    color: var(--texto-gris);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--texto-muted);
 }
 
 .pago-info .dias {
-    font-size: 13px;
     font-weight: 700;
-    color: var(--texto);
+    font-size: 14.5px;
 }
 
 .pago-info .fecha {
-    font-size: 11px;
+    font-size: 12.5px;
     color: var(--texto-gris);
 }
-
-
-/* =========================================================
-   BOTÓN PAGAR
-   ========================================================= */
 
 .sub-card-btn-pagar {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-
     width: 100%;
-
-    padding: 12px;
-
-    border: 1px solid color-mix(in srgb, var(--accent, #6C63FF) 55%, transparent);
-    border-radius: 14px;
-
-    background:
-        linear-gradient(135deg,
-            color-mix(in srgb, var(--accent, #6C63FF) 85%, white 0%),
-            color-mix(in srgb, var(--accent, #6C63FF) 55%, black 15%));
-
-    color: #fff;
-    font-weight: 700;
+    padding: 11px 14px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-sm);
+    background: var(--superficie-suave);
+    color: var(--principal);
     font-size: 14px;
-
-    cursor: pointer;
-
-    box-shadow:
-        inset 0 1px 1px rgba(255, 255, 255, 0.35),
-        0 8px 20px color-mix(in srgb, var(--accent, #6C63FF) 35%, transparent);
-
-    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    font-weight: 700;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .sub-card-btn-pagar:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.06);
-
-    box-shadow:
-        inset 0 1px 1px rgba(255, 255, 255, 0.45),
-        0 10px 26px color-mix(in srgb, var(--accent, #6C63FF) 45%, transparent);
+    border-color: var(--principal);
+    background: var(--principal);
+    color: #fff;
 }
 
+/* ---------- Panel del formulario ---------- */
 
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (max-width: 1024px) {
-    .suscripciones-page {
-        max-width: 100%;
-        padding: 24px;
-    }
-
-    .suscripciones-lista {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    }
+.suscripciones-form-panel {
+    position: sticky;
+    top: 0;
+    padding: 24px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--tarjeta);
+    box-shadow: var(--sombra-card);
 }
 
+/* En el panel lateral no hace falta el botón de cerrar */
+.suscripciones-form-panel .btn-cerrar-modal {
+    display: none;
+}
 
-/* =========================================================
-   MÓVIL
-   ========================================================= */
+/* ---------- Responsive ---------- */
 
-@media (max-width: 768px) {
-    .suscripciones-page {
-        padding: 16px 14px;
-    }
-
-    .suscripciones-header {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .suscripciones-header h1 {
-        font-size: 24px;
-    }
-
-    .tarjeta-total {
-        padding: 19px;
-        border-radius: 18px;
-    }
-
-    .tarjeta-total h2 {
-        font-size: 24px;
-    }
-
-    .suscripciones-lista {
+@media (max-width: 1100px) {
+    .suscripciones-layout {
         grid-template-columns: 1fr;
-        gap: 14px;
     }
 
-    .sub-card {
-        padding: 18px;
-        border-radius: 20px;
+    .suscripciones-form-panel {
+        position: static;
+        order: -1;
+    }
+}
+
+@media (max-width: 560px) {
+    .subs-total {
+        grid-template-columns: 1fr 1fr;
     }
 
-    .sub-card-icono {
-        width: 46px;
-        height: 46px;
-        min-width: 46px;
-        border-radius: 14px;
+    .subs-total > div:first-child {
+        grid-column: 1 / -1;
     }
 
-    .sub-card-precio .monto {
-        font-size: 24px;
+    .subs-total-dato:nth-child(2) {
+        padding-left: 0;
+        border-left: none;
     }
 }

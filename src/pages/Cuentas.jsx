@@ -7,14 +7,14 @@ import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
 import exportarCSV from '../utils/exportarCSV';
+import { useIdioma } from '../i18n/idioma';
 
-const TIPO_LABEL = { debito: 'Corriente', ahorros: 'Ahorros', credito: 'Crédito', efectivo: 'Efectivo' };
 const TIPO_ICONO = { debito: 'landmark', ahorros: 'piggy-bank', credito: 'credit-card', efectivo: 'wallet' };
 
 // Color de respaldo por tipo, usado cuando la cuenta no tiene un
 // color propio asignado (tanto en la barra de patrimonio como en
 // el degradado de la tarjeta).
-const TIPO_COLOR = { debito: '#4f7cff', ahorros: '#22c55e', credito: '#ef4462', efectivo: '#f2b84b' };
+const TIPO_COLOR = { debito: '#0B5E66', ahorros: '#1F7A4D', credito: '#FF6B4A', efectivo: '#E39A2D' };
 
 function formatoMoneda(valor) {
     return Number(valor || 0).toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -29,6 +29,8 @@ function ultimosDigitos(cuenta) {
 function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) {
 
     const { mostrarTour, cerrarTour } = useTour('cuentas', sesion);
+    const { t } = useIdioma();
+    const tipoCuenta = (tipo) => (tipo ? t(`cuentas.tipos.${tipo}`) : t('comun.cuenta'));
 
     const [modalVisible, setModalVisible] = useState(false);
     const [cuentaEditar, setCuentaEditar] = useState(null);
@@ -48,7 +50,7 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) 
             .map(c => ({
                 id: c.id,
                 nombre: c.nombre,
-                color: c.color || TIPO_COLOR[c.tipo] || '#8b8fa3',
+                color: c.color || TIPO_COLOR[c.tipo] || '#94A3B8',
                 porcentaje: (Number(c.saldo) / totalActivos) * 100
             }));
     }, [cuentasActivos, totalActivos]);
@@ -71,37 +73,38 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) 
     return (
         <div className="cuentas-page contenido-pagina">
             {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
-                { titulo: 'Tus cuentas', texto: 'Aquí creas y administras tus cuentas: corriente, ahorros, crédito o efectivo.' },
-                { titulo: 'Patrimonio neto', texto: 'Tus activos menos tu deuda, calculado en automático con cada cuenta.' }
+                { titulo: t('cuentas.tour1Titulo'), texto: t('cuentas.tour1Texto') },
+                { titulo: t('cuentas.tour2Titulo'), texto: t('cuentas.tour2Texto') }
             ]} />}
 
             <div className="cuentas-header">
                 <div>
-                    <h1>Cuentas</h1>
-                    <p>Controla los saldos de tus cuentas</p>
+                    <p className="overline">{t('cuentas.overline')}</p>
+                    <h1>{t('cuentas.titulo')}</h1>
+                    <p>{t('cuentas.subtitulo')}</p>
                 </div>
-                <div className="cuentas-header-botones">
-                    <button className="btn-pildora-secundario" onClick={abrirModalTransferencia}>↔ Transferir</button>
-                    <button className="btn-pildora-secundario" onClick={() => exportarCSV(cuentas, 'cuentas')}>⬇ Exportar</button>
-                    <button className="btn-pildora-acento" onClick={() => setModalVisible(true)}>+ Nueva cuenta</button>
+                <div className="header-acciones">
+                    <button className="btn-pildora-secundario" onClick={() => abrirModalTransferencia()}><Icon name="arrow-left-right" size={16} /> {t('comun.transferir')}</button>
+                    <button className="btn-pildora-secundario" onClick={() => exportarCSV(cuentas, 'cuentas')}><Icon name="download" size={16} /> {t('comun.exportar')}</button>
+                    <button className="btn-pildora-acento" onClick={() => setModalVisible(true)}><Icon name="plus" size={16} /> {t('cuentas.nuevaCuenta')}</button>
                 </div>
             </div>
 
             <div className="resumen-patrimonio">
                 <div className="resumen-metricas">
                     <div className="resumen-metrica">
-                        <span className="resumen-label">Patrimonio neto</span>
+                        <span className="resumen-label">{t('cuentas.patrimonio')}</span>
                         <span className="resumen-valor">${formatoMoneda(patrimonioNeto)}</span>
                     </div>
                     <div className="resumen-metrica">
-                        <span className="resumen-label">Total activos</span>
+                        <span className="resumen-label">{t('cuentas.totalActivos')}</span>
                         <span className="resumen-valor resumen-valor-activos">${formatoMoneda(totalActivos)}</span>
-                        <span className="resumen-conteo">{cuentasActivos.length} cuentas</span>
+                        <span className="resumen-conteo">{t('comun.cuentas', { n: cuentasActivos.length })}</span>
                     </div>
                     <div className="resumen-metrica">
-                        <span className="resumen-label">Total deuda</span>
+                        <span className="resumen-label">{t('cuentas.totalDeuda')}</span>
                         <span className="resumen-valor resumen-valor-deuda">${formatoMoneda(totalDeuda)}</span>
-                        <span className="resumen-conteo">{cuentasDeuda.length} cuentas</span>
+                        <span className="resumen-conteo">{t('comun.cuentas', { n: cuentasDeuda.length })}</span>
                     </div>
                 </div>
 
@@ -130,17 +133,17 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) 
             </div>
 
             {cuentas.length === 0 ? (
-                <div className="cuenta-vacio">
-                    <p>No hay cuentas</p>
-                    <p>Crea tu primera cuenta para comenzar</p>
-                    <button className="btn-pildora-acento" onClick={() => setModalVisible(true)}>+ Crear cuenta</button>
+                <div className="seccion-vacia">
+                    <p>{t('cuentas.vacioTitulo')}</p>
+                    <p>{t('cuentas.vacioTexto')}</p>
+                    <button className="btn-pildora-acento" onClick={() => setModalVisible(true)}><Icon name="plus" size={16} /> {t('cuentas.crearCuenta')}</button>
                 </div>
             ) : (
                 <div className="cuentas-lista">
                     {cuentas.map((cuenta) => {
                         // El color de la tarjeta sale del color elegido al crear la
                         // cuenta; si no tiene uno propio, se usa el color del tipo.
-                        const color = cuenta.color || TIPO_COLOR[cuenta.tipo] || '#6C63FF';
+                        const color = cuenta.color || TIPO_COLOR[cuenta.tipo] || '#0B5E66';
 
                         return (
                             <div
@@ -151,12 +154,12 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) 
                                 <div className="cuenta-tarjeta-brillo" aria-hidden="true" />
 
                                 <div className="cuenta-tarjeta-top">
-                                    <span className="cuenta-etiqueta">{TIPO_LABEL[cuenta.tipo] || 'Cuenta'}</span>
+                                    <span className="cuenta-etiqueta">{tipoCuenta(cuenta.tipo)}</span>
                                     <div className="cuenta-tarjeta-acciones">
-                                        <button className="cuenta-icono-accion" title="Editar" onClick={() => abrirEdicion(cuenta)}>
+                                        <button className="cuenta-icono-accion" title={t('comun.editar')} onClick={() => abrirEdicion(cuenta)}>
                                             <Icon name="pencil" size={14} />
                                         </button>
-                                        <button className="cuenta-icono-accion" title="Eliminar" onClick={() => eliminarCuenta(cuenta)}>
+                                        <button className="cuenta-icono-accion" title={t('comun.eliminar')} onClick={() => eliminarCuenta(cuenta)}>
                                             <Icon name="trash-2" size={14} />
                                         </button>
                                     </div>
@@ -167,7 +170,7 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) 
 
                                 <div className="cuenta-tarjeta-info">
                                     <p className="cuenta-nombre">{cuenta.nombre}</p>
-                                    <p className="cuenta-banco">{cuenta.banco || TIPO_LABEL[cuenta.tipo] || 'Cuenta'}</p>
+                                    <p className="cuenta-banco">{cuenta.banco || tipoCuenta(cuenta.tipo)}</p>
                                 </div>
 
                                 <div className="cuenta-tarjeta-medio">
@@ -179,14 +182,14 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) 
 
                                 <div className="cuenta-tarjeta-bottom">
                                     <div className="cuenta-saldo-bloque">
-                                        <span className="cuenta-saldo-label">Saldo</span>
+                                        <span className="cuenta-saldo-label">{t('cuentas.saldo')}</span>
                                         <span className="cuenta-saldo">${formatoMoneda(cuenta.saldo)}</span>
                                     </div>
                                     <button
                                         className="cuenta-btn-transferir"
                                         onClick={() => abrirModalTransferencia(cuenta)}
                                     >
-                                        ↔ Transferir
+                                        <Icon name="arrow-left-right" size={14} /> {t('comun.transferir')}
                                     </button>
                                 </div>
                             </div>

@@ -1,59 +1,52 @@
+/* Formulario con campos nativos (sin clases propias en cada input) */
 .formulario {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    min-width: 420px;
-}
-
-.formulario h2 {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--texto);
-    margin-bottom: 8px;
-}
-
-.formulario label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--texto-gris);
-    margin-bottom: 4px;
-    display: block;
+    gap: 8px;
 }
 
 .formulario input,
-.formulario select {
+.formulario select,
+.formulario textarea {
     width: 100%;
     padding: 12px 14px;
-    border: 1.5px solid var(--borde);
-    border-radius: 8px;
-    font-size: 14px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-sm);
+    background: var(--tarjeta);
     color: var(--texto);
-    background-color: var(--tarjeta);
+    font-size: 15px;
     outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.formulario textarea {
+    min-height: 90px;
+    resize: vertical;
 }
 
 .formulario input:focus,
-.formulario select:focus {
+.formulario select:focus,
+.formulario textarea:focus {
     border-color: var(--principal);
+    box-shadow: 0 0 0 4px var(--principal-claro);
 }
 
-.formulario button {
-    width: 100%;
-    background-color: var(--principal);
-    color: #FFFFFF;
+.formulario > button:last-child {
+    margin-top: 18px;
+    padding: 14px 20px;
     border: none;
-    padding: 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 700;
+    border-radius: var(--radio-sm);
+    background: var(--acento);
+    color: #fff;
     font-size: 15px;
-    margin-top: 8px;
+    font-weight: 700;
+    box-shadow: var(--sombra-coral);
 }
 
-.formulario .btn-cerrar-modal {
-    width: auto;
-    background: none;
-    color: var(--texto-gris);
-    padding: 0;
-    margin: 0;
+.formulario > button:last-child:hover {
+    background: var(--acento-oscuro);
+}
+
+.formulario > button:last-child:disabled {
+    opacity: 0.6;
 }

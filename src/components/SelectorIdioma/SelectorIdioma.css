@@ -1,0 +1,40 @@
+.selector-idioma {
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: var(--tarjeta);
+}
+
+.selector-idioma button {
+    min-width: 34px;
+    padding: 5px 8px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--texto-gris);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+.selector-idioma button.activo {
+    background: var(--principal-solido);
+    color: #fff;
+}
+
+/* Sobre fondos oscuros (hero de la landing, panel del login, sidebar) */
+.selector-idioma-claro {
+    border-color: rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.selector-idioma-claro button {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.selector-idioma-claro button.activo {
+    background: #fff;
+    color: #0A3A40;
+}

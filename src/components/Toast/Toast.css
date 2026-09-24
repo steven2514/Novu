@@ -1,33 +1,58 @@
 .toast {
     position: fixed;
-    bottom: 24px;
     right: 24px;
-    padding: 14px 20px;
-    border-radius: 10px;
-    color: white;
+    bottom: 24px;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: min(380px, calc(100vw - 32px));
+    padding: 14px 18px 14px 14px;
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    background: var(--tarjeta);
+    color: var(--texto);
     font-size: 14px;
-    font-weight: 500;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    animation: aparecer 0.3s ease;
+    font-weight: 600;
+    box-shadow: var(--sombra-elevada);
+    animation: toast-aparecer 0.25s ease;
 }
 
-.toast-exito {
-    background-color: #00D2A0;
+.toast::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+    border-radius: 50%;
 }
 
-.toast-error {
-    background-color: #FF6B6B;
+.toast-exito::before {
+    background: var(--positivo);
+    box-shadow: 0 0 0 5px var(--positivo-claro);
 }
 
-@keyframes aparecer {
+.toast-error::before {
+    background: var(--negativo);
+    box-shadow: 0 0 0 5px var(--negativo-claro);
+}
+
+@keyframes toast-aparecer {
     from {
-        transform: translateY(20px);
+        transform: translateY(16px);
         opacity: 0;
     }
 
     to {
-        transform: translateY(0);
+        transform: none;
         opacity: 1;
+    }
+}
+
+@media (max-width: 560px) {
+    .toast {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        max-width: none;
     }
 }

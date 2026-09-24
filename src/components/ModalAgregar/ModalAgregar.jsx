@@ -1,33 +1,19 @@
 import { useState, useEffect, useRef } from "react";
+import { PALETA_ELEMENTOS } from '../../utils/tema';
 import { createPortal } from "react-dom";
 import './ModalAgregar.css';
 import { Icon, ICONOS_META } from '../Icon';
 import { supabase } from '../../supabase';
 import { useToast } from '../../Context/ToastContext';
+import { hoyISO, aInputFecha } from '../../utils/fechas';
+import { useIdioma, nombreCategoria } from '../../i18n/idioma';
 
-const CATEGORIAS_INGRESO = [
-    { value: 'salario', label: 'Salario' },
-    { value: 'freelance', label: 'Freelance' },
-    { value: 'regalo', label: 'Regalo' },
-    { value: 'otros', label: 'Otros' },
-];
+// Valores que se guardan en la base de datos; el nombre visible sale de i18n (categorias.*)
+const CATEGORIAS_INGRESO = ['salario', 'freelance', 'regalo', 'otros'];
 
-const CATEGORIAS_GASTO = [
-    { value: 'comida', label: 'Comida' },
-    { value: 'transporte', label: 'Transporte' },
-    { value: 'hogar', label: 'Hogar' },
-    { value: 'ocio', label: 'Ocio' },
-    { value: 'salud', label: 'Salud' },
-    { value: 'compras', label: 'Compras' },
-    { value: 'servicios', label: 'Servicios' },
-    { value: 'otros', label: 'Otros' },
-];
+const CATEGORIAS_GASTO = ['comida', 'transporte', 'hogar', 'ocio', 'salud', 'compras', 'servicios', 'otros'];
 
-const COLORES = ['#6C63FF', '#4A90D9', '#00D2A0', '#FFB347', '#FF6B6B', '#FF69B4', '#00BCD4', '#00E676'];
-
-function fechaHoyInput() {
-    return new Date().toISOString().split('T')[0];
-}
+const COLORES = PALETA_ELEMENTOS;
 
 // ─── Helpers de formato de monto (7000 -> "7.000") ───
 function limpiarNumero(valor) {
@@ -114,6 +100,7 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     // Si estamos editando una transacción existente, se fija en su pestaña y se ocultan las demás
     const [tab, setTab] = useState(transaccionEditar ? transaccionEditar.tipo : (tipoInicial || 'gasto'));
     const { mostrarToast } = useToast();
+    const { t } = useIdioma();
     const [guardando, setGuardando] = useState(false);
 
     // ─── Campos: Gasto / Ingreso ───
@@ -122,7 +109,7 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     const [monto, setMonto] = useState('');
     const [categoria, setCategoria] = useState('');
     const [cuenta, setCuenta] = useState('');
-    const [fecha, setFecha] = useState(fechaHoyInput());
+    const [fecha, setFecha] = useState(hoyISO());
     const [nota, setNota] = useState('');
 
     // ─── Campos: Transferencia / Aporte a meta ───
@@ -134,7 +121,7 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     const [tipoCuenta, setTipoCuenta] = useState('debito');
     const [saldoCuenta, setSaldoCuenta] = useState('');
     const [bancoCuenta, setBancoCuenta] = useState('');
-    const [colorCuenta, setColorCuenta] = useState('#6C63FF');
+    const [colorCuenta, setColorCuenta] = useState(PALETA_ELEMENTOS[0]);
 
     // ─── Campos: Meta nueva ───
     const [nombreMeta, setNombreMeta] = useState('');
@@ -142,7 +129,7 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     const [montoActual, setMontoActual] = useState('');
     const [fechaObjetivo, setFechaObjetivo] = useState('');
     const [iconoMeta, setIconoMeta] = useState('target');
-    const [colorMeta, setColorMeta] = useState('#6C63FF');
+    const [colorMeta, setColorMeta] = useState(PALETA_ELEMENTOS[0]);
 
     useEffect(() => {
         if (transaccionEditar) {
@@ -151,29 +138,35 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
             setCuenta(transaccionEditar.cuenta);
             setNota(transaccionEditar.descripcion || '');
             if (transaccionEditar.fecha) {
-                setFecha(new Date(transaccionEditar.fecha).toISOString().split('T')[0]);
+                setFecha(aInputFecha(transaccionEditar.fecha));
             }
         }
     }, [transaccionEditar]);
 
     const esTransaccion = tab === 'gasto' || tab === 'ingreso';
     const esTransferencia = tab === 'transferencia' || tab === 'aporte';
-    const categorias = tab === 'ingreso' ? CATEGORIAS_INGRESO : CATEGORIAS_GASTO;
+    const categorias = (tab === 'ingreso' ? CATEGORIAS_INGRESO : CATEGORIAS_GASTO)
+        .map(valor => ({ value: valor, label: nombreCategoria(valor) }));
     const opcionesCuentas = cuentas.map(c => ({ value: c.nombre, label: c.nombre }));
 
     // ─── Guardar Gasto / Ingreso ───
     async function guardarTransaccion() {
+        // Antes se podía guardar un gasto sin monto, sin categoría o sin cuenta.
+        if (!monto || Number(monto) <= 0) { mostrarToast(t('agregar.montoMayor'), 'error'); return; }
+        if (!categoria) { mostrarToast(t('agregar.seleccionaCategoria'), 'error'); return; }
+        if (!cuenta) { mostrarToast(t('agregar.seleccionaCuenta'), 'error'); return; }
+        if (!fecha) { mostrarToast(t('agregar.seleccionaFecha'), 'error'); return; }
         setGuardando(true);
         if (transaccionEditar) {
             const { error } = await supabase.from('transacciones').update({ descripcion: nota, monto, categoria, cuenta }).eq('id', transaccionEditar.id);
-            if (error) { mostrarToast('No se pudo actualizar', 'error'); setGuardando(false); return; }
-            mostrarToast('Transacción actualizada', 'exito');
+            if (error) { mostrarToast(t('agregar.noActualizar'), 'error'); setGuardando(false); return; }
+            mostrarToast(t('agregar.transaccionActualizada'), 'exito');
             setTransacciones(prev => prev.map(t => t.id === transaccionEditar.id ? { ...t, descripcion: nota, monto, categoria, cuenta } : t));
         } else {
-            const nueva = { descripcion: nota, monto, tipo: tab, categoria, cuenta, fecha: new Date(fecha).toISOString(), fuente: '', user_id: sesion.user.id };
+            const nueva = { descripcion: nota, monto, tipo: tab, categoria, cuenta, fecha, fuente: '', user_id: sesion.user.id };
             const { data, error } = await supabase.from('transacciones').insert([nueva]).select();
-            if (error) { mostrarToast('No se pudo guardar la transacción', 'error'); setGuardando(false); return; }
-            mostrarToast(tab === 'ingreso' ? 'Ingreso agregado' : 'Gasto agregado', 'exito');
+            if (error) { mostrarToast(t('agregar.noGuardar'), 'error'); setGuardando(false); return; }
+            mostrarToast(tab === 'ingreso' ? t('agregar.ingresoAgregado') : t('agregar.gastoAgregado'), 'exito');
             setTransacciones(prev => [...prev, ...data]);
             const cuentaObj = cuentas.find(c => c.nombre === cuenta);
             if (cuentaObj) {
@@ -188,12 +181,13 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
 
     // ─── Guardar Transferencia / Aporte a meta ───
     async function guardarTransferencia() {
-        if (!origen || !destino || !monto) { mostrarToast('Completa todos los campos', 'error'); return; }
+        if (!origen || !destino || !monto) { mostrarToast(t('agregar.completaCampos'), 'error'); return; }
+        if (Number(monto) <= 0) { mostrarToast(t('agregar.montoMayor'), 'error'); return; }
         const cuentaOrigen = cuentas.find(c => c.nombre === origen);
-        if (!cuentaOrigen || Number(cuentaOrigen.saldo) < Number(monto)) { mostrarToast('Saldo insuficiente en la cuenta de origen', 'error'); return; }
+        if (!cuentaOrigen || Number(cuentaOrigen.saldo) < Number(monto)) { mostrarToast(t('agregar.saldoInsuficiente'), 'error'); return; }
         setGuardando(true);
         const tipoDestino = tab === 'aporte' ? 'meta' : 'cuenta';
-        const nuevaTransferencia = { user_id: sesion.user.id, origen, destino, monto, tipo_destino: tipoDestino, fecha: new Date().toISOString() };
+        const nuevaTransferencia = { user_id: sesion.user.id, origen, destino, monto, tipo_destino: tipoDestino, fecha: hoyISO() };
         await supabase.from('transferencias').insert([nuevaTransferencia]);
         await supabase.from('cuentas').update({ saldo: Number(cuentaOrigen.saldo) - Number(monto) }).eq('id', cuentaOrigen.id);
         setCuentas(prev => prev.map(c => c.id === cuentaOrigen.id ? { ...c, saldo: Number(c.saldo) - Number(monto) } : c));
@@ -208,34 +202,37 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
             setMetas(prev => prev.map(m => m.id === meta.id ? { ...m, monto_actual: nuevoMontoActual } : m));
         }
         setGuardando(false);
-        mostrarToast(tab === 'aporte' ? 'Aporte realizado con éxito' : 'Transferencia realizada con éxito', 'exito');
+        mostrarToast(tab === 'aporte' ? t('agregar.aporteOk') : t('agregar.transferenciaOk'), 'exito');
         onClose();
     }
 
     // ─── Guardar Cuenta nueva ───
     async function guardarCuentaNueva() {
-        if (!nombreCuenta.trim()) { mostrarToast('El nombre es obligatorio', 'error'); return; }
+        if (!nombreCuenta.trim()) { mostrarToast(t('agregar.nombreObligatorio'), 'error'); return; }
         setGuardando(true);
         const saldoFinal = saldoCuenta === '' ? 0 : Number(saldoCuenta);
         const { data: { user } } = await supabase.auth.getUser();
         const nueva = { nombre: nombreCuenta, tipo: tipoCuenta, saldo: saldoFinal, banco: bancoCuenta, color: colorCuenta, user_id: user.id };
         const { data, error } = await supabase.from('cuentas').insert([nueva]).select().single();
-        if (error) { mostrarToast('No se pudo crear la cuenta', 'error'); setGuardando(false); return; }
+        if (error) { mostrarToast(t('agregar.noCrearCuenta'), 'error'); setGuardando(false); return; }
         setCuentas(prev => [...prev, data]);
-        mostrarToast('Cuenta creada correctamente', 'exito');
+        mostrarToast(t('agregar.cuentaCreada'), 'exito');
         setGuardando(false);
         onClose();
     }
 
     // ─── Guardar Meta nueva ───
     async function guardarMetaNueva() {
-        if (!nombreMeta.trim()) { mostrarToast('El nombre es obligatorio', 'error'); return; }
+        if (!nombreMeta.trim()) { mostrarToast(t('agregar.nombreObligatorio'), 'error'); return; }
+        if (!montoObjetivo || Number(montoObjetivo) <= 0) { mostrarToast(t('agregar.objetivoMayor'), 'error'); return; }
         setGuardando(true);
         const nueva = { nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual || 0, fecha_objetivo: fechaObjetivo, icono: iconoMeta, color: colorMeta, user_id: sesion.user.id };
-        const { error } = await supabase.from('metas').insert([nueva]);
-        if (error) { mostrarToast('No se pudo crear la meta', 'error'); setGuardando(false); return; }
-        setMetas(prev => [...prev, nueva]);
-        mostrarToast('Meta creada correctamente', 'exito');
+        // .select().single() devuelve la fila creada con su id: sin él, aportar a
+        // la meta antes de recargar descontaba de la cuenta sin sumar a la meta.
+        const { data, error } = await supabase.from('metas').insert([nueva]).select().single();
+        if (error) { mostrarToast(t('agregar.noCrearMeta'), 'error'); setGuardando(false); return; }
+        setMetas(prev => [...prev, data]);
+        mostrarToast(t('agregar.metaCreada'), 'exito');
         setGuardando(false);
         onClose();
     }
@@ -261,24 +258,23 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     return (
         <div className="modal-agregar">
             <div className="modal-agregar-header">
-                <h2>Agregar</h2>
-                <button className="btn-cerrar-modal" onClick={onClose}><Icon name="x" /></button>
+                <h2>{transaccionEditar ? t('agregar.tituloEditar') : t('agregar.titulo')}</h2>
+                <button className="btn-cerrar-modal" onClick={onClose} aria-label={t('comun.cerrar')}><Icon name="x" /></button>
             </div>
 
             {!transaccionEditar && (
                 <div className="tabs-pildora tabs-pildora-scroll">
-                    <button className={`tab-pildora ${tab === 'gasto' ? 'activo' : ''}`} onClick={() => cambiarTab('gasto')}>Gasto</button>
-                    <button className={`tab-pildora ${tab === 'ingreso' ? 'activo' : ''}`} onClick={() => cambiarTab('ingreso')}>Ingreso</button>
-                    <button className={`tab-pildora ${tab === 'transferencia' ? 'activo' : ''}`} onClick={() => cambiarTab('transferencia')}>Transferencia</button>
-                    <button className={`tab-pildora ${tab === 'aporte' ? 'activo' : ''}`} onClick={() => cambiarTab('aporte')}>Aporte a meta</button>
-                    <button className={`tab-pildora ${tab === 'cuenta' ? 'activo' : ''}`} onClick={() => cambiarTab('cuenta')}>Cuenta</button>
-                    <button className={`tab-pildora ${tab === 'meta' ? 'activo' : ''}`} onClick={() => cambiarTab('meta')}>Meta</button>
+                    {['gasto', 'ingreso', 'transferencia', 'aporte', 'cuenta', 'meta'].map((id) => (
+                        <button key={id} className={`tab-pildora ${tab === id ? 'activo' : ''}`} onClick={() => cambiarTab(id)}>
+                            {t(`agregar.tabs.${id}`)}
+                        </button>
+                    ))}
                 </div>
             )}
 
             {esTransaccion && (
                 <div className="modal-agregar-body">
-                    <label>Monto</label>
+                    <label>{t('comun.monto')}</label>
                     <input
                         className="campo-pildora"
                         type="text"
@@ -288,20 +284,20 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                         placeholder="0"
                     />
 
-                    <label>Categoría</label>
-                    <DropdownPildora value={categoria} onChange={setCategoria} opciones={categorias} placeholder="Seleccionar categoría" />
+                    <label>{t('comun.categoria')}</label>
+                    <DropdownPildora value={categoria} onChange={setCategoria} opciones={categorias} placeholder={t('agregar.seleccionarCategoria')} />
 
-                    <label>Cuenta</label>
-                    <DropdownPildora value={cuenta} onChange={setCuenta} opciones={opcionesCuentas} placeholder="Seleccionar cuenta" />
+                    <label>{t('comun.cuenta')}</label>
+                    <DropdownPildora value={cuenta} onChange={setCuenta} opciones={opcionesCuentas} placeholder={t('comun.seleccionarCuenta')} />
 
                     <div className="modal-agregar-fila-doble">
                         <div>
-                            <label>Fecha</label>
+                            <label>{t('comun.fecha')}</label>
                             <input className="campo-pildora" type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
                         </div>
                         <div>
-                            <label>Nota</label>
-                            <input className="campo-pildora" type="text" value={nota} onChange={(e) => setNota(e.target.value)} placeholder="Opcional" />
+                            <label>{t('agregar.nota')}</label>
+                            <input className="campo-pildora" type="text" value={nota} onChange={(e) => setNota(e.target.value)} placeholder={t('comun.opcional')} />
                         </div>
                     </div>
                 </div>
@@ -309,25 +305,25 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
 
             {esTransferencia && (
                 <div className="modal-agregar-body">
-                    <label>Desde la cuenta</label>
+                    <label>{t('agregar.desde')}</label>
                     <DropdownPildora
                         value={origen}
                         onChange={setOrigen}
                         opciones={opcionesCuentas}
-                        placeholder="Seleccionar cuenta de origen"
+                        placeholder={t('agregar.seleccionarOrigen')}
                     />
 
-                    <label>{tab === 'aporte' ? 'Meta' : 'Hacia la cuenta'}</label>
+                    <label>{tab === 'aporte' ? t('agregar.meta') : t('agregar.hacia')}</label>
                     <DropdownPildora
                         value={destino}
                         onChange={setDestino}
                         opciones={tab === 'aporte'
                             ? metas.map(m => ({ value: m.nombre_meta, label: m.nombre_meta }))
                             : cuentas.filter(c => c.nombre !== origen).map(c => ({ value: c.nombre, label: c.nombre }))}
-                        placeholder={tab === 'aporte' ? 'Seleccionar meta' : 'Seleccionar cuenta destino'}
+                        placeholder={tab === 'aporte' ? t('agregar.seleccionarMeta') : t('agregar.seleccionarDestino')}
                     />
 
-                    <label>Monto</label>
+                    <label>{t('comun.monto')}</label>
                     <input
                         className="campo-pildora"
                         type="text"
@@ -341,25 +337,21 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
 
             {tab === 'cuenta' && (
                 <div className="modal-agregar-body">
-                    <label>Nombre</label>
-                    <input className="campo-pildora" type="text" value={nombreCuenta} onChange={(e) => setNombreCuenta(e.target.value)} placeholder="Ej: Cuenta Principal" />
+                    <label>{t('comun.nombre')}</label>
+                    <input className="campo-pildora" type="text" value={nombreCuenta} onChange={(e) => setNombreCuenta(e.target.value)} placeholder={t('agregar.ejCuenta')} />
 
                     <div className="modal-agregar-fila-doble">
                         <div>
-                            <label>Tipo</label>
+                            <label>{t('agregar.tipo')}</label>
                             <DropdownPildora
                                 value={tipoCuenta}
                                 onChange={setTipoCuenta}
-                                opciones={[
-                                    { value: 'debito', label: 'Débito' },
-                                    { value: 'efectivo', label: 'Efectivo' },
-                                    { value: 'credito', label: 'Crédito' },
-                                ]}
-                                placeholder="Tipo de cuenta"
+                                opciones={['debito', 'efectivo', 'credito'].map(valor => ({ value: valor, label: t(`agregar.tipos.${valor}`) }))}
+                                placeholder={t('agregar.tipoCuenta')}
                             />
                         </div>
                         <div>
-                            <label>Saldo inicial</label>
+                            <label>{t('agregar.saldoInicial')}</label>
                             <input
                                 className="campo-pildora"
                                 type="text"
@@ -371,10 +363,10 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                         </div>
                     </div>
 
-                    <label>Banco (opcional)</label>
-                    <input className="campo-pildora" type="text" value={bancoCuenta} onChange={(e) => setBancoCuenta(e.target.value)} placeholder="Ej: Banco Nacional" />
+                    <label>{t('agregar.banco')}</label>
+                    <input className="campo-pildora" type="text" value={bancoCuenta} onChange={(e) => setBancoCuenta(e.target.value)} placeholder={t('agregar.ejBanco')} />
 
-                    <label>Color</label>
+                    <label>{t('comun.color')}</label>
                     <div className="color-selector-grid">
                         {COLORES.map((c) => (
                             <div key={c} className={`color-selector-opcion ${colorCuenta === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColorCuenta(c)} />
@@ -385,12 +377,12 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
 
             {tab === 'meta' && (
                 <div className="modal-agregar-body">
-                    <label>Nombre</label>
-                    <input className="campo-pildora" type="text" value={nombreMeta} onChange={(e) => setNombreMeta(e.target.value)} placeholder="Ej: Iphone 16" />
+                    <label>{t('comun.nombre')}</label>
+                    <input className="campo-pildora" type="text" value={nombreMeta} onChange={(e) => setNombreMeta(e.target.value)} placeholder={t('agregar.ejMeta')} />
 
                     <div className="modal-agregar-fila-doble">
                         <div>
-                            <label>Objetivo</label>
+                            <label>{t('agregar.objetivo')}</label>
                             <input
                                 className="campo-pildora"
                                 type="text"
@@ -401,12 +393,12 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                             />
                         </div>
                         <div>
-                            <label>Fecha límite</label>
+                            <label>{t('agregar.fechaLimite')}</label>
                             <input className="campo-pildora" type="date" value={fechaObjetivo} onChange={(e) => setFechaObjetivo(e.target.value)} />
                         </div>
                     </div>
 
-                    <label>Monto actual (opcional)</label>
+                    <label>{t('agregar.montoActual')}</label>
                     <input
                         className="campo-pildora"
                         type="text"
@@ -416,7 +408,7 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                         placeholder="0"
                     />
 
-                    <label>Icono</label>
+                    <label>{t('comun.icono')}</label>
                     <div className="icono-selector-grid">
                         {ICONOS_META.map((ic) => (
                             <div key={ic} className={`icono-selector-opcion ${iconoMeta === ic ? 'seleccionado' : ''}`} onClick={() => setIconoMeta(ic)}>
@@ -425,7 +417,7 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                         ))}
                     </div>
 
-                    <label>Color</label>
+                    <label>{t('comun.color')}</label>
                     <div className="color-selector-grid">
                         {COLORES.map((c) => (
                             <div key={c} className={`color-selector-opcion ${colorMeta === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColorMeta(c)} />
@@ -435,7 +427,7 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
             )}
 
             <button className="btn-guardar-gradiente" onClick={guardar} disabled={guardando}>
-                {guardando ? 'Guardando...' : transaccionEditar ? 'Guardar Cambios' : 'Guardar'}
+                {guardando ? t('comun.guardando') : transaccionEditar ? t('comun.guardarCambios') : t('comun.guardar')}
             </button>
         </div>
     );
