@@ -1,59 +1,84 @@
 .tour-overlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(26, 26, 46, 0.6);
+    z-index: 999;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 999;
+    padding: 20px;
+    background: rgba(8, 24, 27, 0.55);
+    backdrop-filter: blur(3px);
 }
 
 .tour-tarjeta {
-    background-color: var(--tarjeta);
-    border-radius: 16px;
+    position: relative;
+    width: min(380px, 100%);
     padding: 28px;
-    max-width: 360px;
-    width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    border-radius: 20px;
+    background: var(--tarjeta);
+    box-shadow: var(--sombra-elevada);
+}
+
+/* Franja de marca arriba */
+.tour-tarjeta::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--principal), var(--acento));
 }
 
 .tour-tarjeta h3 {
-    margin: 0 0 8px 0;
-    color: var(--texto);
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
 }
 
 .tour-tarjeta p {
-    margin: 0 0 20px 0;
+    margin: 0 0 24px;
     color: var(--texto-gris);
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 .tour-acciones {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 12px;
 }
 
 .tour-acciones span {
+    margin-right: auto;
     font-size: 13px;
-    color: var(--texto-gris);
+    font-weight: 700;
+    color: var(--texto-muted);
 }
 
 .tour-btn-saltar {
-    background: none;
+    padding: 10px 12px;
     border: none;
+    border-radius: 10px;
+    background: none;
     color: var(--texto-gris);
-    cursor: pointer;
     font-size: 14px;
+    font-weight: 600;
+}
+
+.tour-btn-saltar:hover {
+    color: var(--texto);
 }
 
 .tour-btn-siguiente {
-    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
-    color: white;
-    border: none;
     padding: 10px 20px;
+    border: none;
     border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
+    background: var(--acento);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: var(--sombra-coral);
+}
+
+.tour-btn-siguiente:hover {
+    background: var(--acento-oscuro);
 }

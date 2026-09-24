@@ -1,66 +1,107 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import './Sidebar.css';
 import { useState } from 'react';
 import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
+import { useIdioma } from '../../i18n/idioma';
+
+// Los textos son claves de traducción dentro de "sidebar.*"
+const SECCIONES = [
+    {
+        titulo: 'general',
+        enlaces: [
+            { to: '/', icono: 'layout-dashboard', texto: 'inicio', end: true },
+            { to: '/transacciones', icono: 'arrow-left-right', texto: 'movimientos' },
+            { to: '/cuentas', icono: 'landmark', texto: 'cuentas' },
+        ],
+    },
+    {
+        titulo: 'planificacion',
+        enlaces: [
+            { to: '/Metas', icono: 'target', texto: 'metas' },
+            { to: '/Suscripciones', icono: 'credit-card', texto: 'suscripciones' },
+            { to: '/Calendario', icono: 'calendar-days', texto: 'calendario' },
+            { to: '/Aprendizaje', icono: 'book-open', texto: 'tareas' },
+        ],
+    },
+];
 
 function Sidebar({ onAgregar, onTransferir, sesion }) {
 
     const [abierto, setAbierto] = useState(false);
+    const { t } = useIdioma();
+    const cerrar = () => setAbierto(false);
 
     async function cerrarSesion() {
         await supabase.auth.signOut();
     }
 
-    function proximamente(feature) {
-        alert(`${feature}: próximamente 🚧`);
-        setAbierto(false);
-    }
-
     const nombreUsuario = sesion?.user?.user_metadata?.nombre
         || sesion?.user?.user_metadata?.full_name
         || sesion?.user?.email?.split('@')[0]
-        || 'Usuario';
+        || t('comun.usuario');
 
     const correoUsuario = sesion?.user?.email || '';
 
     return (
         <>
-            <button className="btn-hamburguesa" onClick={() => setAbierto(!abierto)}><Icon name="menu" size={20} /></button>
-            <div className={`sidebar ${abierto ? 'sidebar-abierto' : ''}`}>
-                <div className="sidebar-logo">
-                    <div className="sidebar-logo-icono">
-                        <Icon name="wallet" size={18} />
-                    </div>
-                    <div className="sidebar-logo-texto">
-                        <h2>Novu</h2>
-                    </div>
+            <header className="topbar-movil">
+                <button className="btn-hamburguesa" onClick={() => setAbierto(true)} aria-label={t('sidebar.abrirMenu')}>
+                    <Icon name="menu" size={20} />
+                </button>
+                <span className="sidebar-marca">
+                    <span className="sidebar-marca-icono">N</span>
+                    Novu<span className="sidebar-marca-app">App</span>
+                </span>
+                <button className="topbar-movil-agregar" onClick={onAgregar} aria-label={t('sidebar.nuevoMovimiento')}>
+                    <Icon name="plus" size={20} />
+                </button>
+            </header>
+
+            {abierto && <div className="sidebar-velo" onClick={cerrar} />}
+
+            <aside className={`sidebar ${abierto ? 'sidebar-abierto' : ''}`}>
+                <div className="sidebar-cabecera">
+                    <Link to="/" className="sidebar-marca" onClick={cerrar}>
+                        <span className="sidebar-marca-icono">N</span>
+                        Novu<span className="sidebar-marca-app">App</span>
+                    </Link>
+                    <button className="sidebar-cerrar" onClick={cerrar} aria-label={t('sidebar.cerrarMenu')}>
+                        <Icon name="x" size={18} />
+                    </button>
                 </div>
 
+                <button className="sidebar-btn-agregar" onClick={() => { onAgregar && onAgregar(); cerrar(); }}>
+                    <Icon name="plus" size={18} /> {t('sidebar.nuevoMovimiento')}
+                </button>
+
                 <nav className="sidebar-nav">
-                    <NavLink to="/" end onClick={() => setAbierto(false)}><Icon name="layout-dashboard" /> Inicio</NavLink>
-                    <NavLink to="/transacciones" onClick={() => setAbierto(false)}><Icon name="arrow-left-right" /> Movimientos</NavLink>
-                    <button className="sidebar-nav-btn" onClick={() => { onTransferir && onTransferir(); setAbierto(false); }}>
-                        <Icon name="send" /> Transferencias
-                    </button>
-                    <NavLink to="/Metas" onClick={() => setAbierto(false)}><Icon name="target" /> Metas</NavLink>
-                    <NavLink to="/Suscripciones" onClick={() => setAbierto(false)}><Icon name="credit-card" /> Suscripciones</NavLink>
-                    <NavLink to="/cuentas" onClick={() => setAbierto(false)}><Icon name="landmark" /> Cuentas</NavLink>
+                    {SECCIONES.map((seccion) => (
+                        <div key={seccion.titulo} className="sidebar-seccion">
+                            <span className="sidebar-seccion-titulo">{t(`sidebar.${seccion.titulo}`)}</span>
+                            {seccion.enlaces.map((enlace) => (
+                                <NavLink key={enlace.to} to={enlace.to} end={enlace.end} onClick={cerrar}>
+                                    <Icon name={enlace.icono} size={18} /> {t(`sidebar.${enlace.texto}`)}
+                                </NavLink>
+                            ))}
+                            {seccion.titulo === 'general' && (
+                                <button className="sidebar-nav-btn" onClick={() => { onTransferir && onTransferir(); cerrar(); }}>
+                                    <Icon name="send" size={18} /> {t('sidebar.transferir')}
+                                </button>
+                            )}
+                        </div>
+                    ))}
 
-                    <div className="sidebar-separador" />
-
-                    <button className="sidebar-nav-btn sidebar-nav-btn-proximamente" onClick={() => proximamente('Reportes')}>
-                        <Icon name="chart-no-axes-column-increasing" /> Reportes
-                    </button>
-                    <button className="sidebar-nav-btn sidebar-nav-btn-proximamente" onClick={() => proximamente('Presupuestos')}>
-                        <Icon name="calculator" /> Presupuestos
-                    </button>
-
-                    <NavLink to="/perfil" onClick={() => setAbierto(false)}><Icon name="settings" /> Ajustes</NavLink>
+                    <div className="sidebar-seccion">
+                        <span className="sidebar-seccion-titulo">{t('sidebar.cuenta')}</span>
+                        <NavLink to="/perfil" onClick={cerrar}>
+                            <Icon name="settings" size={18} /> {t('sidebar.ajustes')}
+                        </NavLink>
+                    </div>
                 </nav>
 
                 <div className="sidebar-inferior">
-                    <NavLink to="/perfil" className="sidebar-perfil-chip" onClick={() => setAbierto(false)}>
+                    <NavLink to="/perfil" className="sidebar-perfil-chip" onClick={cerrar}>
                         <span className="sidebar-perfil-avatar">{nombreUsuario.charAt(0).toUpperCase()}</span>
                         <div className="sidebar-perfil-info">
                             <b>{nombreUsuario}</b>
@@ -68,15 +109,17 @@ function Sidebar({ onAgregar, onTransferir, sesion }) {
                         </div>
                     </NavLink>
 
-                    <button className="sidebar-btn-agregar" onClick={() => { onAgregar && onAgregar(); setAbierto(false); }}>
-                        + Agregar
+                    <button className="sidebar-btn-salir" onClick={cerrarSesion}>
+                        <Icon name="log-out" size={16} /> {t('sidebar.cerrarSesion')}
                     </button>
 
-                    <button className="sidebar-btn-salir" onClick={cerrarSesion}>
-                        <Icon name="log-out" size={16} /> Cerrar sesión
-                    </button>
+                    <div className="sidebar-legal-links">
+                        <Link to="/terminos" onClick={cerrar}>{t('sidebar.terminos')}</Link>
+                        <span>·</span>
+                        <Link to="/privacidad" onClick={cerrar}>{t('sidebar.privacidad')}</Link>
+                    </div>
                 </div>
-            </div>
+            </aside>
         </>
     );
 }

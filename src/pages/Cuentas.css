@@ -1,74 +1,22 @@
-/* CUENTAS — liquid glass + tarjetas por tipo, responsive */
+/* =========================================================
+   CUENTAS
+   ========================================================= */
 
-.cuentas-page {
-    width: 100%;
-    max-width: 1440px;
-    margin: 0 auto;
-    padding: 28px 32px;
-    box-sizing: border-box;
-}
-
-/* HEADER */
-
-.cuentas-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.cuentas-header h1 {
-    margin: 0 0 6px;
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--texto);
-}
-
-.cuentas-header p {
-    margin: 0;
-    font-size: 14px;
-    color: var(--texto-gris);
-}
-
-.cuentas-header-botones {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-/* RESUMEN DE PATRIMONIO */
+/* ---------- Resumen de patrimonio ---------- */
 
 .resumen-patrimonio {
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 24px 28px;
-    box-sizing: border-box;
-
-    background: rgba(255, 255, 255, .04);
-    border: 1px solid var(--glass-border-soft);
-    border-radius: 24px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 8px 20px rgba(0, 0, 0, .15);
-    transition: background .2s ease, box-shadow .25s ease;
-    margin-bottom: 18px;
-}
-
-.resumen-patrimonio:hover {
-    background: rgba(255, 255, 255, .07);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 12px 28px rgba(0, 0, 0, .17);
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--tarjeta);
+    box-shadow: var(--sombra-card);
 }
 
 .resumen-metricas {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 24px;
 }
 
 .resumen-metrica {
@@ -78,202 +26,150 @@
     min-width: 0;
 }
 
-.resumen-metrica:not(:first-child) {
-    padding-left: 20px;
-    border-left: 1px solid var(--glass-border-soft);
+.resumen-metrica + .resumen-metrica {
+    padding-left: 24px;
+    border-left: 1px solid var(--borde);
 }
 
 .resumen-label {
-    font-size: 13px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--texto-gris);
 }
 
 .resumen-valor {
-    font-size: 30px;
-    font-weight: 800;
-    color: var(--texto);
-    letter-spacing: -.02em;
+    font-family: var(--fuente-titulo);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+.resumen-metrica:first-child .resumen-valor {
+    font-size: 32px;
+    color: var(--principal);
+}
+
 .resumen-valor-activos {
-    color: #34d399;
+    color: var(--positivo);
 }
 
 .resumen-valor-deuda {
-    color: #f87171;
+    color: var(--negativo);
 }
 
 .resumen-conteo {
-    font-size: 12px;
-    color: var(--texto-gris);
+    font-size: 13px;
+    color: var(--texto-muted);
 }
 
 .resumen-barra {
     display: flex;
-    width: 100%;
+    gap: 3px;
     height: 10px;
-    border-radius: 999px;
+    margin-top: 22px;
+    border-radius: 99px;
     overflow: hidden;
-    background: rgba(255, 255, 255, .08);
+    background: var(--superficie-suave);
 }
 
 .resumen-segmento {
     height: 100%;
-    transition: width .4s ease;
-}
-
-.resumen-segmento:not(:last-child) {
-    border-right: 2px solid rgba(10, 10, 20, .35);
 }
 
 .resumen-leyenda {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 8px 20px;
+    margin-top: 14px;
 }
 
 .resumen-leyenda-item {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     font-size: 13px;
     color: var(--texto-gris);
+}
+
+.resumen-leyenda-item i {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
 }
 
 .resumen-leyenda-item b {
     color: var(--texto);
-    font-weight: 700;
 }
 
-.resumen-leyenda-item i {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-/* ESTADO VACÍO */
-
-.cuenta-vacio {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 60px 24px;
-    text-align: center;
-    border-radius: 22px;
-    border: 1px dashed var(--glass-border-soft);
-    background: rgba(255, 255, 255, .03);
-}
-
-.cuenta-vacio p:first-of-type {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--texto);
-    margin: 0;
-}
-
-.cuenta-vacio p:last-of-type {
-    font-size: 13px;
-    color: var(--texto-gris);
-    margin: 0 0 8px;
-}
-
-/* LISTA */
+/* ---------- Tarjetas de cuenta (estilo tarjeta bancaria) ---------- */
 
 .cuentas-lista {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 20px;
 }
-
-/* TARJETA DE CUENTA */
 
 .cuenta-tarjeta {
     position: relative;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 24px;
-    min-height: 180px;
-    box-sizing: border-box;
-
+    gap: 18px;
+    min-height: 220px;
+    padding: 22px;
+    border-radius: 20px;
+    overflow: hidden;
+    isolation: isolate;
     color: #fff;
-    border: 1px solid rgba(255, 255, 255, .16);
-    border-radius: 22px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 14px 30px rgba(0, 0, 0, .3);
-    transition: transform .25s ease, box-shadow .25s ease;
-}
-
-.cuenta-tarjeta--debito {
-    background: linear-gradient(150deg, #5b8bff 0%, #2a45ad 60%, #131b45 100%);
-}
-
-.cuenta-tarjeta--ahorros {
-    background: linear-gradient(150deg, #34d999 0%, #159464 60%, #0a3a2e 100%);
-}
-
-.cuenta-tarjeta--credito {
-    background: linear-gradient(150deg, #ff6b87 0%, #b8264c 60%, #3d0f22 100%);
-}
-
-.cuenta-tarjeta--efectivo {
-    background: linear-gradient(150deg, #ffc257 0%, #cc8420 60%, #4a2b0a 100%);
-}
-
-.cuenta-tarjeta-brillo {
-    position: absolute;
-    top: 0;
-    left: -75%;
-    width: 45%;
-    height: 100%;
-    background: linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, .25) 50%, transparent 100%);
-    transform: skewX(-20deg);
-    pointer-events: none;
-    transition: left .85s ease;
-    z-index: 1;
-}
-
-.cuenta-tarjeta:hover .cuenta-tarjeta-brillo {
-    left: 130%;
+    background:
+        radial-gradient(260px 180px at 100% 0%, rgba(255, 255, 255, 0.22), transparent 70%),
+        linear-gradient(145deg, var(--color) 0%, color-mix(in srgb, var(--color) 55%, #0A1F24) 100%);
+    box-shadow: 0 18px 40px color-mix(in srgb, var(--color) 30%, transparent);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .cuenta-tarjeta:hover {
     transform: translateY(-3px);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .24), 0 18px 36px rgba(0, 0, 0, .34);
 }
 
-.cuenta-tarjeta>* {
-    position: relative;
-    z-index: 2;
+/* Círculos decorativos */
+.cuenta-tarjeta-brillo {
+    position: absolute;
+    right: -60px;
+    bottom: -80px;
+    z-index: -1;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 30px solid rgba(255, 255, 255, 0.07);
 }
 
 .cuenta-tarjeta-top {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    align-items: center;
     gap: 8px;
 }
 
 .cuenta-etiqueta {
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.18);
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: .08em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, .75);
 }
 
 .cuenta-tarjeta-acciones {
     display: flex;
-    gap: 6px;
+    gap: 4px;
+    margin-left: auto;
     opacity: 0;
-    transition: opacity .2s ease;
+    transition: opacity 0.15s ease;
 }
 
 .cuenta-tarjeta:hover .cuenta-tarjeta-acciones,
@@ -282,86 +178,73 @@
 }
 
 .cuenta-icono-accion {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.16);
     color: #fff;
-    background: rgba(255, 255, 255, .16);
-    border: 1px solid rgba(255, 255, 255, .2);
-    backdrop-filter: blur(6px);
-    transition: background .2s ease;
 }
 
 .cuenta-icono-accion:hover {
-    background: rgba(255, 255, 255, .28);
+    background: rgba(255, 255, 255, 0.3);
 }
 
-/* Ícono de tipo de cuenta: círculo translúcido, estilo referencia */
 .cuenta-icono-tipo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, .16);
-    border: 1px solid rgba(255, 255, 255, .2);
-    color: #fff;
-    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.16);
 }
 
-.cuenta-tarjeta-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+.cuenta-tarjeta-acciones + .cuenta-icono-tipo {
+    margin-left: 0;
+}
+
+.cuenta-tarjeta-top > .cuenta-etiqueta + .cuenta-tarjeta-acciones {
+    margin-left: auto;
 }
 
 .cuenta-nombre {
-    font-size: 18px;
-    font-weight: 800;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    font-family: var(--fuente-titulo);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 .cuenta-banco {
     font-size: 13px;
-    color: rgba(255, 255, 255, .68);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    opacity: 0.75;
 }
 
 .cuenta-tarjeta-medio {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-top: auto;
 }
 
 .cuenta-chip {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 22px;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 26px;
     border-radius: 6px;
-    background: rgba(255, 255, 255, .22);
-    color: rgba(255, 255, 255, .55);
-    flex-shrink: 0;
+    background: linear-gradient(135deg, #F5D38A, #D9A441);
+    color: rgba(0, 0, 0, 0.45);
+}
+
+.cuenta-chip svg {
+    transform: rotate(90deg);
 }
 
 .cuenta-numero {
     font-size: 14px;
-    letter-spacing: .06em;
-    color: rgba(255, 255, 255, .85);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    letter-spacing: 0.12em;
+    opacity: 0.85;
 }
 
 .cuenta-tarjeta-bottom {
@@ -369,180 +252,67 @@
     align-items: flex-end;
     justify-content: space-between;
     gap: 12px;
+    margin-top: auto;
 }
 
 .cuenta-saldo-bloque {
     display: flex;
     flex-direction: column;
-    gap: 2px;
     min-width: 0;
 }
 
 .cuenta-saldo-label {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: .08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, .6);
+    opacity: 0.7;
 }
 
 .cuenta-saldo {
-    font-size: 22px;
-    font-weight: 800;
+    font-family: var(--fuente-titulo);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .cuenta-btn-transferir {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     flex-shrink: 0;
-    padding: 9px 16px;
+    padding: 9px 14px;
+    border: none;
+    border-radius: 10px;
+    background: #fff;
+    color: #10262B;
     font-size: 13px;
     font-weight: 700;
-    color: #fff;
-    background: rgba(255, 255, 255, .22);
-    border: 1px solid rgba(255, 255, 255, .3);
-    border-radius: 999px;
-    backdrop-filter: blur(6px);
-    transition: background .2s ease, transform .2s ease;
 }
 
 .cuenta-btn-transferir:hover {
-    background: rgba(255, 255, 255, .34);
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.88);
 }
 
-/* RESPONSIVE */
+/* ---------- Responsive ---------- */
 
-@media (max-width: 1024px) {
-    .cuentas-page {
-        max-width: 100%;
-        padding: 24px;
-    }
-
-    .cuentas-lista {
-        gap: 14px;
-    }
-
-    .resumen-patrimonio {
-        padding: 20px;
-    }
-}
-
-@media (max-width: 768px) {
-    .cuentas-page {
-        padding: 20px 16px;
-    }
-
-    .cuentas-header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-    }
-
-    .cuentas-header-botones {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
-    }
-
-    .cuentas-header-botones button {
-        width: 100%;
-        min-height: 42px;
-    }
-
-    .cuentas-header-botones .btn-pildora-acento {
-        grid-column: 1 / -1;
-    }
-
-    .resumen-patrimonio {
-        padding: 20px;
-        border-radius: 20px;
+@media (max-width: 900px) {
+    .resumen-metricas {
+        grid-template-columns: 1fr;
         gap: 16px;
     }
 
-    .resumen-metricas {
-        grid-template-columns: 1fr;
-        gap: 14px;
-    }
-
-    .resumen-metrica:not(:first-child) {
+    .resumen-metrica + .resumen-metrica {
         padding-left: 0;
-        padding-top: 14px;
+        padding-top: 16px;
         border-left: none;
-        border-top: 1px solid var(--glass-border-soft);
-    }
-
-    .resumen-valor {
-        font-size: 26px;
-    }
-
-    .cuentas-lista {
-        grid-template-columns: 1fr;
-        gap: 14px;
-    }
-
-    .cuenta-tarjeta {
-        min-height: 170px;
-        padding: 20px;
-        border-radius: 20px;
+        border-top: 1px solid var(--borde);
     }
 
     .cuenta-tarjeta-acciones {
         opacity: 1;
-    }
-
-    .cuenta-tarjeta:hover {
-        transform: none;
-    }
-}
-
-@media (max-width: 480px) {
-    .cuentas-page {
-        padding: 16px 12px;
-    }
-
-    .cuentas-header h1 {
-        font-size: 25px;
-    }
-
-    .cuentas-header-botones {
-        grid-template-columns: 1fr;
-    }
-
-    .cuentas-header-botones .btn-pildora-acento {
-        grid-column: auto;
-    }
-
-    .resumen-patrimonio {
-        padding: 18px;
-        border-radius: 18px;
-    }
-
-    .resumen-valor {
-        font-size: 23px;
-    }
-
-    .cuenta-tarjeta {
-        padding: 18px;
-        border-radius: 18px;
-        min-height: 160px;
-    }
-
-    .cuenta-nombre {
-        font-size: 16px;
-    }
-
-    .cuenta-banco {
-        font-size: 12px;
-    }
-
-    .cuenta-saldo {
-        font-size: 19px;
-    }
-
-    .cuenta-btn-transferir {
-        padding: 7px 12px;
-        font-size: 12px;
     }
 }

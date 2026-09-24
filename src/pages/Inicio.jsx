@@ -5,46 +5,56 @@ import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
 import { IconoMarca, buscarMarca } from '../components/IconoMarca';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { parseFecha, mismoMes, mismoDia, compararFechas } from '../utils/fechas';
+import { aplicarTema, temaGuardado } from '../utils/tema';
+import { useIdioma, nombreCategoria } from '../i18n/idioma';
+
+// Paleta de categorías: teal, coral, ámbar, violeta, menta y gris
+const COLORES = ['#0B5E66', '#FF6B4A', '#E39A2D', '#5B4FD6', '#5FC4BA', '#94A3B8'];
+
+const estiloTooltip = {
+    contentStyle: {
+        background: 'var(--tarjeta)',
+        border: '1px solid var(--borde)',
+        borderRadius: 12,
+        boxShadow: '0 12px 30px rgba(16, 38, 43, 0.12)',
+        fontSize: 13,
+    },
+    labelStyle: { color: 'var(--texto)', fontWeight: 700 },
+    itemStyle: { color: 'var(--texto-gris)' },
+};
+
+function claveSaludo() {
+    const hora = new Date().getHours();
+    if (hora < 12) return 'inicio.buenosDias';
+    if (hora < 19) return 'inicio.buenasTardes';
+    return 'inicio.buenasNoches';
+}
 
 function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abrirModal }) {
 
     const { mostrarTour, cerrarTour } = useTour('dashboard', sesion);
+    const { t, locale } = useIdioma();
 
     const [mesSeleccionado, setMesSeleccionado] = useState(new Date());
     const [ocultarValores, setOcultarValores] = useState(false);
-    const [temaOscuro, setTemaOscuro] = useState(() => document.documentElement.getAttribute('data-theme') !== 'light');
+    const [temaOscuro, setTemaOscuro] = useState(() => temaGuardado() === 'oscuro');
     const [periodoResumen, setPeriodoResumen] = useState('mes');
 
-    // Aplica el tema guardado al <html> apenas se monta el dashboard.
-    // Antes solo se aplicaba dentro de alternarTema(), así que al cargar/refrescar
-    // la página el atributo data-theme="dark" nunca quedaba puesto y el selector
-    // [data-theme="dark"] body (blobs de color del fondo) no calzaba nunca.
-    // Nota: lo ideal a futuro es mover esto a App.jsx o main.jsx para que aplique
-    // en toda la app desde el primer render, no solo cuando se visita Inicio.
-    useEffect(() => {
-        const guardado = localStorage.getItem('tema'); // 'oscuro' | 'claro' | null
-        const oscuro = guardado ? guardado === 'oscuro' : true; // por defecto oscuro si no hay preferencia guardada
-        document.documentElement.setAttribute('data-theme', oscuro ? 'dark' : 'light');
-        setTemaOscuro(oscuro);
-    }, []);
-
+    // El tema se aplica al iniciar la app (main.jsx); aquí solo se alterna.
     function alternarTema() {
         const nuevoOscuro = !temaOscuro;
-        document.documentElement.setAttribute('data-theme', nuevoOscuro ? 'dark' : 'light');
-        localStorage.setItem('tema', nuevoOscuro ? 'oscuro' : 'claro');
+        aplicarTema(nuevoOscuro ? 'oscuro' : 'claro');
         setTemaOscuro(nuevoOscuro);
     }
 
     const nombreUsuario = sesion?.user?.user_metadata?.nombre
         || sesion?.user?.user_metadata?.full_name
         || sesion?.user?.email?.split('@')[0]
-        || 'Usuario';
+        || t('comun.usuario');
 
-    const transaccionesDelMes = transacciones.filter(t => {
-        const fecha = new Date(t.fecha);
-        return fecha.getMonth() === mesSeleccionado.getMonth() && fecha.getFullYear() === mesSeleccionado.getFullYear();
-    });
+    const transaccionesDelMes = transacciones.filter(mov => mismoMes(parseFecha(mov.fecha), mesSeleccionado));
 
     const balance = cuentas.reduce((acc, c) => acc + Number(c.saldo), 0);
 
@@ -58,10 +68,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
 
     // Comparación real contra el mes anterior al seleccionado (no inventada)
     const mesAnterior = new Date(mesSeleccionado.getFullYear(), mesSeleccionado.getMonth() - 1, 1);
-    const transaccionesMesAnterior = transacciones.filter(t => {
-        const fecha = new Date(t.fecha);
-        return fecha.getMonth() === mesAnterior.getMonth() && fecha.getFullYear() === mesAnterior.getFullYear();
-    });
+    const transaccionesMesAnterior = transacciones.filter(t => mismoMes(parseFecha(t.fecha), mesAnterior));
     const ingresosMesAnterior = transaccionesMesAnterior
         .filter(t => t.tipo === 'ingreso')
         .reduce((acc, t) => acc + Number(t.monto), 0);
@@ -92,18 +99,13 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
 
     const hoy = new Date();
 
-    const MESES_CORTOS_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-
-    function mismoDia(fechaStr, d) {
-        const f = new Date(fechaStr);
-        return f.getDate() === d.getDate() && f.getMonth() === d.getMonth() && f.getFullYear() === d.getFullYear();
-    }
+    const mesCorto = (fecha) => fecha.toLocaleDateString(locale, { month: 'short' }).replace('.', '');
 
     function totalesEntre(inicio, fin, tipo) {
         return transacciones
             .filter(t => {
-                const f = new Date(t.fecha);
-                return t.tipo === tipo && f >= inicio && f <= fin;
+                const f = parseFecha(t.fecha);
+                return t.tipo === tipo && f && f >= inicio && f <= fin;
             })
             .reduce((acc, t) => acc + Number(t.monto), 0);
     }
@@ -113,9 +115,9 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
         if (periodoResumen === 'semana') {
             return Array.from({ length: 7 }, (_, i) => {
                 const d = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - (6 - i));
-                const ingresos = transacciones.filter(t => t.tipo === 'ingreso' && mismoDia(t.fecha, d)).reduce((a, t) => a + Number(t.monto), 0);
-                const gastos = transacciones.filter(t => t.tipo === 'gasto' && mismoDia(t.fecha, d)).reduce((a, t) => a + Number(t.monto), 0);
-                return { mes: `${d.getDate()} ${MESES_CORTOS_ES[d.getMonth()]}`, ingresos, gastos };
+                const ingresos = transacciones.filter(t => t.tipo === 'ingreso' && mismoDia(parseFecha(t.fecha), d)).reduce((a, t) => a + Number(t.monto), 0);
+                const gastos = transacciones.filter(t => t.tipo === 'gasto' && mismoDia(parseFecha(t.fecha), d)).reduce((a, t) => a + Number(t.monto), 0);
+                return { mes: `${d.getDate()} ${mesCorto(d)}`, ingresos, gastos };
             });
         }
 
@@ -125,7 +127,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
                 const inicio = new Date(fechaMes.getFullYear(), fechaMes.getMonth(), 1);
                 const fin = new Date(fechaMes.getFullYear(), fechaMes.getMonth() + 1, 0, 23, 59, 59);
                 return {
-                    mes: MESES_CORTOS_ES[fechaMes.getMonth()],
+                    mes: mesCorto(fechaMes),
                     ingresos: totalesEntre(inicio, fin, 'ingreso'),
                     gastos: totalesEntre(inicio, fin, 'gasto'),
                 };
@@ -142,7 +144,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
             const finSemanaCalculado = new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate() + 6, 23, 59, 59);
             const finSemana = finSemanaCalculado > finMes ? finMes : finSemanaCalculado;
             semanas.push({
-                mes: `${inicioSemana.getDate()} ${MESES_CORTOS_ES[inicioSemana.getMonth()]}`,
+                mes: `${inicioSemana.getDate()} ${mesCorto(inicioSemana)}`,
                 ingresos: totalesEntre(inicioSemana, finSemana, 'ingreso'),
                 gastos: totalesEntre(inicioSemana, finSemana, 'gasto'),
             });
@@ -150,8 +152,6 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
         }
         return semanas;
     }
-
-    const COLORES = ['#8B7EF6', '#F16C7A', '#FFA94D', '#C9A8F5', '#5FD4D0', '#C9CED6'];
 
     function formatoMonto(valor, signo = '') {
         if (ocultarValores) return '••••••';
@@ -166,118 +166,80 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
         <div className='dashboard'>
             <div className="dashboard-header">
                 <div>
-                    <p className="dashboard-saludo">👋 {nombreUsuario}</p>
-                    <h1>Inicio</h1>
+                    <p className="overline">{t(claveSaludo())}, {nombreUsuario}</p>
+                    <h1>{t('inicio.titulo')}</h1>
+                    <p>{hoy.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}</p>
                 </div>
                 <div className="dashboard-top-actions">
-                    <button className="dashboard-icon-btn" onClick={() => alert('Búsqueda: próximamente 🔍')} title="Buscar">
-                        <Icon name="search" size={18} />
-                    </button>
-                    <button className="dashboard-icon-btn" onClick={() => alert('No tienes notificaciones nuevas por ahora.')} title="Notificaciones">
-                        <Icon name="bell" size={18} />
-                    </button>
-                    <button className="dashboard-icon-btn" onClick={alternarTema} title="Cambiar tema">
-                        <Icon name={temaOscuro ? 'sun' : 'moon'} size={18} />
-                    </button>
-                    <button className="dashboard-btn-ojo" onClick={() => setOcultarValores(v => !v)} title={ocultarValores ? 'Mostrar valores' : 'Ocultar valores'}>
+                    <div className='dashboard-mes-selector'>
+                        <button onClick={() => setMesSeleccionado(new Date(mesSeleccionado.getFullYear(), mesSeleccionado.getMonth() - 1))} aria-label={t('comun.mesAnterior')}>
+                            <Icon name="chevron-left" size={16} />
+                        </button>
+                        <span>{mesSeleccionado.toLocaleDateString(locale, { month: 'long', year: 'numeric' })}</span>
+                        <button onClick={() => setMesSeleccionado(new Date(mesSeleccionado.getFullYear(), mesSeleccionado.getMonth() + 1))} aria-label={t('comun.mesSiguiente')}>
+                            <Icon name="chevron-right" size={16} />
+                        </button>
+                    </div>
+                    <button className="dashboard-icon-btn" onClick={() => setOcultarValores(v => !v)} title={ocultarValores ? t('inicio.mostrarValores') : t('inicio.ocultarValores')}>
                         <Icon name={ocultarValores ? 'eye-off' : 'eye'} size={18} />
                     </button>
+                    <button className="dashboard-icon-btn" onClick={alternarTema} title={temaOscuro ? t('inicio.temaClaro') : t('inicio.temaOscuro')}>
+                        <Icon name={temaOscuro ? 'sun' : 'moon'} size={18} />
+                    </button>
                     {abrirModal && (
-                        <button className="dashboard-btn-nuevo" onClick={() => abrirModal('gasto')}>
-                            <Icon name="plus" size={16} /> <span>Nuevo</span>
+                        <button className="btn-pildora-acento" onClick={() => abrirModal('gasto')}>
+                            <Icon name="plus" size={16} /> {t('sidebar.nuevoMovimiento')}
                         </button>
                     )}
                 </div>
             </div>
 
-            <div className='dashboard-mes-selector'>
-                <button onClick={() => setMesSeleccionado(new Date(mesSeleccionado.getFullYear(), mesSeleccionado.getMonth() - 1))}>
-                    <Icon name="chevron-left" size={16} />
-                </button>
-                <span>{mesSeleccionado.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' })}</span>
-                <button onClick={() => setMesSeleccionado(new Date(mesSeleccionado.getFullYear(), mesSeleccionado.getMonth() + 1))}>
-                    <Icon name="chevron-right" size={16} />
-                </button>
-            </div>
-
-            {/* Fila de 4 tarjetas de estadísticas */}
+            {/* Balance destacado + 3 métricas del mes */}
             <div className="dashboard-stats">
-                <div className="dashboard-stat-card">
+                <div className="dashboard-stat-card dashboard-stat-destacada">
                     <div className="dashboard-stat-top">
-                        <span className="dashboard-stat-label">Balance total</span>
-                        <span
-                            className="dashboard-stat-icon"
-                            style={{
-                                backgroundColor: '#6C7FF0',
-                                color: '#ffffff',
-                                boxShadow: '0 6px 14px rgba(108, 127, 240, 0.45)',
-                            }}
-                        >
-                            <Icon name="wallet" size={18} />
-                        </span>
+                        <span className="dashboard-stat-label">{t('inicio.balanceTotal')}</span>
+                        <span className="dashboard-stat-icon"><Icon name="wallet" size={18} /></span>
                     </div>
                     <div className="dashboard-stat-value">{formatoMonto(balance)}</div>
+                    <small className="dashboard-stat-nota">
+                        {t('comun.cuentas', { n: cuentas.length })} · {t('inicio.flujoMes')} {formatoMonto(totalIngresos - totalGasto, totalIngresos - totalGasto < 0 ? '-' : '+')}
+                    </small>
                 </div>
 
                 <div className="dashboard-stat-card">
                     <div className="dashboard-stat-top">
-                        <span className="dashboard-stat-label">Ingresos</span>
-                        <span
-                            className="dashboard-stat-icon"
-                            style={{
-                                backgroundColor: '#8B7EF6',
-                                color: '#ffffff',
-                                boxShadow: '0 6px 14px rgba(139, 126, 246, 0.45)',
-                            }}
-                        >
-                            <Icon name="download" size={18} />
-                        </span>
+                        <span className="dashboard-stat-label">{t('inicio.ingresosMes')}</span>
+                        <span className="dashboard-stat-icon stat-icon-positivo"><Icon name="arrow-down-left" size={18} /></span>
                     </div>
                     <div className="dashboard-stat-value">{formatoMonto(totalIngresos)}</div>
-                    {tendenciaIngresos !== null && (
+                    {tendenciaIngresos !== null ? (
                         <small className={tendenciaIngresos >= 0 ? 'dashboard-tendencia-up-claro' : 'dashboard-tendencia-down-claro'}>
-                            {tendenciaIngresos >= 0 ? '▲' : '▼'} {Math.abs(tendenciaIngresos).toFixed(1)}% vs el mes pasado
+                            {tendenciaIngresos >= 0 ? '▲' : '▼'} {t('inicio.vsMesPasado', { p: Math.abs(tendenciaIngresos).toFixed(1) })}
                         </small>
-                    )}
+                    ) : <small className="dashboard-stat-nota">{t('inicio.sinDatosMesPasado')}</small>}
                 </div>
 
                 <div className="dashboard-stat-card">
                     <div className="dashboard-stat-top">
-                        <span className="dashboard-stat-label">Gastos</span>
-                        <span
-                            className="dashboard-stat-icon"
-                            style={{
-                                backgroundColor: '#F16C7A',
-                                color: '#ffffff',
-                                boxShadow: '0 6px 14px rgba(241, 108, 122, 0.45)',
-                            }}
-                        >
-                            <Icon name="arrow-up-circle" size={18} />
-                        </span>
+                        <span className="dashboard-stat-label">{t('inicio.gastosMes')}</span>
+                        <span className="dashboard-stat-icon stat-icon-negativo"><Icon name="arrow-up-right" size={18} /></span>
                     </div>
                     <div className="dashboard-stat-value">{formatoMonto(totalGasto)}</div>
-                    {tendenciaGastos !== null && (
+                    {tendenciaGastos !== null ? (
                         <small className={tendenciaGastos <= 0 ? 'dashboard-tendencia-up-claro' : 'dashboard-tendencia-down-claro'}>
-                            {tendenciaGastos >= 0 ? '▲' : '▼'} {Math.abs(tendenciaGastos).toFixed(1)}% vs el mes pasado
+                            {tendenciaGastos >= 0 ? '▲' : '▼'} {t('inicio.vsMesPasado', { p: Math.abs(tendenciaGastos).toFixed(1) })}
                         </small>
-                    )}
+                    ) : <small className="dashboard-stat-nota">{t('inicio.sinDatosMesPasado')}</small>}
                 </div>
 
                 <div className="dashboard-stat-card">
                     <div className="dashboard-stat-top">
-                        <span className="dashboard-stat-label">Ahorros</span>
-                        <span
-                            className="dashboard-stat-icon"
-                            style={{
-                                backgroundColor: '#34D399',
-                                color: '#ffffff',
-                                boxShadow: '0 6px 14px rgba(52, 211, 153, 0.45)',
-                            }}
-                        >
-                            <Icon name="piggy-bank" size={18} />
-                        </span>
+                        <span className="dashboard-stat-label">{t('inicio.ahorradoMetas')}</span>
+                        <span className="dashboard-stat-icon stat-icon-ahorro"><Icon name="piggy-bank" size={18} /></span>
                     </div>
                     <div className="dashboard-stat-value">{formatoMonto(ahorradoEnMetas)}</div>
+                    <small className="dashboard-stat-nota">{t('inicio.metasActivas', { n: metas.length })}</small>
                 </div>
             </div>
 
@@ -285,23 +247,23 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
             <div className="dashboard-grid-main">
                 <div className="dashboard-caja dashboard-grid-resumen">
                     <div className="dashboard-caja-header">
-                        <h3>Resumen de movimientos</h3>
+                        <h3>{t('inicio.resumenMovimientos')}</h3>
                         <div className="tabs-periodo">
-                            <button className={periodoResumen === 'semana' ? 'activo' : ''} onClick={() => setPeriodoResumen('semana')}>Semana</button>
-                            <button className={periodoResumen === 'mes' ? 'activo' : ''} onClick={() => setPeriodoResumen('mes')}>Mes</button>
-                            <button className={periodoResumen === 'año' ? 'activo' : ''} onClick={() => setPeriodoResumen('año')}>Año</button>
+                            <button className={periodoResumen === 'semana' ? 'activo' : ''} onClick={() => setPeriodoResumen('semana')}>{t('inicio.semana')}</button>
+                            <button className={periodoResumen === 'mes' ? 'activo' : ''} onClick={() => setPeriodoResumen('mes')}>{t('inicio.mes')}</button>
+                            <button className={periodoResumen === 'año' ? 'activo' : ''} onClick={() => setPeriodoResumen('año')}>{t('inicio.anio')}</button>
                         </div>
                     </div>
-                    <ResponsiveContainer width="100%" height={220}>
+                    <ResponsiveContainer width="100%" height={270}>
                         <AreaChart data={datosResumen()}>
                             <defs>
                                 <linearGradient id="colorIngresos" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#6EE7A8" stopOpacity={0.55} />
-                                    <stop offset="95%" stopColor="#6EE7A8" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#12A77F" stopOpacity={0.28} />
+                                    <stop offset="95%" stopColor="#12A77F" stopOpacity={0} />
                                 </linearGradient>
                                 <linearGradient id="colorGastos" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#F16C7A" stopOpacity={0.35} />
-                                    <stop offset="95%" stopColor="#F16C7A" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#FF6B4A" stopOpacity={0.22} />
+                                    <stop offset="95%" stopColor="#FF6B4A" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--texto-gris)' }} />
@@ -310,45 +272,45 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
                                 tickLine={false}
                                 tick={{ fontSize: 12, fill: 'var(--texto-gris)' }}
                                 tickFormatter={(valor) => valor === 0 ? '$0' : `$${(valor / 1000).toLocaleString('es-CO')}k`}
-                                width={40}
+                                width={56}
                             />
-                            <Tooltip formatter={(valor) => `$${Number(valor).toLocaleString('es-CO')}`} />
-                            <Area type="monotone" dataKey="ingresos" stroke="#4ADE80" strokeWidth={2.5} fill="url(#colorIngresos)" />
-                            <Area type="monotone" dataKey="gastos" stroke="#F16C7A" strokeWidth={2.5} fill="url(#colorGastos)" dot={false} />
+                            <Tooltip {...estiloTooltip} formatter={(valor) => `$${Number(valor).toLocaleString("es-CO")}`} />
+                            <Area type="monotone" dataKey="ingresos" name={t('inicio.ingresos')} stroke="#12A77F" strokeWidth={2.5} fill="url(#colorIngresos)" dot={false} />
+                            <Area type="monotone" dataKey="gastos" name={t('inicio.gastos')} stroke="#FF6B4A" strokeWidth={2.5} fill="url(#colorGastos)" dot={false} />
                         </AreaChart>
                     </ResponsiveContainer>
                     <div className="legend-resumen">
-                        <span><i className="dot-ingreso" /> Ingresos</span>
-                        <span><i className="dot-gasto" /> Gastos</span>
+                        <span><i className="dot-ingreso" /> {t('inicio.ingresos')}</span>
+                        <span><i className="dot-gasto" /> {t('inicio.gastos')}</span>
                     </div>
                 </div>
 
                 <div className="dashboard-caja dashboard-grid-dona">
-                    <h3>Distribución de gastos</h3>
+                    <h3>{t('inicio.distribucion')}</h3>
                     {totalGasto === 0 ? (
-                        <p className="dashboard-caja-vacia">Sin gastos registrados este mes</p>
+                        <p className="dashboard-caja-vacia">{t('inicio.sinGastosMes')}</p>
                     ) : (
                         <>
                             <div className="dashboard-donut-row">
                                 <div className="dashboard-donut-chart-wrap">
                                     <ResponsiveContainer width="100%" height={190}>
                                         <PieChart>
-                                            <Pie data={gastosPorCategoria} dataKey="valor" nameKey="categoria" innerRadius={58} outerRadius={85} paddingAngle={2}>
+                                            <Pie data={gastosPorCategoria} dataKey="valor" nameKey="categoria" innerRadius={58} outerRadius={85} paddingAngle={2} stroke="none">
                                                 {gastosPorCategoria.map((entry, index) => (
                                                     <Cell key={index} fill={COLORES[index % COLORES.length]} />
                                                 ))}
                                             </Pie>
-                                            <Tooltip formatter={(valor) => `$${Number(valor).toLocaleString('es-CO')}`} />
+                                            <Tooltip {...estiloTooltip} formatter={(valor) => `$${Number(valor).toLocaleString("es-CO")}`} />
                                         </PieChart>
                                     </ResponsiveContainer>
                                     <div className="dashboard-donut-center">
                                         <strong>{formatoMonto(totalGasto)}</strong>
-                                        <span>Total</span>
+                                        <span>{t('inicio.total')}</span>
                                     </div>
                                 </div>
                                 <div className="dashboard-donut-legend">
                                     <div className="dashboard-donut-legend-header">
-                                        <span>Categorías</span>
+                                        <span>{t('inicio.categorias')}</span>
                                         <span>%</span>
                                     </div>
                                     {gastosPorCategoria
@@ -358,7 +320,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
                                             <div key={cat.categoria} className="dashboard-donut-legend-item">
                                                 <span>
                                                     <i style={{ backgroundColor: COLORES[gastosPorCategoria.indexOf(cat) % COLORES.length] }} />
-                                                    {cat.categoria}
+                                                    {nombreCategoria(cat.categoria)}
                                                 </span>
                                                 <b>{Math.round((cat.valor / totalGasto) * 100)}%</b>
                                             </div>
@@ -372,11 +334,11 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
                 <div className="dashboard-col-lateral">
                     <div className="dashboard-caja">
                         <div className="dashboard-caja-header">
-                            <h3>Metas</h3>
-                            <Link to="/Metas" className="dashboard-ver-todo">Ver todas</Link>
+                            <h3>{t('inicio.metas')}</h3>
+                            <Link to="/Metas" className="dashboard-ver-todo">{t('comun.verTodas')}</Link>
                         </div>
                         {metas.length === 0 ? (
-                            <p className="dashboard-caja-vacia">No hay metas activas</p>
+                            <p className="dashboard-caja-vacia">{t('inicio.sinMetas')}</p>
                         ) : (
                             metas.slice(0, 3).map((meta, index) => {
                                 const porcentaje = Math.min((meta.monto_actual / meta.monto_objetivo) * 100, 100);
@@ -397,16 +359,16 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
 
                     <div className="dashboard-caja">
                         <div className="dashboard-caja-header">
-                            <h3>Suscripciones</h3>
-                            <Link to="/Suscripciones" className="dashboard-ver-todo">Ver todas</Link>
+                            <h3>{t('inicio.suscripciones')}</h3>
+                            <Link to="/Suscripciones" className="dashboard-ver-todo">{t('comun.verTodas')}</Link>
                         </div>
                         {suscripciones.length === 0 ? (
-                            <p className="dashboard-caja-vacia">No hay suscripciones</p>
+                            <p className="dashboard-caja-vacia">{t('inicio.sinSuscripciones')}</p>
                         ) : (
                             <>
                                 {suscripciones
                                     .slice()
-                                    .sort((a, b) => new Date(a.fecha_renovacion) - new Date(b.fecha_renovacion))
+                                    .sort((a, b) => compararFechas(a.fecha_renovacion, b.fecha_renovacion))
                                     .slice(0, 3)
                                     .map((sus, index) => {
                                         const marca = buscarMarca(sus.nombre);
@@ -416,7 +378,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
                                                     {marca ? (
                                                         <IconoMarca nombre={sus.nombre} size={14} badgeSize={26} borderRadius="8px" />
                                                     ) : (
-                                                        <span className="pago-proximo-icono-generico" style={{ backgroundColor: (sus.color || '#6C63FF') + '22', color: sus.color || '#6C63FF' }}>
+                                                        <span className="pago-proximo-icono-generico" style={{ backgroundColor: (sus.color || "#0B5E66") + '22', color: sus.color || "#0B5E66" }}>
                                                             <Icon name={sus.icono} size={13} />
                                                         </span>
                                                     )}
@@ -427,7 +389,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
                                         );
                                     })}
                                 <div className="dashboard-total-mensual">
-                                    <span>Total mensual</span>
+                                    <span>{t('inicio.totalMensual')}</span>
                                     <b>{formatoMonto(totalSuscripcionesMensual)}</b>
                                 </div>
                             </>
@@ -437,31 +399,31 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
 
                 <div className="dashboard-caja dashboard-grid-recientes">
                     <div className="dashboard-caja-header">
-                        <h3>Movimientos recientes</h3>
-                        <Link to="/transacciones" className="dashboard-ver-todo">Ver todos</Link>
+                        <h3>{t('inicio.recientes')}</h3>
+                        <Link to="/transacciones" className="dashboard-ver-todo">{t('comun.verTodos')}</Link>
                     </div>
                     {transacciones.length === 0 ? (
-                        <p className="dashboard-caja-vacia">No tienes movimientos todavía</p>
+                        <p className="dashboard-caja-vacia">{t('inicio.sinMovimientos')}</p>
                     ) : (
                         transacciones
                             .slice()
-                            .sort((a, b) => new Date(b.fecha) - new Date(a.fecha))
+                            .sort((a, b) => compararFechas(b.fecha, a.fecha))
                             .slice(0, 4)
-                            .map((t) => {
-                                const marca = buscarMarca(t.descripcion);
+                            .map((mov) => {
+                                const marca = buscarMarca(mov.descripcion);
                                 return (
-                                    <div key={t.id} className="fila-movimiento-reciente">
+                                    <div key={mov.id} className="fila-movimiento-reciente">
                                         {marca ? (
-                                            <IconoMarca nombre={t.descripcion} size={16} badgeSize={34} borderRadius="50%" />
+                                            <IconoMarca nombre={mov.descripcion} size={16} badgeSize={34} borderRadius="50%" />
                                         ) : (
-                                            <div className="fila-movimiento-avatar">{iniciales(t.descripcion)}</div>
+                                            <div className="fila-movimiento-avatar">{iniciales(mov.descripcion)}</div>
                                         )}
                                         <div className="fila-movimiento-info">
-                                            <b>{t.descripcion}</b>
-                                            <small>{t.categoria || 'Sin categoría'}</small>
+                                            <b>{mov.descripcion || t('comun.sinDescripcion')}</b>
+                                            <small>{nombreCategoria(mov.categoria)}</small>
                                         </div>
-                                        <span className={t.tipo === 'ingreso' ? 'dashboard-monto-in' : 'dashboard-monto-out'}>
-                                            {t.tipo === 'ingreso' ? '+ ' : '- '}{formatoMonto(t.monto)}
+                                        <span className={mov.tipo === 'ingreso' ? 'dashboard-monto-in' : 'dashboard-monto-out'}>
+                                            {mov.tipo === 'ingreso' ? '+ ' : '- '}{formatoMonto(mov.monto)}
                                         </span>
                                     </div>
                                 );
@@ -470,35 +432,35 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
                 </div>
 
                 <div className="dashboard-caja dashboard-grid-transferencia">
-                    <h3>Transferencia rápida</h3>
-                    <p className="dashboard-transferencia-sub">Mueve dinero entre tus propias cuentas.</p>
+                    <h3>{t('inicio.transferenciaRapida')}</h3>
+                    <p className="dashboard-transferencia-sub">{t('inicio.transferenciaTexto')}</p>
                     {cuentas.length === 0 ? (
-                        <p className="dashboard-caja-vacia">Agrega una cuenta para transferir</p>
+                        <p className="dashboard-caja-vacia">{t('inicio.agregaCuenta')}</p>
                     ) : (
                         <div className="dashboard-avatares-cuentas">
                             {cuentas.slice(0, 3).map((c) => (
                                 <button key={c.id} className="dashboard-avatar-cuenta" onClick={() => abrirModal && abrirModal('transferencia')} title={c.nombre}>
-                                    <span style={{ backgroundColor: c.color || 'var(--dash-accent-1)' }}>{iniciales(c.nombre)}</span>
+                                    <span style={{ backgroundColor: c.color || "var(--principal)" }}>{iniciales(c.nombre)}</span>
                                     <small>{c.nombre}</small>
                                 </button>
                             ))}
                             <Link to="/cuentas" className="dashboard-avatar-cuenta">
                                 <span className="dashboard-avatar-agregar"><Icon name="plus" size={16} /></span>
-                                <small>Agregar</small>
+                                <small>{t('comun.agregar')}</small>
                             </Link>
                         </div>
                     )}
                     {abrirModal && (
                         <button className="dashboard-btn-transferir" onClick={() => abrirModal('transferencia')}>
-                            <Icon name="send" size={14} /> Transferir
+                            <Icon name="send" size={14} /> {t('comun.transferir')}
                         </button>
                     )}
                 </div>
             </div>
 
             {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
-                { titulo: '¡Bienvenido a NOVU!', texto: 'Aquí ves tu balance, ingresos, gastos y metas de un vistazo.' },
-                { titulo: 'Tus gráficas', texto: 'Visualiza tu flujo mensual y en qué categorías gastas más.' }
+                { titulo: t('inicio.tour1Titulo'), texto: t('inicio.tour1Texto') },
+                { titulo: t('inicio.tour2Titulo'), texto: t('inicio.tour2Texto') }
             ]} />}
         </div>
     );

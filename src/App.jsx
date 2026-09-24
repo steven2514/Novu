@@ -90,23 +90,6 @@ function App() {
         });
     }, [sesion]);
 
-    useEffect(() => {
-        const hex = localStorage.getItem('color-acento');
-        if (!hex) return;
-        const oscuro = localStorage.getItem('color-acento-oscuro') || '#B89A1E';
-        const fin = localStorage.getItem('color-acento-fin') || '#A9C95A';
-
-        document.documentElement.style.setProperty('--principal', hex);
-        document.documentElement.style.setProperty('--principal-oscuro', oscuro);
-        document.documentElement.style.setProperty('--principal-claro', hex + '22');
-        document.documentElement.style.setProperty('--principal-muy-claro', hex + '11');
-        document.documentElement.style.setProperty('--gradiente-balance', `linear-gradient(135deg, ${hex} 0%, ${fin} 100%)`);
-        document.documentElement.style.setProperty('--acento', hex);
-        document.documentElement.style.setProperty('--acento-oscuro', oscuro);
-        document.documentElement.style.setProperty('--acento-texto', '#1a1a1a');
-        document.documentElement.style.setProperty('--banner-inicio', hex);
-        document.documentElement.style.setProperty('--banner-fin', fin);
-    }, []);
 
 
 
@@ -158,13 +141,13 @@ function App() {
                 </Routes>
             ) : (
                 <div className='layout'>
-                    <Sidebar onAgregar={() => abrirModal('gasto')} />
+                    <Sidebar onAgregar={() => abrirModal('gasto')} onTransferir={() => abrirModal('transferencia')} sesion={sesion} />
                     <div className='contenido'>
                         <Routes>
 
                             <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} sesion={sesion} />} />
 
-                            <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} sesion={sesion} />} />
+                            <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} sesion={sesion} abrirModal={abrirModal} />} />
 
                             <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} abrirModalTransferencia={() => abrirModal('transferencia')} />} />
 

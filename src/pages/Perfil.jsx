@@ -3,14 +3,8 @@ import './Perfil.css';
 import { supabase } from '../supabase';
 import { useToast } from '../Context/ToastContext';
 import { Icon } from '../components/Icon';
-
-const COLORES_ACENTO = [
-  { name: 'Verde', hex: '#00EFA4', oscuro: '#059B6C', gradienteFin: '#21B3CC' },
-  { name: 'Azul', hex: '#1BC3F3', oscuro: '#108CAF', gradienteFin: '#3B6BD1' },
-  { name: 'Morado', hex: '#B688FE', oscuro: '#8740F7', gradienteFin: '#E097ED' },
-  { name: 'Coral', hex: '#FF8064', oscuro: '#F7441D', gradienteFin: '#E9C078' },
-  { name: 'Amarillo', hex: '#E8CB3D', oscuro: '#B89A1E', gradienteFin: '#A9C95A' },
-];
+import { PALETAS, aplicarPaleta, paletaGuardada, aplicarTema, temaGuardado } from '../utils/tema';
+import { useIdioma } from '../i18n/idioma';
 
 const CONEXIONES_DISPONIBLES = [
   { nombre: 'Nequi', icono: 'smartphone' },
@@ -21,22 +15,25 @@ const CONEXIONES_DISPONIBLES = [
   { nombre: 'Banco de Bogotá', icono: 'landmark' },
 ];
 
+const IDIOMAS = [
+  { codigo: 'es', nombre: 'Español' },
+  { codigo: 'en', nombre: 'English' },
+];
+
 function Perfil({ sesion, setSesion }) {
 
   const { mostrarToast } = useToast();
+  const { t, idioma, cambiarIdioma } = useIdioma();
   const email = sesion?.user?.email || '';
 
   // ─── Datos del perfil ───
-  const [perfil, setPerfil] = useState(null);
   const [nombre, setNombre] = useState('');
   const [moneda, setMoneda] = useState('COP');
   const [cargandoPerfil, setCargandoPerfil] = useState(true);
 
   // ─── Apariencia ───
-  const [colorAcento, setColorAcento] = useState(() => localStorage.getItem('color-acento') || '#E8CB3D');
-  // Nota: el idioma es solo un interruptor visual guardado en localStorage.
-  // La app todavía no tiene sistema de traducción (i18n) real implementado.
-  const [idioma, setIdioma] = useState(() => localStorage.getItem('idioma') || 'es');
+  const [paleta, setPaleta] = useState(paletaGuardada);
+  const [tema, setTema] = useState(temaGuardado);
 
   // ─── Cambiar contraseña ───
   const [passNueva, setPassNueva] = useState('');
@@ -52,48 +49,34 @@ function Perfil({ sesion, setSesion }) {
       setCargandoPerfil(false);
       if (data && data.length > 0) {
         const p = data[0];
-        setPerfil(p);
         setNombre(p.nombre || '');
         setMoneda(p.moneda || 'COP');
       }
     });
   }, [sesion]);
 
-  function aplicarColor(hex) {
-    setColorAcento(hex);
-    const obj = COLORES_ACENTO.find(c => c.hex === hex);
-    document.documentElement.style.setProperty('--principal', hex);
-    document.documentElement.style.setProperty('--principal-oscuro', obj?.oscuro || '#B89A1E');
-    document.documentElement.style.setProperty('--principal-claro', hex + '22');
-    document.documentElement.style.setProperty('--principal-muy-claro', hex + '11');
-    document.documentElement.style.setProperty('--gradiente-balance', `linear-gradient(135deg, ${hex} 0%, ${obj?.gradienteFin || '#A9C95A'} 100%)`);
-    document.documentElement.style.setProperty('--acento', hex);
-    document.documentElement.style.setProperty('--acento-oscuro', obj?.oscuro || '#B89A1E');
-    document.documentElement.style.setProperty('--acento-texto', '#ffffff');
-    document.documentElement.style.setProperty('--banner-inicio', hex);
-    document.documentElement.style.setProperty('--banner-fin', obj?.gradienteFin || '#A9C95A');
-    localStorage.setItem('color-acento', hex);
-    localStorage.setItem('color-acento-oscuro', obj?.oscuro || '#B89A1E');
-    localStorage.setItem('color-acento-fin', obj?.gradienteFin || '#A9C95A');
+  function elegirPaleta(id) {
+    setPaleta(id);
+    aplicarPaleta(id);
   }
 
-  function cambiarIdioma(valor) {
-    setIdioma(valor);
-    localStorage.setItem('idioma', valor);
+  function cambiarTema(nuevoTema) {
+    setTema(nuevoTema);
+    aplicarTema(nuevoTema);
   }
 
   // ─── Guardar datos generales ───
   async function guardarPerfil() {
     if (!nombre.trim()) {
-      mostrarToast('El nombre no puede estar vacío', 'error');
+      mostrarToast(t('ajustes.nombreVacio'), 'error');
       return;
     }
     const datos = { nombre: nombre.trim(), moneda };
     const { error } = await supabase.from('perfiles').update(datos).eq('user_id', sesion.user.id);
     if (error) {
-      mostrarToast('Error al guardar perfil', 'error');
+      mostrarToast(t('ajustes.errorGuardar'), 'error');
     } else {
-      mostrarToast('Perfil actualizado', 'exito');
+      mostrarToast(t('ajustes.perfilActualizado'), 'exito');
     }
   }
 
@@ -101,11 +84,11 @@ function Perfil({ sesion, setSesion }) {
   async function cambiarPassword() {
     setPassError('');
     if (!passNueva || passNueva.length < 6) {
-      setPassError('La contraseña debe tener al menos 6 caracteres');
+      setPassError(t('ajustes.passCorta'));
       return;
     }
     if (passNueva !== passConfirmar) {
-      setPassError('Las contraseñas no coinciden');
+      setPassError(t('ajustes.passNoCoinciden'));
       return;
     }
     setGuardandoPass(true);
@@ -114,7 +97,7 @@ function Perfil({ sesion, setSesion }) {
     if (err) {
       setPassError(err.message);
     } else {
-      mostrarToast('Contraseña actualizada', 'exito');
+      mostrarToast(t('ajustes.passActualizada'), 'exito');
       setPassNueva('');
       setPassConfirmar('');
     }
@@ -128,7 +111,7 @@ function Perfil({ sesion, setSesion }) {
   if (cargandoPerfil) {
     return (
       <div className="perfil-page">
-        <div className="perfil-loading">Cargando perfil...</div>
+        <div className="perfil-loading">{t('ajustes.cargando')}</div>
       </div>
     );
   }
@@ -139,122 +122,140 @@ function Perfil({ sesion, setSesion }) {
 
         <div className="perfil-header">
           <div>
-            <h1>Ajustes</h1>
-            <p>Administra tu cuenta y preferencias</p>
+            <p className="overline">{t('ajustes.overline')}</p>
+            <h1>{t('ajustes.titulo')}</h1>
+            <p>{t('ajustes.subtitulo')}</p>
           </div>
         </div>
 
-        <div className="perfil-grid">
-
-          {/* ─── Apariencia ─── */}
-          <section className="tarjeta-lista">
-            <h2 className="perfil-card-titulo">Apariencia</h2>
-            <div className="perfil-card-body">
-              <label>Color de la app</label>
-              <div className="perfil-colores">
-                {COLORES_ACENTO.map((c) => (
-                  <button
-                    key={c.hex}
-                    className={`perfil-color-btn ${colorAcento === c.hex ? 'perfil-color-activo' : ''}`}
-                    style={{ backgroundColor: c.hex }}
-                    onClick={() => aplicarColor(c.hex)}
-                    title={c.name}
-                  />
-                ))}
+        {/* ─── Apariencia (ancho completo: tema, idioma y paletas) ─── */}
+        <section className="tarjeta-lista perfil-apariencia">
+          <h2 className="perfil-card-titulo"><Icon name="palette" size={18} /> {t('ajustes.apariencia')}</h2>
+          <div className="perfil-card-body">
+            <div className="perfil-apariencia-fila">
+              <div>
+                <label>{t('ajustes.tema')}</label>
+                <div className="perfil-toggle-grande">
+                  <button className={tema === 'claro' ? 'activo' : ''} onClick={() => cambiarTema('claro')}>
+                    <Icon name="sun" size={16} /> {t('ajustes.claro')}
+                  </button>
+                  <button className={tema === 'oscuro' ? 'activo' : ''} onClick={() => cambiarTema('oscuro')}>
+                    <Icon name="moon" size={16} /> {t('ajustes.oscuro')}
+                  </button>
+                </div>
               </div>
-
-              <div className="perfil-toggle-grande">
-                <button className={idioma === 'es' ? 'activo' : ''} onClick={() => cambiarIdioma('es')}>
-                  Español
-                </button>
-                <button className={idioma === 'en' ? 'activo' : ''} onClick={() => cambiarIdioma('en')}>
-                  English
-                </button>
+              <div>
+                <label>{t('ajustes.idioma')}</label>
+                <div className="perfil-toggle-grande">
+                  {IDIOMAS.map((opcion) => (
+                    <button key={opcion.codigo} className={idioma === opcion.codigo ? 'activo' : ''} onClick={() => cambiarIdioma(opcion.codigo)}>
+                      {opcion.nombre}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
-          </section>
+
+            <label>{t('ajustes.paleta')}</label>
+            <div className="perfil-paletas">
+              {PALETAS.map((p) => {
+                const [sidebar, principal, acento, fondo] = p.muestra;
+                return (
+                  <button
+                    key={p.id}
+                    className={`perfil-paleta ${paleta === p.id ? 'perfil-paleta-activa' : ''}`}
+                    onClick={() => elegirPaleta(p.id)}
+                    aria-pressed={paleta === p.id}
+                  >
+                    {/* Miniatura de la app con los colores de la paleta */}
+                    <span className="perfil-paleta-vista" style={{ background: fondo }} aria-hidden="true">
+                      <span className="perfil-paleta-sidebar" style={{ background: sidebar }}>
+                        <i style={{ background: acento }} />
+                      </span>
+                      <span className="perfil-paleta-contenido">
+                        <span className="perfil-paleta-tarjeta" style={{ background: principal }} />
+                        <span className="perfil-paleta-lineas"><i /><i /></span>
+                        <span className="perfil-paleta-boton" style={{ background: acento }} />
+                      </span>
+                    </span>
+                    <span className="perfil-paleta-nombre">
+                      {t(`ajustes.paletas.${p.id}`)}
+                      {paleta === p.id && <Icon name="check" size={14} />}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <div className="perfil-grid">
 
           {/* ─── Perfil (información general) ─── */}
           <section className="tarjeta-lista">
-            <h2 className="perfil-card-titulo">Perfil</h2>
+            <h2 className="perfil-card-titulo"><Icon name="user" size={18} /> {t('ajustes.perfil')}</h2>
             <div className="perfil-card-body">
-              <label>Nombre</label>
-              <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Tu nombre" />
+              <label>{t('ajustes.nombre')}</label>
+              <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={t('ajustes.tuNombre')} />
 
-              <label>Correo electrónico</label>
+              <label>{t('ajustes.correo')}</label>
               <input type="email" value={email} disabled className="perfil-input-disabled" />
 
-              <label>Moneda</label>
+              <label>{t('ajustes.moneda')}</label>
               <select value={moneda} onChange={(e) => setMoneda(e.target.value)}>
-                <option value="COP">COP $ — Peso colombiano</option>
-                <option value="USD">USD $ — Dólar estadounidense</option>
-                <option value="EUR">EUR € — Euro</option>
+                <option value="COP">{t('ajustes.monedas.COP')}</option>
+                <option value="USD">{t('ajustes.monedas.USD')}</option>
+                <option value="EUR">{t('ajustes.monedas.EUR')}</option>
               </select>
 
-              <button className="btn-pildora-acento btn-ancho-completo" onClick={guardarPerfil}>Guardar</button>
+              <button className="btn-pildora-acento btn-ancho-completo" onClick={guardarPerfil}>{t('comun.guardar')}</button>
             </div>
           </section>
 
           {/* ─── Seguridad ─── */}
           <section className="tarjeta-lista">
-            <h2 className="perfil-card-titulo">Seguridad</h2>
+            <h2 className="perfil-card-titulo"><Icon name="shield-check" size={18} /> {t('ajustes.seguridad')}</h2>
             <div className="perfil-card-body">
-              <label>Nueva contraseña</label>
-              <input type="password" value={passNueva} onChange={(e) => setPassNueva(e.target.value)} placeholder="Nueva contraseña" />
-              <input type="password" value={passConfirmar} onChange={(e) => setPassConfirmar(e.target.value)} placeholder="Confirmar contraseña" />
+              <label>{t('ajustes.nuevaContrasena')}</label>
+              <input type="password" value={passNueva} onChange={(e) => setPassNueva(e.target.value)} placeholder={t('ajustes.nuevaContrasena')} />
+              <input type="password" value={passConfirmar} onChange={(e) => setPassConfirmar(e.target.value)} placeholder={t('ajustes.confirmarContrasena')} />
               {passError && <p className="perfil-error">{passError}</p>}
               <button className="btn-pildora-acento" onClick={cambiarPassword} disabled={guardandoPass}>
-                {guardandoPass ? 'Guardando...' : 'Cambiar contraseña'}
+                {guardandoPass ? t('comun.guardando') : t('ajustes.cambiarContrasena')}
               </button>
 
-              <div className="perfil-switch-row">
-                <div>
-                  <p className="perfil-switch-label">Autenticación en dos pasos</p>
-                  <p className="perfil-switch-desc">Pide un código extra al iniciar sesión desde un dispositivo nuevo.</p>
+              {[
+                ['dosPasos', 'dosPasosTexto'],
+                ['biometria', 'biometriaTexto'],
+                ['ocultarSaldos', 'ocultarSaldosTexto'],
+              ].map(([titulo, texto]) => (
+                <div key={titulo} className="perfil-switch-row">
+                  <div>
+                    <p className="perfil-switch-label">{t(`ajustes.${titulo}`)}</p>
+                    <p className="perfil-switch-desc">{t(`ajustes.${texto}`)}</p>
+                  </div>
+                  <label className="perfil-switch" title={t('ajustes.proximamente')}>
+                    <input type="checkbox" disabled />
+                    <span className="perfil-switch-slider"></span>
+                  </label>
                 </div>
-                <label className="perfil-switch">
-                  <input type="checkbox" disabled />
-                  <span className="perfil-switch-slider"></span>
-                </label>
-              </div>
-
-              <div className="perfil-switch-row">
-                <div>
-                  <p className="perfil-switch-label">Bloqueo con biometría</p>
-                  <p className="perfil-switch-desc">Usa huella o rostro para abrir la app en tu teléfono.</p>
-                </div>
-                <label className="perfil-switch">
-                  <input type="checkbox" disabled />
-                  <span className="perfil-switch-slider"></span>
-                </label>
-              </div>
-
-              <div className="perfil-switch-row">
-                <div>
-                  <p className="perfil-switch-label">Ocultar saldos</p>
-                  <p className="perfil-switch-desc">Oculta las cantidades cuando alguien mira tu pantalla.</p>
-                </div>
-                <label className="perfil-switch">
-                  <input type="checkbox" disabled />
-                  <span className="perfil-switch-slider"></span>
-                </label>
-              </div>
+              ))}
             </div>
           </section>
 
           {/* ─── Conexiones (placeholder visual, sin lógica todavía) ─── */}
           <section className="tarjeta-lista">
-            <h2 className="perfil-card-titulo">Conexiones</h2>
+            <h2 className="perfil-card-titulo"><Icon name="link" size={18} /> {t('ajustes.conexiones')}</h2>
             <div className="perfil-card-body">
-              <p className="perfil-card-desc perfil-conexiones-desc">Sincroniza tus cuentas con otras apps de finanzas.</p>
+              <p className="perfil-card-desc perfil-conexiones-desc">{t('ajustes.conexionesTexto')}</p>
               {CONEXIONES_DISPONIBLES.map((con) => (
                 <div key={con.nombre} className="fila-item">
                   <span className="icono-circulo icono-circulo-neutro"><Icon name={con.icono} size={18} /></span>
                   <div className="perfil-cat-info">
                     <p className="perfil-cat-nombre">{con.nombre}</p>
-                    <p className="perfil-conexion-estado">Sin conectar</p>
+                    <p className="perfil-conexion-estado">{t('ajustes.sinConectar')}</p>
                   </div>
-                  <button className="btn-conectar" disabled title="Próximamente">Conectar</button>
+                  <button className="btn-conectar" disabled title={t('ajustes.proximamente')}>{t('ajustes.conectar')}</button>
                 </div>
               ))}
             </div>
@@ -262,11 +263,11 @@ function Perfil({ sesion, setSesion }) {
 
           {/* ─── Cerrar sesión ─── */}
           <section className="tarjeta-lista perfil-card-peligro">
-            <h2 className="perfil-card-titulo">Sesión</h2>
+            <h2 className="perfil-card-titulo"><Icon name="log-out" size={18} /> {t('ajustes.sesion')}</h2>
             <div className="perfil-card-body">
-              <p className="perfil-card-desc">Cierra tu sesión en este dispositivo</p>
+              <p className="perfil-card-desc">{t('ajustes.sesionTexto')}</p>
               <button className="perfil-btn peligro" onClick={cerrarSesion}>
-                Cerrar sesión
+                {t('ajustes.cerrarSesion')}
               </button>
             </div>
           </section>
