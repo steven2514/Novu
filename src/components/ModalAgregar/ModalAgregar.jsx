@@ -7,11 +7,10 @@ import { supabase } from '../../supabase';
 import { useToast } from '../../Context/ToastContext';
 import { hoyISO, aInputFecha } from '../../utils/fechas';
 import { useIdioma, nombreCategoria } from '../../i18n/idioma';
+import { CATEGORIAS_GASTO, CATEGORIAS_INGRESO } from '../../utils/categorias';
+import { ajustarSaldos, revertirSaldos, conSaldosNuevos, efectoEnSaldo } from '../../utils/saldos';
 
-// Valores que se guardan en la base de datos; el nombre visible sale de i18n (categorias.*)
-const CATEGORIAS_INGRESO = ['salario', 'freelance', 'regalo', 'otros'];
 
-const CATEGORIAS_GASTO = ['comida', 'transporte', 'hogar', 'ocio', 'salud', 'compras', 'servicios', 'otros'];
 
 const COLORES = PALETA_ELEMENTOS;
 
@@ -157,23 +156,52 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
         if (!cuenta) { mostrarToast(t('agregar.seleccionaCuenta'), 'error'); return; }
         if (!fecha) { mostrarToast(t('agregar.seleccionaFecha'), 'error'); return; }
         setGuardando(true);
+        const cuentaObj = cuentas.find(c => c.nombre === cuenta);
+
         if (transaccionEditar) {
-            const { error } = await supabase.from('transacciones').update({ descripcion: nota, monto, categoria, cuenta }).eq('id', transaccionEditar.id);
+            // Al editar se deshace el efecto del movimiento original en su cuenta
+            // y se aplica el nuevo (puede cambiar el monto y también la cuenta).
+            const anterior = transaccionEditar;
+            const cuentaAnterior = cuentas.find(c => c.nombre === anterior.cuenta);
+            const cambios = { descripcion: nota, monto, categoria, cuenta, fecha };
+
+            const { error } = await supabase.from('transacciones').update(cambios).eq('id', anterior.id);
             if (error) { mostrarToast(t('agregar.noActualizar'), 'error'); setGuardando(false); return; }
+
+            const ajuste = await ajustarSaldos([
+                { cuenta: cuentaAnterior, delta: -efectoEnSaldo(anterior.tipo, anterior.monto) },
+                { cuenta: cuentaObj, delta: efectoEnSaldo(anterior.tipo, monto) },
+            ]);
+            if (ajuste.error) {
+                // Si el saldo no se pudo corregir, el movimiento vuelve a como estaba
+                await supabase.from('transacciones')
+                    .update({ descripcion: anterior.descripcion, monto: anterior.monto, categoria: anterior.categoria, cuenta: anterior.cuenta, fecha: anterior.fecha })
+                    .eq('id', anterior.id);
+                mostrarToast(t('errores.saldo'), 'error');
+                setGuardando(false);
+                return;
+            }
+
+            setTransacciones(prev => prev.map(mov => mov.id === anterior.id ? { ...mov, ...cambios } : mov));
+            setCuentas(conSaldosNuevos(ajuste.saldos));
             mostrarToast(t('agregar.transaccionActualizada'), 'exito');
-            setTransacciones(prev => prev.map(t => t.id === transaccionEditar.id ? { ...t, descripcion: nota, monto, categoria, cuenta } : t));
         } else {
             const nueva = { descripcion: nota, monto, tipo: tab, categoria, cuenta, fecha, fuente: '', user_id: sesion.user.id };
             const { data, error } = await supabase.from('transacciones').insert([nueva]).select();
             if (error) { mostrarToast(t('agregar.noGuardar'), 'error'); setGuardando(false); return; }
-            mostrarToast(tab === 'ingreso' ? t('agregar.ingresoAgregado') : t('agregar.gastoAgregado'), 'exito');
-            setTransacciones(prev => [...prev, ...data]);
-            const cuentaObj = cuentas.find(c => c.nombre === cuenta);
-            if (cuentaObj) {
-                const nuevoSaldo = tab === 'ingreso' ? Number(cuentaObj.saldo) + Number(monto) : Number(cuentaObj.saldo) - Number(monto);
-                await supabase.from('cuentas').update({ saldo: nuevoSaldo }).eq('id', cuentaObj.id);
-                setCuentas(prev => prev.map(c => c.id === cuentaObj.id ? { ...c, saldo: nuevoSaldo } : c));
+
+            const ajuste = await ajustarSaldos([{ cuenta: cuentaObj, delta: efectoEnSaldo(tab, monto) }]);
+            if (ajuste.error) {
+                // Sin saldo actualizado el movimiento quedaría descuadrado: se borra
+                await supabase.from('transacciones').delete().eq('id', data[0].id);
+                mostrarToast(t('errores.saldo'), 'error');
+                setGuardando(false);
+                return;
             }
+
+            setTransacciones(prev => [...prev, ...data]);
+            setCuentas(conSaldosNuevos(ajuste.saldos));
+            mostrarToast(tab === 'ingreso' ? t('agregar.ingresoAgregado') : t('agregar.gastoAgregado'), 'exito');
         }
         setGuardando(false);
         onClose();
@@ -185,22 +213,42 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
         if (Number(monto) <= 0) { mostrarToast(t('agregar.montoMayor'), 'error'); return; }
         const cuentaOrigen = cuentas.find(c => c.nombre === origen);
         if (!cuentaOrigen || Number(cuentaOrigen.saldo) < Number(monto)) { mostrarToast(t('agregar.saldoInsuficiente'), 'error'); return; }
-        setGuardando(true);
         const tipoDestino = tab === 'aporte' ? 'meta' : 'cuenta';
+        const cuentaDestino = tipoDestino === 'cuenta' ? cuentas.find(c => c.nombre === destino) : null;
+        const meta = tipoDestino === 'meta' ? metas.find(m => m.nombre_meta === destino) : null;
+        if (!cuentaDestino && !meta) { mostrarToast(t('agregar.completaCampos'), 'error'); return; }
+        setGuardando(true);
+
+        // Cada paso se verifica; si uno falla se deshacen los anteriores
+        // para que nunca "desaparezca" ni "aparezca" dinero.
+        const fallar = async (aplicados, idTransferencia) => {
+            await revertirSaldos(aplicados);
+            if (idTransferencia) await supabase.from('transferencias').delete().eq('id', idTransferencia);
+            mostrarToast(t('errores.transferencia'), 'error');
+            setGuardando(false);
+        };
+
+        // 1. Registro de la transferencia (historial)
         const nuevaTransferencia = { user_id: sesion.user.id, origen, destino, monto, tipo_destino: tipoDestino, fecha: hoyISO() };
-        await supabase.from('transferencias').insert([nuevaTransferencia]);
-        await supabase.from('cuentas').update({ saldo: Number(cuentaOrigen.saldo) - Number(monto) }).eq('id', cuentaOrigen.id);
-        setCuentas(prev => prev.map(c => c.id === cuentaOrigen.id ? { ...c, saldo: Number(c.saldo) - Number(monto) } : c));
-        if (tipoDestino === 'cuenta') {
-            const cuentaDestino = cuentas.find(c => c.nombre === destino);
-            await supabase.from('cuentas').update({ saldo: Number(cuentaDestino.saldo) + Number(monto) }).eq('id', cuentaDestino.id);
-            setCuentas(prev => prev.map(c => c.id === cuentaDestino.id ? { ...c, saldo: Number(c.saldo) + Number(monto) } : c));
-        } else {
-            const meta = metas.find(m => m.nombre_meta === destino);
+        const { data: registro, error: errorRegistro } = await supabase.from('transferencias').insert([nuevaTransferencia]).select().single();
+        if (errorRegistro) { await fallar([]); return; }
+
+        // 2. Saldos: sale de la cuenta de origen (y entra a la de destino si es entre cuentas)
+        const ajuste = await ajustarSaldos([
+            { cuenta: cuentaOrigen, delta: -Number(monto) },
+            { cuenta: cuentaDestino, delta: Number(monto) },
+        ]);
+        if (ajuste.error) { await fallar([], registro.id); return; }
+
+        // 3. Aporte a meta
+        if (meta) {
             const nuevoMontoActual = Number(meta.monto_actual) + Number(monto);
-            await supabase.from('metas').update({ monto_actual: nuevoMontoActual }).eq('id', meta.id);
+            const { error: errorMeta } = await supabase.from('metas').update({ monto_actual: nuevoMontoActual }).eq('id', meta.id);
+            if (errorMeta) { await fallar(ajuste.aplicados, registro.id); return; }
             setMetas(prev => prev.map(m => m.id === meta.id ? { ...m, monto_actual: nuevoMontoActual } : m));
         }
+
+        setCuentas(conSaldosNuevos(ajuste.saldos));
         setGuardando(false);
         mostrarToast(tab === 'aporte' ? t('agregar.aporteOk') : t('agregar.transferenciaOk'), 'exito');
         onClose();

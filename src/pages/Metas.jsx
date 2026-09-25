@@ -9,6 +9,8 @@ import { Icon } from '../components/Icon';
 import exportarCSV from '../utils/exportarCSV';
 import { parseFecha } from '../utils/fechas';
 import { useIdioma, traducir, localeActual } from '../i18n/idioma';
+import { useToast } from '../Context/ToastContext';
+import { useConfirmar } from '../Context/confirmar';
 
 const COLOR_POR_DEFECTO = '#0B5E66';
 // "Dic 2026" / "Dec 2026" según el idioma activo
@@ -43,6 +45,8 @@ function Metas({ metas, setMetas, sesion }) {
 
     const { mostrarTour, cerrarTour } = useTour('metas', sesion);
     const { t } = useIdioma();
+    const { mostrarToast } = useToast();
+    const confirmar = useConfirmar();
     const [modalVisible, setModalVisible] = useState(false);
     const [metaEditar, setMetaEditar] = useState(null);
 
@@ -61,9 +65,16 @@ function Metas({ metas, setMetas, sesion }) {
         setMetaEditar(null);
     }
 
-    function eliminarMeta(meta) {
-        supabase.from('metas').delete().eq('id', meta.id).then(() => { });
+    async function eliminarMeta(meta) {
+        const aceptado = await confirmar({
+            titulo: t('confirmar.eliminarMeta', { nombre: meta.nombre_meta }),
+            mensaje: t('confirmar.eliminarMetaTexto'),
+        });
+        if (!aceptado) return;
+        const { error } = await supabase.from('metas').delete().eq('id', meta.id);
+        if (error) { mostrarToast(t('confirmar.noSePudoEliminar'), 'error'); return; }
         setMetas(prev => prev.filter(m => m.id !== meta.id));
+        mostrarToast(t('confirmar.eliminado'), 'exito');
     }
 
     return (

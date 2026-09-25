@@ -437,6 +437,23 @@
     background: var(--principal);
 }
 
+.barra-presupuesto {
+    background: var(--positivo);
+}
+
+.barra-presupuesto.alerta {
+    background: var(--ahorro);
+}
+
+.barra-presupuesto.excedido {
+    background: var(--negativo);
+}
+
+.dashboard-caja-vacia .dashboard-ver-todo {
+    display: inline-flex;
+    margin-top: 8px;
+}
+
 .pago-proximo {
     display: flex;
     align-items: center;

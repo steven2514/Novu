@@ -1,0 +1,362 @@
+/* =========================================================
+   PRESUPUESTOS
+   Estados: .pres-ok (en orden), .pres-alerta (≥80%), .pres-excedido (>100%)
+   ========================================================= */
+
+.presupuestos-page {
+    --pres-color: var(--positivo);
+    --pres-fondo: var(--positivo-claro);
+}
+
+.pres-ok {
+    --pres-color: var(--positivo);
+    --pres-fondo: var(--positivo-claro);
+}
+
+.pres-alerta {
+    --pres-color: var(--ahorro);
+    --pres-fondo: var(--ahorro-claro);
+}
+
+.pres-excedido {
+    --pres-color: var(--negativo);
+    --pres-fondo: var(--negativo-claro);
+}
+
+/* ---------- Selector de mes ---------- */
+
+.pres-mes {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 42px;
+    padding: 0 4px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-sm);
+    background: var(--tarjeta);
+}
+
+.pres-mes span {
+    min-width: 140px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.pres-mes span::first-letter {
+    text-transform: uppercase;
+}
+
+.pres-mes button {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--texto-gris);
+}
+
+.pres-mes button:hover {
+    background: var(--superficie-suave);
+    color: var(--texto);
+}
+
+/* ---------- Barra de progreso ---------- */
+
+.pres-barra {
+    height: 10px;
+    border-radius: 99px;
+    background: var(--superficie-suave);
+    overflow: hidden;
+}
+
+.pres-barra span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--pres-color);
+    transition: width 0.4s ease;
+}
+
+.pres-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--texto-gris);
+}
+
+/* ---------- Resumen ---------- */
+
+.pres-resumen {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 24px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--tarjeta);
+    box-shadow: var(--sombra-card);
+}
+
+.pres-resumen-cifras {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 6px 0 12px;
+}
+
+.pres-resumen-cifras strong {
+    font-family: var(--fuente-titulo);
+    font-size: 30px;
+    letter-spacing: -0.03em;
+}
+
+.pres-resumen-cifras span {
+    font-size: 15px;
+    color: var(--texto-gris);
+}
+
+.pres-resumen-dato {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding-left: 24px;
+    border-left: 1px solid var(--borde);
+}
+
+.pres-resumen-dato strong {
+    font-family: var(--fuente-titulo);
+    font-size: 22px;
+    letter-spacing: -0.03em;
+}
+
+/* ---------- Tarjetas ---------- */
+
+.pres-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 18px;
+}
+
+.pres-tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    background: var(--tarjeta);
+    box-shadow: var(--sombra-card);
+}
+
+.pres-tarjeta.pres-excedido {
+    border-color: color-mix(in srgb, var(--negativo) 35%, var(--borde));
+}
+
+.pres-tarjeta-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pres-icono {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: var(--principal-claro);
+    color: var(--principal);
+}
+
+.pres-tarjeta-titulo {
+    flex: 1;
+    min-width: 0;
+}
+
+.pres-tarjeta-titulo h3 {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.pres-chip {
+    display: inline-block;
+    margin-top: 3px;
+    padding: 2px 9px;
+    border-radius: 99px;
+    font-size: 11.5px;
+    font-weight: 700;
+    background: var(--pres-fondo);
+    color: var(--pres-color);
+}
+
+.pres-acciones {
+    display: flex;
+    gap: 2px;
+}
+
+.pres-cifras {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.pres-cifras strong {
+    font-family: var(--fuente-titulo);
+    font-size: 24px;
+    letter-spacing: -0.03em;
+}
+
+.pres-cifras span {
+    font-size: 13.5px;
+    color: var(--texto-gris);
+}
+
+.pres-cifras b {
+    margin-left: auto;
+    font-size: 14px;
+    color: var(--pres-color);
+}
+
+.pres-restante {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--texto-gris);
+}
+
+.pres-excedido .pres-restante {
+    color: var(--negativo);
+}
+
+/* ---------- Gastos sin presupuesto ---------- */
+
+.pres-sin-limite {
+    margin-top: 28px;
+    padding: 22px 24px;
+    border: 1.5px dashed var(--borde-fuerte);
+    border-radius: var(--radio);
+}
+
+.pres-sin-limite h3 {
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.pres-sin-limite > p {
+    margin-top: 4px;
+    font-size: 14px;
+    color: var(--texto-gris);
+}
+
+.pres-sin-limite-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.pres-sin-limite-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    border: 1px solid var(--borde);
+    border-radius: 99px;
+    background: var(--tarjeta);
+    color: var(--texto);
+    font-size: 14px;
+    font-weight: 600;
+    transition: border-color 0.15s ease;
+}
+
+.pres-sin-limite-item:hover:not(:disabled) {
+    border-color: var(--principal);
+}
+
+.pres-sin-limite-item b {
+    color: var(--texto-gris);
+}
+
+.pres-sin-limite-item svg:last-child {
+    color: var(--principal);
+}
+
+/* ---------- Formulario ---------- */
+
+.pres-form-categorias {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.pres-form-categoria {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--borde);
+    border-radius: var(--radio-sm);
+    background: var(--tarjeta);
+    color: var(--texto-gris);
+    font-size: 13.5px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.pres-form-categoria.activa {
+    border-color: var(--principal);
+    background: var(--principal-claro);
+    color: var(--principal);
+}
+
+.pres-form-categoria:disabled {
+    cursor: default;
+}
+
+.pres-form-ayuda {
+    font-size: 13px;
+    color: var(--texto-muted);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+    .pres-resumen {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .pres-resumen-principal {
+        grid-column: 1 / -1;
+    }
+
+    .pres-resumen-dato:nth-child(2) {
+        padding-left: 0;
+        border-left: none;
+    }
+}
+
+@media (max-width: 560px) {
+    .pres-resumen {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .pres-resumen-dato {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0 0;
+        border-left: none;
+        border-top: 1px solid var(--borde);
+    }
+
+    .pres-form-categorias {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

@@ -20,6 +20,7 @@ const SECCIONES = [
         enlaces: [
             { to: '/Metas', icono: 'target', texto: 'metas' },
             { to: '/Suscripciones', icono: 'credit-card', texto: 'suscripciones' },
+            { to: '/presupuestos', icono: 'calculator', texto: 'presupuestos' },
             { to: '/Calendario', icono: 'calendar-days', texto: 'calendario' },
             { to: '/Aprendizaje', icono: 'book-open', texto: 'tareas' },
         ],

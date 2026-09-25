@@ -18,6 +18,11 @@ import Loader from './components/Loader/Loader';
 import Terminos from './pages/Terminos';
 import Privacidad from './pages/Privacidad';
 import Splash from './components/Splash/Splash';
+import Presupuestos from './pages/Presupuestos';
+import { useToast } from './Context/ToastContext';
+import { useConfirmar } from './Context/confirmar';
+import { useIdioma } from './i18n/idioma';
+import { ajustarSaldos, revertirSaldos, conSaldosNuevos, efectoEnSaldo } from './utils/saldos';
 
 
 
@@ -34,6 +39,20 @@ function App() {
     const [cargando, setCargando] = useState(true);
     const [mostrarSplash, setMostrarSplash] = useState(true);
     const [transaccionEditar, setTransaccionEditar] = useState(null);
+    const [presupuestos, setPresupuestos] = useState([]);
+    // null = cargando, false = la tabla no existe todavía en Supabase
+    const [presupuestosDisponibles, setPresupuestosDisponibles] = useState(null);
+    const { mostrarToast } = useToast();
+    const confirmar = useConfirmar();
+    const { t } = useIdioma();
+
+    useEffect(() => {
+        if (!sesion) return;
+        supabase.from('presupuestos').select('*').eq('user_id', sesion.user.id).then(({ data, error }) => {
+            setPresupuestosDisponibles(!error);
+            if (data) setPresupuestos(data);
+        });
+    }, [sesion]);
 
     useEffect(() => {
         if (!sesion) return;
@@ -101,18 +120,33 @@ function App() {
         setModalVisible(true);
     }
 
+    // Elimina un movimiento y devuelve su efecto al saldo de la cuenta.
+    // Primero se ajusta el saldo (se puede revertir) y luego se borra el
+    // movimiento; si el borrado falla, el saldo vuelve a como estaba.
     async function eliminar(id) {
-        const transaccion = transacciones.find(t => t.id === id);
-        await supabase.from('transacciones').delete().eq('id', id);
-        setTransacciones(prev => prev.filter(t => t.id !== id));
+        const transaccion = transacciones.find(mov => mov.id === id);
+        if (!transaccion) return;
+
+        const aceptado = await confirmar({
+            titulo: t('confirmar.eliminarMovimiento'),
+            mensaje: t('confirmar.eliminarMovimientoTexto', { nombre: transaccion.descripcion || t('comun.sinDescripcion') }),
+        });
+        if (!aceptado) return;
+
         const cuentaActual = cuentas.find(c => c.nombre === transaccion.cuenta);
-        if (cuentaActual) {
-            const nuevoSaldo = transaccion.tipo === 'ingreso'
-                ? Number(cuentaActual.saldo) - Number(transaccion.monto)
-                : Number(cuentaActual.saldo) + Number(transaccion.monto);
-            await supabase.from('cuentas').update({ saldo: nuevoSaldo }).eq('id', cuentaActual.id);
-            setCuentas(prev => prev.map(c => c.id === cuentaActual.id ? { ...c, saldo: nuevoSaldo } : c));
+        const ajuste = await ajustarSaldos([{ cuenta: cuentaActual, delta: -efectoEnSaldo(transaccion.tipo, transaccion.monto) }]);
+        if (ajuste.error) { mostrarToast(t('errores.saldo'), 'error'); return; }
+
+        const { error } = await supabase.from('transacciones').delete().eq('id', id);
+        if (error) {
+            await revertirSaldos(ajuste.aplicados);
+            mostrarToast(t('confirmar.noSePudoEliminar'), 'error');
+            return;
         }
+
+        setTransacciones(prev => prev.filter(mov => mov.id !== id));
+        setCuentas(conSaldosNuevos(ajuste.saldos));
+        mostrarToast(t('confirmar.eliminado'), 'exito');
     }
 
     if (cargando) {
@@ -147,7 +181,7 @@ function App() {
 
                             <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} sesion={sesion} />} />
 
-                            <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} sesion={sesion} abrirModal={abrirModal} />} />
+                            <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} presupuestos={presupuestos} sesion={sesion} abrirModal={abrirModal} />} />
 
                             <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} abrirModalTransferencia={() => abrirModal('transferencia')} />} />
 
@@ -157,6 +191,8 @@ function App() {
                             <Route path='/Metas' element={<Meta metas={metas} setMetas={setMetas} sesion={sesion} />} />
 
                             <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} tareas={tareas} sesion={sesion} />} />
+
+                            <Route path='/presupuestos' element={<Presupuestos presupuestos={presupuestos} setPresupuestos={setPresupuestos} disponibles={presupuestosDisponibles} transacciones={transacciones} sesion={sesion} />} />
 
                             <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} sesion={sesion} />} />
 

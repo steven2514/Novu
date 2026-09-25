@@ -8,6 +8,8 @@ import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
 import { useIdioma } from '../i18n/idioma';
+import { useToast } from '../Context/ToastContext';
+import { useConfirmar } from '../Context/confirmar';
 
 // Cada filtro y la categoría de la base de datos que muestra (null = todas)
 const FILTROS = [
@@ -24,6 +26,8 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
     const [filtro, setFiltro] = useState('todas');
     const { mostrarTour, cerrarTour } = useTour('aprendizaje', sesion);
     const { t } = useIdioma();
+    const { mostrarToast } = useToast();
+    const confirmar = useConfirmar();
 
     const pendientes = tareas.filter(tarea => !tarea.completada).length;
     const completadas = tareas.filter(tarea => tarea.completada).length;
@@ -33,13 +37,29 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
     const categoriaFiltro = FILTROS.find(f => f.id === filtro)?.categoria;
     const tareasFiltradas = tareas.filter(tarea => !categoriaFiltro || tarea.categoria === categoriaFiltro);
 
-    function toggleCompletada(id) {
-        setTareas(prev => prev.map(tarea => tarea.id === id ? { ...tarea, completada: !tarea.completada } : tarea));
+    // Antes el cambio solo se veía en pantalla y se perdía al recargar.
+    // Ahora se guarda en Supabase; si falla, la tarea vuelve a su estado anterior.
+    async function toggleCompletada(tarea) {
+        const completada = !tarea.completada;
+        const cambiar = (valor) => setTareas(prev => prev.map(item => item.id === tarea.id ? { ...item, completada: valor } : item));
+        cambiar(completada);
+        const { error } = await supabase.from('tareas').update({ completada }).eq('id', tarea.id);
+        if (error) {
+            cambiar(!completada);
+            mostrarToast(t('errores.tareaEstado'), 'error');
+        }
     }
 
-    function eliminarTarea(id) {
-        supabase.from('tareas').delete().eq('id', id).then(() => { });
-        setTareas(prev => prev.filter(tarea => tarea.id !== id));
+    async function eliminarTarea(tarea) {
+        const aceptado = await confirmar({
+            titulo: t('confirmar.eliminarTarea'),
+            mensaje: t('confirmar.eliminarTareaTexto', { nombre: tarea.titulo }),
+        });
+        if (!aceptado) return;
+        const { error } = await supabase.from('tareas').delete().eq('id', tarea.id);
+        if (error) { mostrarToast(t('confirmar.noSePudoEliminar'), 'error'); return; }
+        setTareas(prev => prev.filter(item => item.id !== tarea.id));
+        mostrarToast(t('confirmar.eliminado'), 'exito');
     }
 
     function abrirNueva() {
@@ -117,7 +137,7 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
                             <div key={tarea.id} className={`tarea-item ${tarea.completada ? 'tarea-completada' : ''}`}>
                                 <button
                                     className="check-tarea"
-                                    onClick={() => toggleCompletada(tarea.id)}
+                                    onClick={() => toggleCompletada(tarea)}
                                     aria-label={tarea.completada ? t('tareas.marcarPendiente') : t('tareas.marcarCompletada')}
                                 >
                                     {tarea.completada && <Icon name="check" size={14} />}
@@ -142,7 +162,7 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
                                     <button className="btn-icono" title={t('comun.editar')} onClick={() => { setTareaEditar(tarea); setModalVisible(true); }}>
                                         <Icon name="pencil" size={15} />
                                     </button>
-                                    <button className="btn-fila-eliminar" title={t('comun.eliminar')} onClick={() => eliminarTarea(tarea.id)}>
+                                    <button className="btn-fila-eliminar" title={t('comun.eliminar')} onClick={() => eliminarTarea(tarea)}>
                                         <Icon name="trash-2" size={15} />
                                     </button>
                                 </div>

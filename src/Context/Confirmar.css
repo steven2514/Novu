@@ -1,0 +1,59 @@
+.confirmar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.confirmar-icono {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 6px;
+    border-radius: 16px;
+    background: var(--negativo-claro);
+    color: var(--negativo);
+}
+
+.confirmar h2 {
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.confirmar p {
+    max-width: 360px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--texto-gris);
+}
+
+.confirmar-acciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    margin-top: 16px;
+}
+
+.confirmar-btn-peligro {
+    padding: 11px 18px;
+    border: none;
+    border-radius: var(--radio-sm);
+    background: var(--negativo);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    transition: filter 0.15s ease;
+}
+
+.confirmar-btn-peligro:hover {
+    filter: brightness(0.92);
+}
+
+/* El diálogo de confirmación es más angosto que los formularios */
+.modal-contenido:has(.confirmar) {
+    width: min(420px, 100%);
+}
