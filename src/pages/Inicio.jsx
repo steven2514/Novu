@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { parseFecha, mismoMes, mismoDia, compararFechas } from '../utils/fechas';
 import { aplicarTema, temaGuardado } from '../utils/tema';
 import { useIdioma, nombreCategoria } from '../i18n/idioma';
+import { montoMensual } from '../utils/suscripciones';
 
 // Paleta de categorías: teal, coral, ámbar, violeta, menta y gris
 const COLORES = ['#0B5E66', '#FF6B4A', '#E39A2D', '#5B4FD6', '#5FC4BA', '#94A3B8'];
@@ -32,7 +33,7 @@ function claveSaludo() {
     return 'inicio.buenasNoches';
 }
 
-function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abrirModal }) {
+function Inicio({ transacciones, metas, suscripciones, cuentas = [], presupuestos = [], sesion, abrirModal }) {
 
     const { mostrarTour, cerrarTour } = useTour('dashboard', sesion);
     const { t, locale } = useIdioma();
@@ -86,7 +87,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
 
     const ahorradoEnMetas = metas.reduce((acc, m) => acc + Number(m.monto_actual || 0), 0);
 
-    const totalSuscripcionesMensual = suscripciones.reduce((acc, s) => acc + Number(s.monto || 0), 0);
+    const totalSuscripcionesMensual = suscripciones.reduce((acc, s) => acc + montoMensual(s), 0);
 
     const gastosPorCategoria = transaccionesDelMes
         .filter(t => t.tipo === 'gasto')
@@ -98,6 +99,15 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
         }, []);
 
     const hoy = new Date();
+
+    // Presupuestos del mes seleccionado, los más cerca de su límite primero
+    const presupuestosDelMes = presupuestos
+        .map(p => {
+            const gastado = gastosPorCategoria.find(c => c.categoria === p.categoria)?.valor || 0;
+            const porcentaje = Number(p.monto) > 0 ? (gastado / Number(p.monto)) * 100 : 0;
+            return { ...p, gastado, porcentaje };
+        })
+        .sort((a, b) => b.porcentaje - a.porcentaje);
 
     const mesCorto = (fecha) => fecha.toLocaleDateString(locale, { month: 'short' }).replace('.', '');
 
@@ -354,6 +364,34 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], sesion, abr
                                     </div>
                                 );
                             })
+                        )}
+                    </div>
+
+                    <div className="dashboard-caja">
+                        <div className="dashboard-caja-header">
+                            <h3>{t('inicio.presupuestos')}</h3>
+                            <Link to="/presupuestos" className="dashboard-ver-todo">{t('comun.verTodos')}</Link>
+                        </div>
+                        {presupuestosDelMes.length === 0 ? (
+                            <div className="dashboard-caja-vacia">
+                                <p>{t('inicio.sinPresupuestos')}</p>
+                                <Link to="/presupuestos" className="dashboard-ver-todo">{t('inicio.crearPresupuesto')}</Link>
+                            </div>
+                        ) : (
+                            presupuestosDelMes.slice(0, 3).map((p) => (
+                                <div key={p.id} className="meta-dashboard">
+                                    <div className="meta-dashboard-header">
+                                        <span>{nombreCategoria(p.categoria)}</span>
+                                        <span>{formatoMonto(p.gastado)} / {formatoMonto(p.monto)}</span>
+                                    </div>
+                                    <div className="barra-fondo">
+                                        <div
+                                            className={`barra-progreso barra-presupuesto ${p.porcentaje > 100 ? 'excedido' : p.porcentaje >= 80 ? 'alerta' : ''}`}
+                                            style={{ width: `${Math.min(p.porcentaje, 100)}%` }}
+                                        ></div>
+                                    </div>
+                                </div>
+                            ))
                         )}
                     </div>
 

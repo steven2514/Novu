@@ -8,6 +8,8 @@ import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
 import exportarCSV from '../utils/exportarCSV';
 import { useIdioma } from '../i18n/idioma';
+import { useToast } from '../Context/ToastContext';
+import { useConfirmar } from '../Context/confirmar';
 
 const TIPO_ICONO = { debito: 'landmark', ahorros: 'piggy-bank', credito: 'credit-card', efectivo: 'wallet' };
 
@@ -30,6 +32,8 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) 
 
     const { mostrarTour, cerrarTour } = useTour('cuentas', sesion);
     const { t } = useIdioma();
+    const { mostrarToast } = useToast();
+    const confirmar = useConfirmar();
     const tipoCuenta = (tipo) => (tipo ? t(`cuentas.tipos.${tipo}`) : t('comun.cuenta'));
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -65,9 +69,16 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) 
         setCuentaEditar(null);
     }
 
-    function eliminarCuenta(cuenta) {
-        supabase.from('cuentas').delete().eq('id', cuenta.id).then(() => { });
+    async function eliminarCuenta(cuenta) {
+        const aceptado = await confirmar({
+            titulo: t('confirmar.eliminarCuenta', { nombre: cuenta.nombre }),
+            mensaje: t('confirmar.eliminarCuentaTexto'),
+        });
+        if (!aceptado) return;
+        const { error } = await supabase.from('cuentas').delete().eq('id', cuenta.id);
+        if (error) { mostrarToast(t('confirmar.noSePudoEliminar'), 'error'); return; }
         setCuentas(prev => prev.filter(c => c.id !== cuenta.id));
+        mostrarToast(t('confirmar.eliminado'), 'exito');
     }
 
     return (

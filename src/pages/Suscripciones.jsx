@@ -10,6 +10,9 @@ import exportarCSV from '../utils/exportarCSV';
 import { useToast } from '../Context/ToastContext';
 import { parseFecha, aISO, hoyISO, formatearFecha } from '../utils/fechas';
 import { useIdioma } from '../i18n/idioma';
+import { useConfirmar } from '../Context/confirmar';
+import { montoMensual, montoAnual } from '../utils/suscripciones';
+import { ajustarSaldos, revertirSaldos, conSaldosNuevos } from '../utils/saldos';
 
 const DIAS_CICLO = { diario: 1, semanal: 7, mensual: 30 };
 
@@ -74,20 +77,20 @@ function accentDeSuscripcion(sus) {
 function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, setTransacciones, sesion }) {
 
     const [suscripcionEditar, setSuscripcionEditar] = useState(null);
-    const gastoMensual = suscripciones.reduce((acc, c) => acc + Number(c.monto), 0);
+    // Cada suscripción se convierte a su costo mensual según la frecuencia
+    // (una diaria de $5.000 son ~$152.083 al mes, no $5.000).
+    const gastoMensual = suscripciones.reduce((acc, s) => acc + montoMensual(s), 0);
+    const gastoAnual = suscripciones.reduce((acc, s) => acc + montoAnual(s), 0);
+    const confirmar = useConfirmar();
     const { mostrarTour, cerrarTour } = useTour('suscripciones', sesion);
     const { t } = useIdioma();
     const frecuencia = (sus) => (sus.frecuencia in DIAS_CICLO ? sus.frecuencia : 'mensual');
     const { mostrarToast } = useToast();
 
+    // Pagar = registrar el gasto, descontarlo de la cuenta y avanzar la fecha de
+    // renovación. Si un paso falla se deshacen los anteriores.
     async function pagarSuscripcion(sus) {
         const nuevaFecha = sumarCiclo(sus.fecha_renovacion, sus.frecuencia);
-
-        const { error: errorFecha } = await supabase
-            .from('suscripciones')
-            .update({ fecha_renovacion: nuevaFecha })
-            .eq('id', sus.id);
-        if (errorFecha) { mostrarToast(t('suscripciones.errorActualizar'), 'error'); return; }
 
         const { data: nuevaTransaccion, error: errorTransaccion } = await supabase
             .from('transacciones')
@@ -103,25 +106,41 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
             .select()
             .single();
         if (errorTransaccion) { mostrarToast(t('suscripciones.errorPago'), 'error'); return; }
+        const borrarTransaccion = () => supabase.from('transacciones').delete().eq('id', nuevaTransaccion.id);
 
         const cuenta = cuentas.find(c => c.nombre === sus.cuenta);
-        if (cuenta) {
-            const nuevoSaldo = Number(cuenta.saldo) - Number(sus.monto);
-            const { error: errorSaldo } = await supabase
-                .from('cuentas')
-                .update({ saldo: nuevoSaldo })
-                .eq('id', cuenta.id);
-            if (errorSaldo) { mostrarToast(t('suscripciones.errorSaldo'), 'error'); return; }
-            setCuentas(prev => prev.map(c => c.id === cuenta.id ? { ...c, saldo: nuevoSaldo } : c));
+        const ajuste = await ajustarSaldos([{ cuenta, delta: -Number(sus.monto) }]);
+        if (ajuste.error) {
+            await borrarTransaccion();
+            mostrarToast(t('suscripciones.errorSaldo'), 'error');
+            return;
         }
 
+        const { error: errorFecha } = await supabase
+            .from('suscripciones')
+            .update({ fecha_renovacion: nuevaFecha })
+            .eq('id', sus.id);
+        if (errorFecha) {
+            await revertirSaldos(ajuste.aplicados);
+            await borrarTransaccion();
+            mostrarToast(t('suscripciones.errorActualizar'), 'error');
+            return;
+        }
+
+        setCuentas(conSaldosNuevos(ajuste.saldos));
         setSuscripciones(prev => prev.map(s => s.id === sus.id ? { ...s, fecha_renovacion: nuevaFecha } : s));
         setTransacciones(prev => [nuevaTransaccion, ...prev]);
         mostrarToast(t('suscripciones.pagada'), 'exito');
     }
 
-    function eliminarSuscripcion(sus) {
-        supabase.from('suscripciones').delete().eq('id', sus.id).then(() => { });
+    async function eliminarSuscripcion(sus) {
+        const aceptado = await confirmar({
+            titulo: t('confirmar.eliminarSuscripcion', { nombre: sus.nombre }),
+            mensaje: t('confirmar.eliminarSuscripcionTexto'),
+        });
+        if (!aceptado) return;
+        const { error } = await supabase.from('suscripciones').delete().eq('id', sus.id);
+        if (error) { mostrarToast(t('confirmar.noSePudoEliminar'), 'error'); return; }
         setSuscripciones(prev => prev.filter(s => s.id !== sus.id));
         if (suscripcionEditar?.id === sus.id) setSuscripcionEditar(null);
         mostrarToast(t('suscripciones.eliminada'), 'exito');
@@ -163,7 +182,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                         </div>
                         <div className="subs-total-dato">
                             <p>{t('suscripciones.alAnio')}</p>
-                            <h2>${(gastoMensual * 12).toLocaleString('es-CO')}</h2>
+                            <h2>${gastoAnual.toLocaleString('es-CO')}</h2>
                         </div>
                     </div>
 

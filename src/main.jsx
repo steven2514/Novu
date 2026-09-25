@@ -8,6 +8,7 @@ import { ToastProvider } from "./Context/ToastContext";
 import { iniciarApariencia } from './utils/tema';
 import IdiomaProvider from './i18n/IdiomaProvider';
 import { obtenerIdioma } from './i18n/idioma';
+import ConfirmarProvider from './Context/ConfirmarProvider';
 
 // Aplica tema y color guardados antes del primer render para evitar parpadeos.
 iniciarApariencia();
@@ -17,7 +18,9 @@ createRoot(document.getElementById('root')).render(
     <StrictMode>
         <IdiomaProvider>
             <ToastProvider>
-                <App />
+                <ConfirmarProvider>
+                    <App />
+                </ConfirmarProvider>
             </ToastProvider>
         </IdiomaProvider>
     </StrictMode>,
