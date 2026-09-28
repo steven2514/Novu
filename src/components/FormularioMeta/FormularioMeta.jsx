@@ -3,6 +3,7 @@ import { PALETA_ELEMENTOS } from '../../utils/tema';
 import { aInputFecha } from '../../utils/fechas';
 import './FormularioMeta.css';
 import { Icon } from '../Icon';
+import { SelectorColor, SelectorIcono } from '../Selectores';
 import { ICONOS_META } from '../../utils/iconos';
 import { supabase } from '../../supabase';
 import { useToast } from '../../Context/toast';
@@ -52,13 +53,7 @@ function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
             </div>
 
             <div className="modal-kaipo-body">
-                <div className="icono-selector-grid">
-                    {ICONOS.map((ic) => (
-                        <div key={ic} className={`icono-selector-opcion ${icono === ic ? 'seleccionado' : ''}`} onClick={() => setIcono(ic)}>
-                            <Icon name={ic} />
-                        </div>
-                    ))}
-                </div>
+                <SelectorIcono iconos={ICONOS} valor={icono} onChange={setIcono} />
 
                 <label>{t('comun.nombre')}</label>
                 <input className="campo-pildora" type="text" value={nombreMeta} onChange={(e) => setNombreMeta(e.target.value)} placeholder={t('agregar.ejMeta')} />
@@ -78,11 +73,7 @@ function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
                 <input className="campo-pildora" type="text" value={montoActual} onChange={(e) => setMontoActual(e.target.value)} placeholder="0" />
 
                 <label>{t('comun.color')}</label>
-                <div className="color-selector-grid">
-                    {COLORES.map((c) => (
-                        <div key={c} className={`color-selector-opcion ${color === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColor(c)} />
-                    ))}
-                </div>
+                <SelectorColor colores={COLORES} valor={color} onChange={setColor} />
             </div>
 
             <button className="btn-guardar-gradiente" onClick={guardar} disabled={guardando}>

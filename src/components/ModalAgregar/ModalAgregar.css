@@ -82,16 +82,36 @@
     color: var(--texto-gris);
 }
 
+/* El texto elegido nunca empuja la flecha fuera del campo: si es muy largo se
+   corta con "…" y el nombre completo se ve en la lista. */
+.dropdown-pildora-valor {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* top/bottom, left, width y max-height los calcula el componente según el
+   espacio libre en pantalla (abre hacia arriba si abajo no cabe). */
 .dropdown-pildora-panel {
     position: fixed;
     z-index: 2000;
-    max-height: 260px;
+    margin: 0;
+    list-style: none;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 6px;
     border: 1px solid var(--borde);
     border-radius: var(--radio-sm);
     background: var(--tarjeta);
     box-shadow: var(--sombra-elevada);
+}
+
+.dropdown-pildora-vacio {
+    padding: 10px 12px;
+    font-size: 14px;
+    color: var(--texto-muted);
 }
 
 .dropdown-pildora-opcion {
@@ -106,7 +126,13 @@
     cursor: pointer;
 }
 
-.dropdown-pildora-opcion:hover {
+.dropdown-pildora-opcion span {
+    min-width: 0;
+    overflow-wrap: anywhere;   /* nombres largos en varias líneas, no cortados */
+}
+
+.dropdown-pildora-opcion:hover,
+.dropdown-pildora-opcion.activa {
     background: var(--superficie-suave);
 }
 

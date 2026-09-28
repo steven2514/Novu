@@ -649,6 +649,48 @@ select.campo-pildora {
   box-shadow: 0 0 0 2px var(--tarjeta), 0 0 0 4px var(--texto);
 }
 
+/* Aviso cuando no se pudieron cargar los datos (App.jsx). */
+.aviso-carga {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 16px 24px 0;
+  padding: 12px 16px;
+  border: 1px solid color-mix(in srgb, var(--peligro) 30%, transparent);
+  border-radius: var(--radio-sm);
+  background: var(--peligro-claro);
+  color: var(--peligro);
+  font-size: 14px;
+  font-weight: 600;
+}
+.aviso-carga button {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--peligro);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Ahora son <button>: sin estilos del navegador y con foco visible al usar Tab. */
+.icono-selector-opcion,
+.color-selector-opcion {
+  appearance: none;
+  padding: 0;
+  font: inherit;
+}
+.icono-selector-opcion:focus-visible,
+.color-selector-opcion:focus-visible,
+.dropdown-pildora-trigger:focus-visible {
+  outline: 2px solid var(--principal);
+  outline-offset: 2px;
+}
+
 /* Estructura de los formularios en modal */
 .modal-kaipo-header,
 .formulario-header,

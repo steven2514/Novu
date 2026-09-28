@@ -1,15 +1,17 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useId } from "react";
 import { PALETA_ELEMENTOS } from '../../utils/tema';
 import { createPortal } from "react-dom";
 import './ModalAgregar.css';
 import { Icon } from '../Icon';
+import { SelectorColor, SelectorIcono } from '../Selectores';
 import { ICONOS_META } from '../../utils/iconos';
 import { supabase } from '../../supabase';
 import { useToast } from '../../Context/toast';
 import { hoyISO, aInputFecha } from '../../utils/fechas';
 import { useIdioma, nombreCategoria } from '../../i18n/idioma';
 import { CATEGORIAS_GASTO, CATEGORIAS_INGRESO } from '../../utils/categorias';
-import { ajustarSaldos, revertirSaldos, conSaldosNuevos, efectoEnSaldo } from '../../utils/saldos';
+import { ajustarSaldos, ajustarMeta, revertirSaldos, conSaldosNuevos, efectoEnSaldo } from '../../utils/saldos';
+import { nombreDuplicado } from '../../utils/cuentas';
 
 
 
@@ -42,53 +44,139 @@ function CheckIcon() {
     );
 }
 
-// ─── Dropdown personalizado, con el panel en un portal para que nunca se corte ───
+// ─── Dropdown personalizado ───
+// El panel va en un portal (document.body) para que el overflow del modal no lo
+// recorte. Se coloca debajo del campo si cabe y, si no, ENCIMA: antes se abría
+// siempre hacia abajo y en el campo "Cuenta", que está al final del formulario,
+// la lista se salía de la pantalla. Se reubica con el scroll y el resize.
+// Accesible con teclado: flechas para moverse, Enter para elegir, Escape/Tab
+// para cerrar.
+const ALTO_MAX_PANEL = 280;
+const MARGEN = 8;
+
+function calcularPosicion(rect, cantidad) {
+    const altoIdeal = Math.min(ALTO_MAX_PANEL, cantidad * 42 + 12);
+    const abajo = window.innerHeight - rect.bottom - MARGEN;
+    const arriba = rect.top - MARGEN;
+    const haciaArriba = abajo < altoIdeal && arriba > abajo;
+    const disponible = Math.max(120, (haciaArriba ? arriba : abajo) - 6);
+    return {
+        left: rect.left,
+        width: rect.width,
+        maxHeight: Math.min(ALTO_MAX_PANEL, disponible),
+        ...(haciaArriba
+            ? { bottom: window.innerHeight - rect.top + 6 }
+            : { top: rect.bottom + 6 }),
+    };
+}
+
 function DropdownPildora({ value, onChange, opciones, placeholder }) {
     const [abierto, setAbierto] = useState(false);
-    const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
+    const [pos, setPos] = useState(null);
+    const [activa, setActiva] = useState(-1);
     const triggerRef = useRef(null);
     const panelRef = useRef(null);
+    const idLista = useId();
+
+    function cerrar(devolverFoco = false) {
+        setAbierto(false);
+        if (devolverFoco) triggerRef.current?.focus();
+    }
 
     function abrir() {
-        const rect = triggerRef.current.getBoundingClientRect();
-        setPos({ top: rect.bottom + 6, left: rect.left, width: rect.width });
+        setPos(calcularPosicion(triggerRef.current.getBoundingClientRect(), opciones.length));
+        setActiva(Math.max(0, opciones.findIndex(o => o.value === value)));
         setAbierto(true);
     }
 
+    function elegir(opcion) {
+        onChange(opcion.value);
+        cerrar(true);
+    }
+
+    // Clic fuera cierra; scroll o resize reubican el panel junto al campo.
     useEffect(() => {
-        function handler(e) {
-            if (
-                triggerRef.current && !triggerRef.current.contains(e.target) &&
-                panelRef.current && !panelRef.current.contains(e.target)
-            ) {
-                setAbierto(false);
-            }
+        if (!abierto) return;
+        function clicFuera(e) {
+            if (!triggerRef.current?.contains(e.target) && !panelRef.current?.contains(e.target)) cerrar();
         }
-        if (abierto) document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
-    }, [abierto]);
+        function reubicar(e) {
+            if (panelRef.current?.contains(e.target)) return; // scroll dentro de la propia lista
+            setPos(calcularPosicion(triggerRef.current.getBoundingClientRect(), opciones.length));
+        }
+        document.addEventListener('mousedown', clicFuera);
+        window.addEventListener('scroll', reubicar, true);
+        window.addEventListener('resize', reubicar);
+        return () => {
+            document.removeEventListener('mousedown', clicFuera);
+            window.removeEventListener('scroll', reubicar, true);
+            window.removeEventListener('resize', reubicar);
+        };
+    }, [abierto, opciones.length]);
+
+    // La opción activa siempre visible al moverse con las flechas.
+    useEffect(() => {
+        if (abierto && activa >= 0) {
+            panelRef.current?.children[activa]?.scrollIntoView({ block: 'nearest' });
+        }
+    }, [abierto, activa]);
+
+    function teclado(e) {
+        if (!abierto) {
+            if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) { e.preventDefault(); abrir(); }
+            return;
+        }
+        if (e.key === 'ArrowDown') { e.preventDefault(); setActiva(i => Math.min(opciones.length - 1, i + 1)); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); setActiva(i => Math.max(0, i - 1)); }
+        else if (e.key === 'Home') { e.preventDefault(); setActiva(0); }
+        else if (e.key === 'End') { e.preventDefault(); setActiva(opciones.length - 1); }
+        else if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            if (opciones[activa]) elegir(opciones[activa]);
+        }
+        else if (e.key === 'Escape') { e.preventDefault(); cerrar(true); }
+        else if (e.key === 'Tab') cerrar();
+    }
 
     const seleccionada = opciones.find(o => o.value === value);
 
     return (
         <div className="dropdown-pildora">
-            <button ref={triggerRef} type="button" className="campo-pildora dropdown-pildora-trigger" onClick={() => (abierto ? setAbierto(false) : abrir())}>
-                <span className={seleccionada ? '' : 'dropdown-placeholder'}>{seleccionada ? seleccionada.label : placeholder}</span>
+            <button
+                ref={triggerRef}
+                type="button"
+                className="campo-pildora dropdown-pildora-trigger"
+                onClick={() => (abierto ? cerrar() : abrir())}
+                onKeyDown={teclado}
+                aria-haspopup="listbox"
+                aria-expanded={abierto}
+                aria-controls={abierto ? idLista : undefined}
+                aria-activedescendant={abierto && activa >= 0 ? `${idLista}-${activa}` : undefined}
+            >
+                <span className={`dropdown-pildora-valor ${seleccionada ? '' : 'dropdown-placeholder'}`}>
+                    {seleccionada ? seleccionada.label : placeholder}
+                </span>
                 <ChevronDownIcon />
             </button>
-            {abierto && createPortal(
-                <div ref={panelRef} className="dropdown-pildora-panel" style={{ top: pos.top, left: pos.left, width: pos.width }}>
-                    {opciones.map((o) => (
-                        <div
+            {abierto && pos && createPortal(
+                <ul ref={panelRef} id={idLista} role="listbox" className="dropdown-pildora-panel" style={pos}>
+                    {opciones.length === 0 && <li className="dropdown-pildora-vacio">{placeholder}</li>}
+                    {opciones.map((o, i) => (
+                        <li
                             key={o.value}
-                            className={`dropdown-pildora-opcion ${value === o.value ? 'seleccionada' : ''}`}
-                            onClick={() => { onChange(o.value); setAbierto(false); }}
+                            id={`${idLista}-${i}`}
+                            role="option"
+                            aria-selected={value === o.value}
+                            className={`dropdown-pildora-opcion ${value === o.value ? 'seleccionada' : ''} ${i === activa ? 'activa' : ''}`}
+                            onMouseEnter={() => setActiva(i)}
+                            onMouseDown={(e) => e.preventDefault()} /* el foco se queda en el botón */
+                            onClick={() => elegir(o)}
                         >
                             <span>{o.label}</span>
                             {value === o.value && <CheckIcon />}
-                        </div>
+                        </li>
                     ))}
-                </div>,
+                </ul>,
                 document.body
             )}
         </div>
@@ -233,10 +321,9 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
 
         // 3. Aporte a meta
         if (meta) {
-            const nuevoMontoActual = Number(meta.monto_actual) + Number(monto);
-            const { error: errorMeta } = await supabase.from('metas').update({ monto_actual: nuevoMontoActual }).eq('id', meta.id);
+            const { montoActual, error: errorMeta } = await ajustarMeta(meta, Number(monto));
             if (errorMeta) { await fallar(ajuste.aplicados, registro.id); return; }
-            setMetas(prev => prev.map(m => m.id === meta.id ? { ...m, monto_actual: nuevoMontoActual } : m));
+            setMetas(prev => prev.map(m => m.id === meta.id ? { ...m, monto_actual: montoActual } : m));
         }
 
         setCuentas(conSaldosNuevos(ajuste.saldos));
@@ -248,6 +335,8 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     // ─── Guardar Cuenta nueva ───
     async function guardarCuentaNueva() {
         if (!nombreCuenta.trim()) { mostrarToast(t('agregar.nombreObligatorio'), 'error'); return; }
+        // Los movimientos guardan el nombre de la cuenta: no puede repetirse.
+        if (nombreDuplicado(cuentas, nombreCuenta)) { mostrarToast(t('formularios.cuentaDuplicada'), 'error'); return; }
         setGuardando(true);
         const saldoFinal = saldoCuenta === '' ? 0 : Number(saldoCuenta);
         const { data: { user } } = await supabase.auth.getUser();
@@ -406,11 +495,7 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                     <input className="campo-pildora" type="text" value={bancoCuenta} onChange={(e) => setBancoCuenta(e.target.value)} placeholder={t('agregar.ejBanco')} />
 
                     <label>{t('comun.color')}</label>
-                    <div className="color-selector-grid">
-                        {COLORES.map((c) => (
-                            <div key={c} className={`color-selector-opcion ${colorCuenta === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColorCuenta(c)} />
-                        ))}
-                    </div>
+                    <SelectorColor colores={COLORES} valor={colorCuenta} onChange={setColorCuenta} />
                 </div>
             )}
 
@@ -448,20 +533,10 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                     />
 
                     <label>{t('comun.icono')}</label>
-                    <div className="icono-selector-grid">
-                        {ICONOS_META.map((ic) => (
-                            <div key={ic} className={`icono-selector-opcion ${iconoMeta === ic ? 'seleccionado' : ''}`} onClick={() => setIconoMeta(ic)}>
-                                <Icon name={ic} />
-                            </div>
-                        ))}
-                    </div>
+                    <SelectorIcono iconos={ICONOS_META} valor={iconoMeta} onChange={setIconoMeta} />
 
                     <label>{t('comun.color')}</label>
-                    <div className="color-selector-grid">
-                        {COLORES.map((c) => (
-                            <div key={c} className={`color-selector-opcion ${colorMeta === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColorMeta(c)} />
-                        ))}
-                    </div>
+                    <SelectorColor colores={COLORES} valor={colorMeta} onChange={setColorMeta} />
                 </div>
             )}
 

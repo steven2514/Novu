@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar/Sidebar';
 import Modal from './components/Modal/Modal';
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import ModalAgregar from './components/ModalAgregar/ModalAgregar';
 import { supabase } from './supabase';
 import Landing from './pages/Landing';
@@ -23,6 +23,7 @@ const Presupuestos = lazy(() => import('./pages/Presupuestos'));
 const Login = lazy(() => import('./pages/Login'));
 const Terminos = lazy(() => import('./pages/Terminos'));
 const Privacidad = lazy(() => import('./pages/Privacidad'));
+const Admin = lazy(() => import('./pages/Admin'));
 import { useToast } from './Context/toast';
 import { useConfirmar } from './Context/confirmar';
 import { useIdioma } from './i18n/idioma';
@@ -50,48 +51,90 @@ function App() {
     const confirmar = useConfirmar();
     const { t } = useIdioma();
 
-    useEffect(() => {
-        if (!sesion) return;
-        supabase.from('presupuestos').select('*').eq('user_id', sesion.user.id).then(({ data, error }) => {
-            setPresupuestosDisponibles(!error);
-            if (data) setPresupuestos(data);
-        });
-    }, [sesion]);
+    // true si alguna tabla no se pudo cargar: se muestra un aviso con "Reintentar"
+    // en vez de pantallas vacías que parecen "no tienes datos".
+    const [errorCarga, setErrorCarga] = useState(false);
+    const [perfil, setPerfil] = useState(null);
+    const [intentoCarga, setIntentoCarga] = useState(0);
+
+    // Depende del id y no del objeto sesión: la sesión cambia cada vez que
+    // Supabase renueva el token (≈ cada hora) y eso recargaba todo sin motivo.
+    const userId = sesion?.user?.id;
+
+    // Los efectos de carga avisan con toasts traducidos, pero no deben volver a
+    // cargar los datos porque cambie el idioma: por eso leen t desde una ref.
+    const avisar = useRef({ t, mostrarToast });
+    useEffect(() => { avisar.current = { t, mostrarToast }; }, [t, mostrarToast]);
+    const avisarDeshabilitada = useCallback(() => {
+        avisar.current.mostrarToast(avisar.current.t('admin.cuentaDeshabilitada'), 'error');
+    }, []);
 
     useEffect(() => {
-        if (!sesion) return;
-        supabase.from('transacciones').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
-            if (data) setTransacciones(data);
-        });
-    }, [sesion]);
+        if (!userId) return;
+        let vigente = true;
 
-    useEffect(() => {
-        if (!sesion) return;
-        supabase.from('cuentas').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
-            if (data) setCuentas(data);
-        });
-    }, [sesion]);
+        const consulta = (tabla) => supabase.from(tabla).select('*').eq('user_id', userId);
 
-    useEffect(() => {
-        if (!sesion) return;
-        supabase.from('metas').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
-            if (data) setMetas(data);
-        });
-    }, [sesion]);
+        Promise.all([
+            consulta('transacciones'), consulta('cuentas'), consulta('metas'),
+            consulta('suscripciones'), consulta('tareas'), consulta('presupuestos'),
+            consulta('perfiles'),
+        ]).then(async ([trans, cuent, met, susc, tar, pres, perf]) => {
+            if (!vigente) return;
 
-    useEffect(() => {
-        if (!sesion) return;
-        supabase.from('suscripciones').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
-            if (data) setSuscripciones(data);
-        });
-    }, [sesion]);
+            // Una cuenta deshabilitada por un administrador no entra.
+            const miPerfil = perf.data?.[0] || null;
+            if (miPerfil && miPerfil.habilitado === false) {
+                avisarDeshabilitada();
+                await supabase.auth.signOut();
+                return;
+            }
+            if (!perf.error && !miPerfil) {
+                // Primera vez que entra: se crea su perfil.
+                supabase.from('perfiles').insert([{ user_id: userId, tours_vistos: '' }]).then(() => { });
+            }
+            setPerfil(miPerfil);
 
-    useEffect(() => {
-        if (!sesion) return;
-        supabase.from('tareas').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
-            if (data) setTareas(data);
+            if (trans.data) setTransacciones(trans.data);
+            if (cuent.data) setCuentas(cuent.data);
+            if (met.data) setMetas(met.data);
+            if (susc.data) setSuscripciones(susc.data);
+            if (tar.data) setTareas(tar.data);
+            // Presupuestos es opcional: si la tabla no existe (migración sin
+            // ejecutar) la página lo explica; no cuenta como error de carga.
+            setPresupuestosDisponibles(!pres.error);
+            if (pres.data) setPresupuestos(pres.data);
+
+            setErrorCarga([trans, cuent, met, susc, tar].some(r => r.error));
         });
-    }, [sesion]);
+
+        return () => { vigente = false; };
+    }, [userId, intentoCarga, avisarDeshabilitada]);
+
+    // Al volver a la ventana se revisa si un administrador la deshabilitó
+    // mientras tanto (las políticas RLS ya le impiden leer o escribir datos).
+    useEffect(() => {
+        if (!userId) return;
+        async function revisarEstado() {
+            const { data } = await supabase.from('perfiles').select('habilitado').eq('user_id', userId).maybeSingle();
+            if (data && data.habilitado === false) {
+                avisarDeshabilitada();
+                await supabase.auth.signOut();
+            }
+        }
+        window.addEventListener('focus', revisarEstado);
+        return () => window.removeEventListener('focus', revisarEstado);
+    }, [userId, avisarDeshabilitada]);
+
+    // Un movimiento o suscripción que mencionaba la cuenta por su nombre viejo
+    // pasa a mostrar el nuevo (en Supabase ya lo cambió utils/cuentas.js).
+    function renombrarCuentaEnEstado(anterior, nuevo) {
+        const cambiar = (lista) => lista.map(x => (x.cuenta === anterior ? { ...x, cuenta: nuevo } : x));
+        setTransacciones(cambiar);
+        setSuscripciones(cambiar);
+    }
+
+    const esAdmin = perfil?.rol === 'admin';
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data }) => {
@@ -106,21 +149,13 @@ function App() {
                 // cuenta anterior (importa en un computador compartido).
                 setTransacciones([]); setCuentas([]); setMetas([]); setSuscripciones([]);
                 setTareas([]); setPresupuestos([]); setPresupuestosDisponibles(null);
+                setPerfil(null); setErrorCarga(false);
             }
         });
         // Sin esto la suscripción queda viva al desmontar; en desarrollo, con
         // StrictMode, se registraba dos veces.
         return () => subscription.unsubscribe();
     }, []);
-
-    useEffect(() => {
-        if (!sesion) return;
-        supabase.from('perfiles').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
-            if (!data || data.length === 0) {
-                supabase.from('perfiles').insert([{ user_id: sesion.user.id, tours_vistos: '' }]).then(() => { });
-            }
-        });
-    }, [sesion]);
 
 
 
@@ -194,15 +229,23 @@ function App() {
                 </Routes>
             ) : (
                 <div className='layout'>
-                    <Sidebar onAgregar={() => abrirModal('gasto')} onTransferir={() => abrirModal('transferencia')} sesion={sesion} />
+                    <Sidebar onAgregar={() => abrirModal('gasto')} onTransferir={() => abrirModal('transferencia')} sesion={sesion} esAdmin={esAdmin} />
                     <div className='contenido'>
+                        {errorCarga && (
+                            <div className="aviso-carga" role="alert">
+                                <span>{t('errores.carga')}</span>
+                                <button onClick={() => { setErrorCarga(false); setIntentoCarga(n => n + 1); }}>
+                                    {t('errores.reintentar')}
+                                </button>
+                            </div>
+                        )}
                         <Routes>
 
                             <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} sesion={sesion} />} />
 
                             <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} presupuestos={presupuestos} sesion={sesion} abrirModal={abrirModal} />} />
 
-                            <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} abrirModalTransferencia={() => abrirModal('transferencia')} />} />
+                            <Route path='/cuentas' element={<Cuenta cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} abrirModalTransferencia={() => abrirModal('transferencia')} onCuentaRenombrada={renombrarCuentaEnEstado} />} />
 
                             <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} setCuentas={setCuentas} setTransacciones={setTransacciones} sesion={sesion} />} />
 
@@ -216,6 +259,11 @@ function App() {
                             <Route path='/Aprendizaje' element={<Aprendizaje tareas={tareas} setTareas={setTareas} sesion={sesion} />} />
 
                             <Route path='/perfil' element={<Perfil sesion={sesion} setSesion={setSesion} />} />
+
+                            {/* Sólo aparece para administradores. Aunque alguien escriba
+                                /admin a mano, las funciones SQL comprueban el rol en el
+                                servidor y no devuelven nada a quien no lo es. */}
+                            {esAdmin && <Route path='/admin' element={<Admin sesion={sesion} />} />}
 
                             <Route path='/login' element={<Navigate to="/" replace />} />
 
