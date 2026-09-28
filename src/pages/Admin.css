@@ -1,0 +1,384 @@
+/* ═══ Panel de administración ═══ */
+
+.admin-page h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--texto);
+    margin: 0;
+}
+
+/* ── Indicadores ── */
+.admin-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.admin-kpi {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 18px 20px;
+    min-height: 128px;
+}
+
+.admin-kpi-icono {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--principal-claro);
+    color: var(--principal);
+    margin-bottom: 6px;
+}
+
+.admin-kpi-alerta .admin-kpi-icono {
+    background: var(--peligro-claro);
+    color: var(--peligro);
+}
+
+.admin-kpi-etiqueta {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--texto-gris);
+}
+
+.admin-kpi-valor {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--texto);
+    font-variant-numeric: tabular-nums;
+}
+
+.admin-kpi-sub {
+    font-size: 12px;
+    color: var(--texto-muted);
+}
+
+.admin-cargando {
+    background: linear-gradient(90deg, var(--fondo-hover) 25%, var(--superficie-suave) 50%, var(--fondo-hover) 75%);
+    background-size: 200% 100%;
+    animation: admin-brillo 1.3s infinite linear;
+}
+
+@keyframes admin-brillo {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-cargando { animation: none; }
+}
+
+.admin-error {
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    color: var(--peligro);
+    background: var(--peligro-claro);
+}
+
+/* ── Registros por mes ── */
+.admin-registros {
+    padding: 20px;
+    margin-bottom: 18px;
+}
+
+.admin-barras {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    height: 150px;
+    margin-top: 16px;
+}
+
+.admin-barra {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-barra-relleno {
+    width: 100%;
+    max-width: 46px;
+    min-height: 4px;
+    border-radius: 8px 8px 4px 4px;
+    background: linear-gradient(180deg, var(--principal) 0%, color-mix(in srgb, var(--principal) 70%, #fff) 100%);
+}
+
+.admin-barra-valor {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--texto);
+}
+
+.admin-barra-mes {
+    font-size: 12px;
+    color: var(--texto-muted);
+    text-transform: capitalize;
+}
+
+/* ── Usuarios ── */
+.admin-usuarios {
+    padding: 20px;
+}
+
+.admin-usuarios-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.admin-contador {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--superficie-suave);
+    color: var(--principal);
+    font-size: 12.5px;
+}
+
+.admin-buscar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 240px;
+    padding: 9px 14px;
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    background: var(--tarjeta);
+    color: var(--texto-muted);
+}
+
+.admin-buscar:focus-within {
+    border-color: var(--principal);
+}
+
+.admin-buscar input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    font-size: 14px;
+    color: var(--texto);
+}
+
+.admin-tabla-scroll {
+    overflow-x: auto;
+}
+
+.admin-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.admin-tabla th {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--texto-muted);
+    border-bottom: 1px solid var(--borde);
+    white-space: nowrap;
+}
+
+.admin-tabla td {
+    padding: 12px;
+    border-bottom: 1px solid var(--borde);
+    color: var(--texto-gris);
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.admin-tabla tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-tabla tbody tr:hover {
+    background: var(--fondo-hover);
+}
+
+.admin-usuario {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-usuario b {
+    display: block;
+    color: var(--texto);
+    font-size: 14px;
+}
+
+.admin-usuario small {
+    color: var(--texto-muted);
+    font-size: 12.5px;
+}
+
+.admin-avatar {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--principal-claro);
+    color: var(--principal);
+    font-weight: 800;
+}
+
+.admin-tu {
+    color: var(--principal);
+    font-weight: 600;
+}
+
+.admin-chip-admin {
+    background: var(--principal-claro);
+    color: var(--principal);
+}
+
+.admin-acciones {
+    text-align: right;
+}
+
+.admin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    background: var(--tarjeta);
+    color: var(--texto-gris);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.admin-btn:hover:not(:disabled) {
+    border-color: var(--principal);
+    color: var(--principal);
+}
+
+.admin-btn-peligro:hover:not(:disabled) {
+    border-color: var(--peligro);
+    color: var(--peligro);
+    background: var(--peligro-claro);
+}
+
+.admin-btn-ok:hover:not(:disabled) {
+    border-color: var(--positivo);
+    color: var(--positivo);
+    background: var(--positivo-claro);
+}
+
+.admin-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.admin-btn:focus-visible,
+.admin-paginacion button:focus-visible {
+    outline: 2px solid var(--principal);
+    outline-offset: 2px;
+}
+
+.admin-vacio {
+    padding: 32px 12px;
+    text-align: center;
+    color: var(--texto-muted);
+}
+
+/* ── Paginación numerada ── */
+.admin-paginacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 18px;
+}
+
+.admin-paginacion button {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid var(--borde);
+    border-radius: 999px;
+    background: var(--tarjeta);
+    color: var(--texto-gris);
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.admin-paginacion button:hover:not(:disabled) {
+    border-color: var(--principal);
+    color: var(--principal);
+}
+
+.admin-paginacion button.actual {
+    background: var(--principal);
+    border-color: var(--principal);
+    color: #fff;
+}
+
+.admin-paginacion button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.admin-pag-hueco {
+    color: var(--texto-muted);
+    padding: 0 2px;
+}
+
+.admin-codigo {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: var(--superficie-suave);
+    color: var(--principal);
+    font-size: 13px;
+}
+
+/* Texto sólo para lectores de pantalla. */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 640px) {
+    .admin-buscar { min-width: 0; width: 100%; }
+    .admin-kpi-valor { font-size: 24px; }
+    .admin-barras { gap: 8px; }
+}

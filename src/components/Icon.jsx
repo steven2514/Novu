@@ -73,6 +73,13 @@ const ICON_MAP = {
   'receipt': Lucide.Receipt,
   'palette': Lucide.Palette,
   'user': Lucide.User,
+  // Panel de administración
+  users: Lucide.Users,
+  activity: Lucide.Activity,
+  'shield-off': Lucide.ShieldOff,
+  'user-x': Lucide.UserX,
+  'user-check': Lucide.UserCheck,
+  database: Lucide.Database,
   'link': Lucide.Link,
 };
 

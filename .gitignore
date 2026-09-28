@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Archivos que crea Windows/OneDrive en cada carpeta
+desktop.ini
+Thumbs.db

@@ -28,7 +28,7 @@ function ultimosDigitos(cuenta) {
     return soloDigitos.slice(-4).padStart(4, '0');
 }
 
-function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) {
+function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia, onCuentaRenombrada }) {
 
     const { mostrarTour, cerrarTour } = useTour('cuentas', sesion);
     const { t } = useIdioma();
@@ -210,7 +210,8 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia }) 
             )}
 
             <Modal visible={modalVisible} onClose={cerrarModal}>
-                <FormularioCuenta setCuenta={setCuentas} onClose={cerrarModal} cuentaEditar={cuentaEditar} />
+                <FormularioCuenta setCuenta={setCuentas} onClose={cerrarModal} cuentaEditar={cuentaEditar}
+                    cuentas={cuentas} onRenombrada={onCuentaRenombrada} />
             </Modal>
         </div>
     );

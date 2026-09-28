@@ -9,4 +9,12 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
   },
+  // Tests (npm test). La zona horaria se fija en Bogotá: los errores de fechas
+  // que corrigen utils/fechas.js sólo aparecen en zonas con desfase respecto a
+  // UTC, y así los tests dan lo mismo en cualquier máquina o en GitHub Actions.
+  test: {
+    environment: 'node',
+    include: ['src/**/*.test.js'],
+    env: { TZ: 'America/Bogota' },
+  },
 })

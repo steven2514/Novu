@@ -3,6 +3,7 @@ import { PALETA_ELEMENTOS } from '../../utils/tema';
 import { aInputFecha } from '../../utils/fechas';
 import './FormularioSuscripcion.css'
 import { Icon } from '../Icon';
+import { SelectorColor, SelectorIcono } from '../Selectores';
 import { ICONOS_SUSCRIPCION } from '../../utils/iconos';
 import { supabase } from '../../supabase';
 import { useToast } from '../../Context/toast';
@@ -56,13 +57,7 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, sesion, sus
             </div>
 
             <div className="modal-kaipo-body">
-                <div className="icono-selector-grid">
-                    {ICONOS.map((ic) => (
-                        <div key={ic} className={`icono-selector-opcion ${icono === ic ? 'seleccionado' : ''}`} onClick={() => setIcono(ic)}>
-                            <Icon name={ic} />
-                        </div>
-                    ))}
-                </div>
+                <SelectorIcono iconos={ICONOS} valor={icono} onChange={setIcono} />
 
                 <label>{t('comun.nombre')}</label>
                 <input className="campo-pildora" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={t('formularios.ejSuscripcion')} />
@@ -97,11 +92,7 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, sesion, sus
                 </div>
 
                 <label>{t('comun.color')}</label>
-                <div className="color-selector-grid">
-                    {COLORES.map((c) => (
-                        <div key={c} className={`color-selector-opcion ${color === c ? 'seleccionado' : ''}`} style={{ backgroundColor: c }} onClick={() => setColor(c)} />
-                    ))}
-                </div>
+                <SelectorColor colores={COLORES} valor={color} onChange={setColor} />
             </div>
 
             <button className="btn-guardar-gradiente" onClick={guardar} disabled={guardando}>

@@ -27,7 +27,7 @@ const SECCIONES = [
     },
 ];
 
-function Sidebar({ onAgregar, onTransferir, sesion }) {
+function Sidebar({ onAgregar, onTransferir, sesion, esAdmin = false }) {
 
     const [abierto, setAbierto] = useState(false);
     const { t } = useIdioma();
@@ -92,6 +92,15 @@ function Sidebar({ onAgregar, onTransferir, sesion }) {
                             )}
                         </div>
                     ))}
+
+                    {esAdmin && (
+                        <div className="sidebar-seccion">
+                            <span className="sidebar-seccion-titulo">{t('sidebar.administracion')}</span>
+                            <NavLink to="/admin" onClick={cerrar}>
+                                <Icon name="shield" size={18} /> {t('sidebar.admin')}
+                            </NavLink>
+                        </div>
+                    )}
 
                     <div className="sidebar-seccion">
                         <span className="sidebar-seccion-titulo">{t('sidebar.cuenta')}</span>
