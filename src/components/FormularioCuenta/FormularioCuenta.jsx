@@ -1,30 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PALETA_ELEMENTOS } from '../../utils/tema';
 import './FormularioCuenta.css';
 import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
-import { useToast } from '../../Context/ToastContext';
+import { useToast } from '../../Context/toast';
 import { useIdioma } from '../../i18n/idioma';
 
 function FormularioCuenta({ setCuenta, onClose, cuentaEditar }) {
-    const [nombre, setNombre] = useState('');
-    const [tipo, setTipo] = useState('debito');
-    const [saldo, setSaldo] = useState('');
-    const [banco, setBanco] = useState('');
-    const [color, setColor] = useState(PALETA_ELEMENTOS[0]);
+    // Al editar, los campos arrancan con los datos de la cuenta. El formulario
+    // vive dentro de un Modal que se desmonta al cerrarse, así que cada vez que
+    // se abre se vuelve a inicializar; no hace falta un useEffect.
+    const [nombre, setNombre] = useState(cuentaEditar?.nombre ?? '');
+    const [tipo, setTipo] = useState(cuentaEditar?.tipo ?? 'debito');
+    const [saldo, setSaldo] = useState(cuentaEditar?.saldo ?? '');
+    const [banco, setBanco] = useState(cuentaEditar?.banco || '');
+    const [color, setColor] = useState(cuentaEditar?.color ?? PALETA_ELEMENTOS[0]);
     const [guardando, setGuardando] = useState(false);
     const { mostrarToast } = useToast();
     const { t } = useIdioma();
-
-    useEffect(() => {
-        if (cuentaEditar) {
-            setNombre(cuentaEditar.nombre);
-            setTipo(cuentaEditar.tipo);
-            setSaldo(cuentaEditar.saldo);
-            setBanco(cuentaEditar.banco || '');
-            setColor(cuentaEditar.color);
-        }
-    }, [cuentaEditar]);
 
     async function guardar() {
         setGuardando(true);

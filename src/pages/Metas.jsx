@@ -9,7 +9,7 @@ import { Icon } from '../components/Icon';
 import exportarCSV from '../utils/exportarCSV';
 import { parseFecha } from '../utils/fechas';
 import { useIdioma, traducir, localeActual } from '../i18n/idioma';
-import { useToast } from '../Context/ToastContext';
+import { useToast } from '../Context/toast';
 import { useConfirmar } from '../Context/confirmar';
 
 const COLOR_POR_DEFECTO = '#0B5E66';

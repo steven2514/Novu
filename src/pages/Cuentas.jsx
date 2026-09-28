@@ -8,7 +8,7 @@ import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
 import exportarCSV from '../utils/exportarCSV';
 import { useIdioma } from '../i18n/idioma';
-import { useToast } from '../Context/ToastContext';
+import { useToast } from '../Context/toast';
 import { useConfirmar } from '../Context/confirmar';
 
 const TIPO_ICONO = { debito: 'landmark', ahorros: 'piggy-bank', credito: 'credit-card', efectivo: 'wallet' };

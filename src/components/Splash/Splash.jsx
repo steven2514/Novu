@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './Splash.css';
 import { useIdioma } from '../../i18n/idioma';
 
@@ -6,9 +6,15 @@ function Splash({ onTerminar }) {
     const [creciendo, setCreciendo] = useState(false);
     const { t } = useIdioma();
 
+    // onTerminar cambia de identidad en cada render del padre. Si fuera
+    // dependencia del efecto, los temporizadores se reiniciarían; con la ref
+    // corren una sola vez y siempre llaman a la versión más reciente.
+    const onTerminarRef = useRef(onTerminar);
+    useEffect(() => { onTerminarRef.current = onTerminar; }, [onTerminar]);
+
     useEffect(() => {
         const t1 = setTimeout(() => setCreciendo(true), 2000);
-        const t2 = setTimeout(() => onTerminar(), 2600);
+        const t2 = setTimeout(() => onTerminarRef.current(), 2600);
         return () => {
             clearTimeout(t1);
             clearTimeout(t2);

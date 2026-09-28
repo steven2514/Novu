@@ -1,25 +1,29 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Inicio from './pages/Inicio';
 import Sidebar from './components/Sidebar/Sidebar';
-import Transacciones from './pages/Transacciones';
-import Suscripciones from './pages/Suscripciones'
-import Cuenta from './pages/Cuentas';
-import Meta from './pages/Metas';
-import Calendario from './pages/Calendario';
-import Aprendizaje from './pages/Aprendizaje';
-import Perfil from './pages/Perfil';
 import Modal from './components/Modal/Modal';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import ModalAgregar from './components/ModalAgregar/ModalAgregar';
 import { supabase } from './supabase';
-import Login from './pages/Login';
 import Landing from './pages/Landing';
 import Loader from './components/Loader/Loader';
-import Terminos from './pages/Terminos';
-import Privacidad from './pages/Privacidad';
 import Splash from './components/Splash/Splash';
-import Presupuestos from './pages/Presupuestos';
-import { useToast } from './Context/ToastContext';
+
+// Las páginas se cargan bajo demanda: quien entra a la Landing no descarga el
+// panel ni recharts (la librería de gráficas, lo más pesado del proyecto).
+// Landing se queda fuera porque es lo primero que ve un visitante.
+const Inicio = lazy(() => import('./pages/Inicio'));
+const Transacciones = lazy(() => import('./pages/Transacciones'));
+const Suscripciones = lazy(() => import('./pages/Suscripciones'));
+const Cuenta = lazy(() => import('./pages/Cuentas'));
+const Meta = lazy(() => import('./pages/Metas'));
+const Calendario = lazy(() => import('./pages/Calendario'));
+const Aprendizaje = lazy(() => import('./pages/Aprendizaje'));
+const Perfil = lazy(() => import('./pages/Perfil'));
+const Presupuestos = lazy(() => import('./pages/Presupuestos'));
+const Login = lazy(() => import('./pages/Login'));
+const Terminos = lazy(() => import('./pages/Terminos'));
+const Privacidad = lazy(() => import('./pages/Privacidad'));
+import { useToast } from './Context/toast';
 import { useConfirmar } from './Context/confirmar';
 import { useIdioma } from './i18n/idioma';
 import { ajustarSaldos, revertirSaldos, conSaldosNuevos, efectoEnSaldo } from './utils/saldos';
@@ -95,9 +99,18 @@ function App() {
             setCargando(false);
         });
 
-        supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setSesion(session);
+            if (!session) {
+                // Al cerrar sesión no deben quedar en memoria los datos de la
+                // cuenta anterior (importa en un computador compartido).
+                setTransacciones([]); setCuentas([]); setMetas([]); setSuscripciones([]);
+                setTareas([]); setPresupuestos([]); setPresupuestosDisponibles(null);
+            }
         });
+        // Sin esto la suscripción queda viva al desmontar; en desarrollo, con
+        // StrictMode, se registraba dos veces.
+        return () => subscription.unsubscribe();
     }, []);
 
     useEffect(() => {
@@ -163,6 +176,7 @@ function App() {
 
     return (
         <BrowserRouter>
+            <Suspense fallback={<Loader />}>
             {!sesion ? (
                 <Routes>
                     <Route path='/' element={<Landing />} />
@@ -171,6 +185,11 @@ function App() {
                             setSesion(data.session);
                         });
                     }} />} />
+                    {/* Los términos y la privacidad se leen ANTES de registrarse:
+                        antes estas rutas sólo existían con sesión iniciada y un
+                        visitante acababa en la Landing. */}
+                    <Route path='/terminos' element={<Terminos />} />
+                    <Route path='/privacidad' element={<Privacidad />} />
                     <Route path='*' element={<Landing />} />
                 </Routes>
             ) : (
@@ -224,6 +243,7 @@ function App() {
                     </div>
                 </div>
             )}
+            </Suspense>
         </BrowserRouter>
     );
 }

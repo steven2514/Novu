@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import './Perfil.css';
 import { supabase } from '../supabase';
-import { useToast } from '../Context/ToastContext';
+import { useToast } from '../Context/toast';
 import { Icon } from '../components/Icon';
 import { PALETAS, aplicarPaleta, paletaGuardada, aplicarTema, temaGuardado } from '../utils/tema';
 import { useIdioma } from '../i18n/idioma';
@@ -42,10 +42,12 @@ function Perfil({ sesion, setSesion }) {
   const [guardandoPass, setGuardandoPass] = useState(false);
 
   // ─── Cargar perfil desde Supabase ───
+  // cargandoPerfil ya arranca en true, así que aquí sólo se apaga al responder.
   useEffect(() => {
     if (!sesion) return;
-    setCargandoPerfil(true);
+    let vigente = true; // si se sale de la página antes de la respuesta, se ignora
     supabase.from('perfiles').select('*').eq('user_id', sesion.user.id).then(({ data }) => {
+      if (!vigente) return;
       setCargandoPerfil(false);
       if (data && data.length > 0) {
         const p = data[0];
@@ -53,6 +55,7 @@ function Perfil({ sesion, setSesion }) {
         setMoneda(p.moneda || 'COP');
       }
     });
+    return () => { vigente = false; };
   }, [sesion]);
 
   function elegirPaleta(id) {

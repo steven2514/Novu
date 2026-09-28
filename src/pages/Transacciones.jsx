@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import './Transacciones.css';
 import { Icon } from '../components/Icon';
-import { IconoMarca, buscarMarca } from '../components/IconoMarca';
+import { IconoMarca } from '../components/IconoMarca';
+import { buscarMarca } from '../utils/marcas';
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import exportarCSV from '../utils/exportarCSV';

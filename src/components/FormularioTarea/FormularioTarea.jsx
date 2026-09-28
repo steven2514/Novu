@@ -1,30 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import './FormularioTarea.css';
 import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
-import { useToast } from '../../Context/ToastContext';
+import { useToast } from '../../Context/toast';
 import { useIdioma } from '../../i18n/idioma';
 import { aInputFecha } from '../../utils/fechas';
 
 function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
-    const [titulo, setTitulo] = useState('');
-    const [descripcion, setDescripcion] = useState('');
-    const [categoria, setCategoria] = useState('Tarea');
-    const [prioridad, setPrioridad] = useState('media');
-    const [fechaLimite, setFechaLimite] = useState('');
+    // Al editar, los campos arrancan con los datos de la tarea. El formulario
+    // vive dentro de un Modal que se desmonta al cerrarse: cada apertura lo
+    // inicializa de nuevo, sin necesidad de un useEffect.
+    const [titulo, setTitulo] = useState(tareaEditar?.titulo ?? '');
+    const [descripcion, setDescripcion] = useState(tareaEditar?.descripcion || '');
+    const [categoria, setCategoria] = useState(tareaEditar?.categoria ?? 'Tarea');
+    const [prioridad, setPrioridad] = useState(tareaEditar?.prioridad ?? 'media');
+    const [fechaLimite, setFechaLimite] = useState(() => aInputFecha(tareaEditar?.fecha_limite));
     const [guardando, setGuardando] = useState(false);
     const { mostrarToast } = useToast();
     const { t } = useIdioma();
-
-    useEffect(() => {
-        if (tareaEditar) {
-            setTitulo(tareaEditar.titulo);
-            setDescripcion(tareaEditar.descripcion || '');
-            setCategoria(tareaEditar.categoria);
-            setPrioridad(tareaEditar.prioridad);
-            setFechaLimite(aInputFecha(tareaEditar.fecha_limite));
-        }
-    }, [tareaEditar]);
 
     async function guardar() {
         if (titulo.trim() === '') return;
