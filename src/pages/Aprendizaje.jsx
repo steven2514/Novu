@@ -8,7 +8,7 @@ import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
 import { useIdioma } from '../i18n/idioma';
-import { useToast } from '../Context/ToastContext';
+import { useToast } from '../Context/toast';
 import { useConfirmar } from '../Context/confirmar';
 
 // Cada filtro y la categoría de la base de datos que muestra (null = todas)

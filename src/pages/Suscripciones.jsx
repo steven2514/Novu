@@ -5,9 +5,10 @@ import FormularioSuscripcion from "../components/FormularioSuscripcion/Formulari
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
-import { IconoMarca, buscarMarca } from '../components/IconoMarca';
+import { IconoMarca } from '../components/IconoMarca';
+import { buscarMarca } from '../utils/marcas';
 import exportarCSV from '../utils/exportarCSV';
-import { useToast } from '../Context/ToastContext';
+import { useToast } from '../Context/toast';
 import { parseFecha, aISO, hoyISO, formatearFecha } from '../utils/fechas';
 import { useIdioma } from '../i18n/idioma';
 import { useConfirmar } from '../Context/confirmar';

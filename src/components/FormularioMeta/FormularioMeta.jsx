@@ -1,35 +1,28 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PALETA_ELEMENTOS } from '../../utils/tema';
 import { aInputFecha } from '../../utils/fechas';
 import './FormularioMeta.css';
-import { Icon, ICONOS_META } from '../Icon';
+import { Icon } from '../Icon';
+import { ICONOS_META } from '../../utils/iconos';
 import { supabase } from '../../supabase';
-import { useToast } from '../../Context/ToastContext';
+import { useToast } from '../../Context/toast';
 import { useIdioma } from '../../i18n/idioma';
 
 function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
-    const [nombreMeta, setNombreMeta] = useState('');
-    const [montoObjetivo, setMontoObjetivo] = useState('');
-    const [montoActual, setMontoActual] = useState();
-    const [fechaObjetivo, setFechaObjetivo] = useState('');
-    const [icono, setIcono] = useState('');
-    const [color, setColor] = useState('');
+    // Al editar, los campos arrancan con los datos de la meta. El formulario
+    // vive dentro de un Modal que se desmonta al cerrarse: cada apertura lo
+    // inicializa de nuevo, sin necesidad de un useEffect.
+    const [nombreMeta, setNombreMeta] = useState(metaEditar?.nombre_meta ?? '');
+    const [montoObjetivo, setMontoObjetivo] = useState(metaEditar?.monto_objetivo ?? '');
+    const [montoActual, setMontoActual] = useState(metaEditar?.monto_actual);
+    const [fechaObjetivo, setFechaObjetivo] = useState(() => aInputFecha(metaEditar?.fecha_objetivo));
+    const [icono, setIcono] = useState(metaEditar?.icono ?? '');
+    const [color, setColor] = useState(metaEditar?.color ?? '');
     const [guardando, setGuardando] = useState(false);
     const { mostrarToast } = useToast();
     const { t } = useIdioma();
     const ICONOS = ICONOS_META;
     const COLORES = PALETA_ELEMENTOS;
-
-    useEffect(() => {
-        if (metaEditar) {
-            setNombreMeta(metaEditar.nombre_meta);
-            setMontoObjetivo(metaEditar.monto_objetivo);
-            setMontoActual(metaEditar.monto_actual);
-            setFechaObjetivo(aInputFecha(metaEditar.fecha_objetivo));
-            setIcono(metaEditar.icono);
-            setColor(metaEditar.color);
-        }
-    }, [metaEditar]);
 
     async function guardar() {
         setGuardando(true);

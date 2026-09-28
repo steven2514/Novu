@@ -14,7 +14,7 @@ export function useTour(nombreTour, sesion) {
                 }
             }
         });
-    }, [sesion]);
+    }, [sesion, nombreTour]);
 
     function cerrarTour() {
         setMostrarTour(false);

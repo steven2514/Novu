@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { PALETA_ELEMENTOS } from '../../utils/tema';
 import { createPortal } from "react-dom";
 import './ModalAgregar.css';
-import { Icon, ICONOS_META } from '../Icon';
+import { Icon } from '../Icon';
+import { ICONOS_META } from '../../utils/iconos';
 import { supabase } from '../../supabase';
-import { useToast } from '../../Context/ToastContext';
+import { useToast } from '../../Context/toast';
 import { hoyISO, aInputFecha } from '../../utils/fechas';
 import { useIdioma, nombreCategoria } from '../../i18n/idioma';
 import { CATEGORIAS_GASTO, CATEGORIAS_INGRESO } from '../../utils/categorias';
@@ -105,11 +106,13 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     // ─── Campos: Gasto / Ingreso ───
     // "monto" guarda SOLO dígitos (ej: "7000"), lo que se envía a Supabase.
     // En el input se muestra formateado con formatearNumero(monto) (ej: "7.000").
-    const [monto, setMonto] = useState('');
-    const [categoria, setCategoria] = useState('');
-    const [cuenta, setCuenta] = useState('');
-    const [fecha, setFecha] = useState(hoyISO());
-    const [nota, setNota] = useState('');
+    // Al editar un movimiento, los campos arrancan con sus datos. El modal se
+    // desmonta al cerrarse, así que cada apertura vuelve a inicializarlos.
+    const [monto, setMonto] = useState(() => (transaccionEditar ? limpiarNumero(transaccionEditar.monto) : ''));
+    const [categoria, setCategoria] = useState(transaccionEditar?.categoria ?? '');
+    const [cuenta, setCuenta] = useState(transaccionEditar?.cuenta ?? '');
+    const [fecha, setFecha] = useState(() => (transaccionEditar?.fecha ? aInputFecha(transaccionEditar.fecha) : hoyISO()));
+    const [nota, setNota] = useState(transaccionEditar?.descripcion || '');
 
     // ─── Campos: Transferencia / Aporte a meta ───
     const [origen, setOrigen] = useState('');
@@ -129,18 +132,6 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     const [fechaObjetivo, setFechaObjetivo] = useState('');
     const [iconoMeta, setIconoMeta] = useState('target');
     const [colorMeta, setColorMeta] = useState(PALETA_ELEMENTOS[0]);
-
-    useEffect(() => {
-        if (transaccionEditar) {
-            setMonto(limpiarNumero(transaccionEditar.monto));
-            setCategoria(transaccionEditar.categoria);
-            setCuenta(transaccionEditar.cuenta);
-            setNota(transaccionEditar.descripcion || '');
-            if (transaccionEditar.fecha) {
-                setFecha(aInputFecha(transaccionEditar.fecha));
-            }
-        }
-    }, [transaccionEditar]);
 
     const esTransaccion = tab === 'gasto' || tab === 'ingreso';
     const esTransferencia = tab === 'transferencia' || tab === 'aporte';

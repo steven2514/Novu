@@ -1,37 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PALETA_ELEMENTOS } from '../../utils/tema';
 import { aInputFecha } from '../../utils/fechas';
 import './FormularioSuscripcion.css'
-import { Icon, ICONOS_SUSCRIPCION } from '../Icon';
+import { Icon } from '../Icon';
+import { ICONOS_SUSCRIPCION } from '../../utils/iconos';
 import { supabase } from '../../supabase';
-import { useToast } from '../../Context/ToastContext';
+import { useToast } from '../../Context/toast';
 import { useIdioma } from '../../i18n/idioma';
 
 function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, sesion, suscripcionEditar }) {
-    const [nombre, setNombre] = useState('');
-    const [monto, setMonto] = useState();
-    const [cuenta, setCuenta] = useState('');
-    const [fechaRenovacion, setFechaRenovacion] = useState('');
-    const [frecuencia, setFrecuencia] = useState('mensual');
-    const [icono, setIcono] = useState('credit-card');
-    const [color, setColor] = useState(PALETA_ELEMENTOS[0]);
+    // Al editar, los campos arrancan con los datos de la suscripción. Este
+    // formulario está siempre visible en el panel lateral, así que quien lo usa
+    // le pasa key={id}: al elegir otra suscripción React lo monta de nuevo y
+    // estos valores iniciales se vuelven a calcular.
+    const [nombre, setNombre] = useState(suscripcionEditar?.nombre ?? '');
+    const [monto, setMonto] = useState(suscripcionEditar?.monto);
+    const [cuenta, setCuenta] = useState(suscripcionEditar?.cuenta ?? '');
+    const [fechaRenovacion, setFechaRenovacion] = useState(() => aInputFecha(suscripcionEditar?.fecha_renovacion));
+    const [frecuencia, setFrecuencia] = useState(suscripcionEditar?.frecuencia ?? 'mensual');
+    const [icono, setIcono] = useState(suscripcionEditar?.icono ?? 'credit-card');
+    const [color, setColor] = useState(suscripcionEditar?.color ?? PALETA_ELEMENTOS[0]);
     const [guardando, setGuardando] = useState(false);
     const { mostrarToast } = useToast();
     const { t } = useIdioma();
     const ICONOS = ICONOS_SUSCRIPCION;
     const COLORES = PALETA_ELEMENTOS;
-
-    useEffect(() => {
-        if (suscripcionEditar) {
-            setNombre(suscripcionEditar.nombre);
-            setMonto(suscripcionEditar.monto);
-            setCuenta(suscripcionEditar.cuenta);
-            setFechaRenovacion(aInputFecha(suscripcionEditar.fecha_renovacion));
-            setFrecuencia(suscripcionEditar.frecuencia);
-            setIcono(suscripcionEditar.icono);
-            setColor(suscripcionEditar.color);
-        }
-    }, [suscripcionEditar]);
 
     async function guardar() {
         setGuardando(true);

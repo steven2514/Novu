@@ -3,7 +3,7 @@ import './Presupuestos.css';
 import { supabase } from '../supabase';
 import Modal from '../components/Modal/Modal';
 import { Icon } from '../components/Icon';
-import { useToast } from '../Context/ToastContext';
+import { useToast } from '../Context/toast';
 import { useConfirmar } from '../Context/confirmar';
 import { useIdioma, nombreCategoria } from '../i18n/idioma';
 import { parseFecha, mismoMes } from '../utils/fechas';
