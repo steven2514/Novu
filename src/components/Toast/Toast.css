@@ -1,18 +1,18 @@
 .toast {
     position: fixed;
-    right: 24px;
-    bottom: 24px;
+    right: 1.5rem;
+    bottom: 1.5rem;
     z-index: 3000;
     display: flex;
     align-items: center;
-    gap: 12px;
-    max-width: min(380px, calc(100vw - 32px));
-    padding: 14px 18px 14px 14px;
+    gap: 0.75rem;
+    max-width: min(23.75rem, calc(100vw - 2rem));
+    padding: 0.875rem 1.125rem 0.875rem 0.875rem;
     border: 1px solid var(--borde);
-    border-radius: 14px;
+    border-radius: 0.875rem;
     background: var(--tarjeta);
     color: var(--texto);
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 600;
     box-shadow: var(--sombra-elevada);
     animation: toast-aparecer 0.25s ease;
@@ -20,25 +20,25 @@
 
 .toast::before {
     content: '';
-    width: 10px;
-    height: 10px;
+    width: 0.625rem;
+    height: 0.625rem;
     flex-shrink: 0;
     border-radius: 50%;
 }
 
 .toast-exito::before {
     background: var(--positivo);
-    box-shadow: 0 0 0 5px var(--positivo-claro);
+    box-shadow: 0 0 0 0.3125rem var(--positivo-claro);
 }
 
 .toast-error::before {
     background: var(--negativo);
-    box-shadow: 0 0 0 5px var(--negativo-claro);
+    box-shadow: 0 0 0 0.3125rem var(--negativo-claro);
 }
 
 @keyframes toast-aparecer {
     from {
-        transform: translateY(16px);
+        transform: translateY(1rem);
         opacity: 0;
     }
 
@@ -50,9 +50,9 @@
 
 @media (max-width: 560px) {
     .toast {
-        left: 16px;
-        right: 16px;
-        bottom: 16px;
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
         max-width: none;
     }
 }

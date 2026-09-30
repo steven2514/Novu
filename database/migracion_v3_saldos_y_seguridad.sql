@@ -182,7 +182,13 @@ RETURNS BOOLEAN
 LANGUAGE sql STABLE SECURITY DEFINER
 SET search_path = public, pg_temp
 AS $$
-  SELECT COALESCE((SELECT habilitado FROM public.perfiles WHERE user_id = auth.uid()), TRUE);
+  -- bool_and y no "SELECT habilitado": si el usuario tiene perfiles repetidos,
+  -- una subconsulta de una sola fila falla y con ella TODAS las políticas RLS
+  -- (la app queda sin datos). Deshabilitada si cualquiera de sus perfiles lo está.
+  SELECT COALESCE(
+    (SELECT bool_and(habilitado) FROM public.perfiles WHERE user_id = auth.uid()),
+    TRUE
+  );
 $$;
 
 -- Un usuario puede editar su perfil (nombre, moneda, tema…) pero NO su rol ni

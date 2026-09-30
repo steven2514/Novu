@@ -11,6 +11,7 @@ import { parseFecha, mismoMes, mismoDia, compararFechas } from '../utils/fechas'
 import { aplicarTema, temaGuardado } from '../utils/tema';
 import { useIdioma, nombreCategoria } from '../i18n/idioma';
 import { montoMensual } from '../utils/suscripciones';
+import { pxEscalados } from '../utils/escala';
 
 // Paleta de categorías: teal, coral, ámbar, violeta, menta y gris
 const COLORES = ['#0B5E66', '#FF6B4A', '#E39A2D', '#5B4FD6', '#5FC4BA', '#94A3B8'];
@@ -265,7 +266,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], presupuesto
                             <button className={periodoResumen === 'año' ? 'activo' : ''} onClick={() => setPeriodoResumen('año')}>{t('inicio.anio')}</button>
                         </div>
                     </div>
-                    <ResponsiveContainer width="100%" height={270}>
+                    <ResponsiveContainer width="100%" height={pxEscalados(270)}>
                         <AreaChart data={datosResumen()}>
                             <defs>
                                 <linearGradient id="colorIngresos" x1="0" y1="0" x2="0" y2="1">
@@ -277,13 +278,13 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], presupuesto
                                     <stop offset="95%" stopColor="#FF6B4A" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
-                            <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--texto-gris)' }} />
+                            <XAxis dataKey="mes" axisLine={false} tickLine={false} tick={{ fontSize: pxEscalados(12), fill: 'var(--texto-gris)' }} />
                             <YAxis
                                 axisLine={false}
                                 tickLine={false}
-                                tick={{ fontSize: 12, fill: 'var(--texto-gris)' }}
+                                tick={{ fontSize: pxEscalados(12), fill: 'var(--texto-gris)' }}
                                 tickFormatter={(valor) => valor === 0 ? '$0' : `$${(valor / 1000).toLocaleString('es-CO')}k`}
-                                width={56}
+                                width={pxEscalados(56)}
                             />
                             <Tooltip {...estiloTooltip} formatter={(valor) => `$${Number(valor).toLocaleString("es-CO")}`} />
                             <Area type="monotone" dataKey="ingresos" name={t('inicio.ingresos')} stroke="#12A77F" strokeWidth={2.5} fill="url(#colorIngresos)" dot={false} />
@@ -304,9 +305,9 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = [], presupuesto
                         <>
                             <div className="dashboard-donut-row">
                                 <div className="dashboard-donut-chart-wrap">
-                                    <ResponsiveContainer width="100%" height={190}>
+                                    <ResponsiveContainer width="100%" height={pxEscalados(190)}>
                                         <PieChart>
-                                            <Pie data={gastosPorCategoria} dataKey="valor" nameKey="categoria" innerRadius={58} outerRadius={85} paddingAngle={2} stroke="none">
+                                            <Pie data={gastosPorCategoria} dataKey="valor" nameKey="categoria" innerRadius={pxEscalados(58)} outerRadius={pxEscalados(85)} paddingAngle={2} stroke="none">
                                                 {gastosPorCategoria.map((entry, index) => (
                                                     <Cell key={index} fill={COLORES[index % COLORES.length]} />
                                                 ))}

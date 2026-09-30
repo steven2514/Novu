@@ -1,4 +1,5 @@
 import * as Lucide from 'lucide-react';
+import { rem } from '../utils/escala';
 
 const ICON_MAP = {
   'credit-card': Lucide.CreditCard,
@@ -93,7 +94,7 @@ export function Icon({
 
   return (
     <Component
-      size={size}
+      size={typeof size === 'number' ? rem(size) : size}
       className={className}
       style={style}
     />

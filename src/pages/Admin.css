@@ -1,7 +1,7 @@
 /* ═══ Panel de administración ═══ */
 
 .admin-page h2 {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--texto);
     margin: 0;
@@ -10,28 +10,28 @@
 /* ── Indicadores ── */
 .admin-kpis {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: 14px;
-    margin-bottom: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(11.875rem, 1fr));
+    gap: 0.875rem;
+    margin-bottom: 1.125rem;
 }
 
 .admin-kpi {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 18px 20px;
-    min-height: 128px;
+    gap: 0.25rem;
+    padding: 1.125rem 1.25rem;
+    min-height: 8rem;
 }
 
 .admin-kpi-icono {
     display: grid;
     place-items: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
+    width: 2.125rem;
+    height: 2.125rem;
+    border-radius: 0.625rem;
     background: var(--principal-claro);
     color: var(--principal);
-    margin-bottom: 6px;
+    margin-bottom: 0.375rem;
 }
 
 .admin-kpi-alerta .admin-kpi-icono {
@@ -40,13 +40,13 @@
 }
 
 .admin-kpi-etiqueta {
-    font-size: 12.5px;
+    font-size: 0.7813rem;
     font-weight: 600;
     color: var(--texto-gris);
 }
 
 .admin-kpi-valor {
-    font-size: 28px;
+    font-size: 1.75rem;
     font-weight: 800;
     letter-spacing: -0.02em;
     color: var(--texto);
@@ -54,7 +54,7 @@
 }
 
 .admin-kpi-sub {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: var(--texto-muted);
 }
 
@@ -74,24 +74,24 @@
 }
 
 .admin-error {
-    padding: 14px 18px;
-    margin-bottom: 18px;
+    padding: 0.875rem 1.125rem;
+    margin-bottom: 1.125rem;
     color: var(--peligro);
     background: var(--peligro-claro);
 }
 
 /* ── Registros por mes ── */
 .admin-registros {
-    padding: 20px;
-    margin-bottom: 18px;
+    padding: 1.25rem;
+    margin-bottom: 1.125rem;
 }
 
 .admin-barras {
     display: flex;
     align-items: flex-end;
-    gap: 14px;
-    height: 150px;
-    margin-top: 16px;
+    gap: 0.875rem;
+    height: 9.375rem;
+    margin-top: 1rem;
 }
 
 .admin-barra {
@@ -101,61 +101,61 @@
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
-    gap: 6px;
+    gap: 0.375rem;
 }
 
 .admin-barra-relleno {
     width: 100%;
-    max-width: 46px;
-    min-height: 4px;
-    border-radius: 8px 8px 4px 4px;
+    max-width: 2.875rem;
+    min-height: 0.25rem;
+    border-radius: 0.5rem 0.5rem 0.25rem 0.25rem;
     background: linear-gradient(180deg, var(--principal) 0%, color-mix(in srgb, var(--principal) 70%, #fff) 100%);
 }
 
 .admin-barra-valor {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 700;
     color: var(--texto);
 }
 
 .admin-barra-mes {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: var(--texto-muted);
     text-transform: capitalize;
 }
 
 /* ── Usuarios ── */
 .admin-usuarios {
-    padding: 20px;
+    padding: 1.25rem;
 }
 
 .admin-usuarios-cabecera {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 14px;
+    gap: 0.875rem;
     flex-wrap: wrap;
-    margin-bottom: 14px;
+    margin-bottom: 0.875rem;
 }
 
 .admin-contador {
     display: inline-block;
-    margin-left: 6px;
-    padding: 2px 9px;
-    border-radius: 999px;
+    margin-left: 0.375rem;
+    padding: 2px 0.5625rem;
+    border-radius: 62.4375rem;
     background: var(--superficie-suave);
     color: var(--principal);
-    font-size: 12.5px;
+    font-size: 0.7813rem;
 }
 
 .admin-buscar {
     display: flex;
     align-items: center;
-    gap: 8px;
-    min-width: 240px;
-    padding: 9px 14px;
+    gap: 0.5rem;
+    min-width: 15rem;
+    padding: 0.5625rem 0.875rem;
     border: 1px solid var(--borde);
-    border-radius: 999px;
+    border-radius: 62.4375rem;
     background: var(--tarjeta);
     color: var(--texto-muted);
 }
@@ -171,7 +171,7 @@
     outline: none;
     background: transparent;
     font: inherit;
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--texto);
 }
 
@@ -182,13 +182,13 @@
 .admin-tabla {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .admin-tabla th {
-    padding: 10px 12px;
+    padding: 0.625rem 0.75rem;
     text-align: left;
-    font-size: 11.5px;
+    font-size: 0.7188rem;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -198,7 +198,7 @@
 }
 
 .admin-tabla td {
-    padding: 12px;
+    padding: 0.75rem;
     border-bottom: 1px solid var(--borde);
     color: var(--texto-gris);
     vertical-align: middle;
@@ -216,25 +216,25 @@
 .admin-usuario {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.625rem;
 }
 
 .admin-usuario b {
     display: block;
     color: var(--texto);
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .admin-usuario small {
     color: var(--texto-muted);
-    font-size: 12.5px;
+    font-size: 0.7813rem;
 }
 
 .admin-avatar {
     display: grid;
     place-items: center;
-    width: 34px;
-    height: 34px;
+    width: 2.125rem;
+    height: 2.125rem;
     flex-shrink: 0;
     border-radius: 50%;
     background: var(--principal-claro);
@@ -259,15 +259,15 @@
 .admin-btn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    margin-left: 6px;
-    padding: 6px 12px;
+    gap: 0.375rem;
+    margin-left: 0.375rem;
+    padding: 0.375rem 0.75rem;
     border: 1px solid var(--borde);
-    border-radius: 999px;
+    border-radius: 62.4375rem;
     background: var(--tarjeta);
     color: var(--texto-gris);
     font: inherit;
-    font-size: 12.5px;
+    font-size: 0.7813rem;
     font-weight: 700;
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s, color 0.15s;
@@ -302,7 +302,7 @@
 }
 
 .admin-vacio {
-    padding: 32px 12px;
+    padding: 2rem 0.75rem;
     text-align: center;
     color: var(--texto-muted);
 }
@@ -313,22 +313,22 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 18px;
+    gap: 0.375rem;
+    margin-top: 1.125rem;
 }
 
 .admin-paginacion button {
-    min-width: 36px;
-    height: 36px;
-    padding: 0 10px;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding: 0 0.625rem;
     display: inline-grid;
     place-items: center;
     border: 1px solid var(--borde);
-    border-radius: 999px;
+    border-radius: 62.4375rem;
     background: var(--tarjeta);
     color: var(--texto-gris);
     font: inherit;
-    font-size: 13.5px;
+    font-size: 0.8438rem;
     font-weight: 700;
     cursor: pointer;
 }
@@ -356,12 +356,12 @@
 
 .admin-codigo {
     display: inline-block;
-    margin-top: 10px;
-    padding: 6px 10px;
-    border-radius: 8px;
+    margin-top: 0.625rem;
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.5rem;
     background: var(--superficie-suave);
     color: var(--principal);
-    font-size: 13px;
+    font-size: 0.8125rem;
 }
 
 /* Texto sólo para lectores de pantalla. */
@@ -379,6 +379,6 @@
 
 @media (max-width: 640px) {
     .admin-buscar { min-width: 0; width: 100%; }
-    .admin-kpi-valor { font-size: 24px; }
-    .admin-barras { gap: 8px; }
+    .admin-kpi-valor { font-size: 1.5rem; }
+    .admin-barras { gap: 0.5rem; }
 }
