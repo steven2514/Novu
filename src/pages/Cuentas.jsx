@@ -6,7 +6,7 @@ import FormularioCuenta from "../components/FormularioCuenta/FormularioCuenta";
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
-import exportarCSV from '../utils/exportarCSV';
+import { exportarPDF, pesos } from '../utils/exportarPDF';
 import { useIdioma } from '../i18n/idioma';
 import { useToast } from '../Context/toast';
 import { useConfirmar } from '../Context/confirmar';
@@ -59,6 +59,33 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia, on
             }));
     }, [cuentasActivos, totalActivos]);
 
+    function exportar() {
+        exportarPDF({
+            titulo: t('cuentas.titulo'),
+            subtitulo: t('comun.cuentas', { n: cuentas.length }),
+            archivo: 'novu-cuentas',
+            resumen: [
+                { etiqueta: t('cuentas.patrimonio'), valor: pesos(patrimonioNeto), tono: patrimonioNeto < 0 ? 'negativo' : 'teal' },
+                { etiqueta: t('cuentas.totalActivos'), valor: pesos(totalActivos), tono: 'positivo' },
+                { etiqueta: t('cuentas.totalDeuda'), valor: pesos(totalDeuda), tono: totalDeuda > 0 ? 'negativo' : 'teal' },
+            ],
+            columnas: [
+                { titulo: t('pdf.col.cuenta'), negrita: true },
+                { titulo: t('pdf.col.tipo') },
+                { titulo: t('pdf.col.banco') },
+                { titulo: t('pdf.col.saldo'), alinear: 'right', ancho: 38 },
+            ],
+            filas: cuentas.map(c => [
+                c.nombre,
+                tipoCuenta(c.tipo),
+                c.banco || '—',
+                c.tipo === 'credito'
+                    ? { texto: pesos(Math.abs(Number(c.saldo || 0))), tono: 'negativo' }
+                    : pesos(c.saldo),
+            ]),
+        });
+    }
+
     function abrirEdicion(cuenta) {
         setCuentaEditar(cuenta);
         setModalVisible(true);
@@ -96,7 +123,7 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia, on
                 </div>
                 <div className="header-acciones">
                     <button className="btn-pildora-secundario" onClick={() => abrirModalTransferencia()}><Icon name="arrow-left-right" size={16} /> {t('comun.transferir')}</button>
-                    <button className="btn-pildora-secundario" onClick={() => exportarCSV(cuentas, 'cuentas')}><Icon name="download" size={16} /> {t('comun.exportar')}</button>
+                    <button className="btn-pildora-secundario" onClick={exportar}><Icon name="download" size={16} /> {t('comun.exportar')}</button>
                     <button className="btn-pildora-acento" onClick={() => setModalVisible(true)}><Icon name="plus" size={16} /> {t('cuentas.nuevaCuenta')}</button>
                 </div>
             </div>

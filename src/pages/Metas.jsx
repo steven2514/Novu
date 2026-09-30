@@ -6,8 +6,8 @@ import FormularioMeta from '../components/FormularioMeta/FormularioMeta';
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
-import exportarCSV from '../utils/exportarCSV';
-import { parseFecha } from '../utils/fechas';
+import { exportarPDF, pesos } from '../utils/exportarPDF';
+import { parseFecha, formatearFecha } from '../utils/fechas';
 import { useIdioma, traducir, localeActual } from '../i18n/idioma';
 import { useToast } from '../Context/toast';
 import { useConfirmar } from '../Context/confirmar';
@@ -55,6 +55,39 @@ function Metas({ metas, setMetas, sesion }) {
     const progresoGeneral = totalObjetivo > 0 ? Math.min((totalAhorrado / totalObjetivo) * 100, 100) : 0;
     const metasCumplidas = metas.filter(m => Number(m.monto_actual) >= Number(m.monto_objetivo) && Number(m.monto_objetivo) > 0).length;
 
+    function exportar() {
+        exportarPDF({
+            titulo: t('metas.overline'),
+            subtitulo: t('pdf.registros', { n: metas.length }),
+            archivo: 'novu-metas',
+            resumen: [
+                { etiqueta: t('metas.progresoGeneral'), valor: `${Math.round(progresoGeneral)}%`, tono: 'teal' },
+                { etiqueta: t('metas.ahorrado'), valor: pesos(totalAhorrado), tono: 'positivo' },
+                { etiqueta: t('metas.porAhorrar'), valor: pesos(Math.max(totalObjetivo - totalAhorrado, 0)) },
+                { etiqueta: t('metas.cumplidas'), valor: String(metasCumplidas) },
+            ],
+            columnas: [
+                { titulo: t('pdf.col.meta'), negrita: true },
+                { titulo: t('pdf.col.fechaLimite') },
+                { titulo: t('pdf.col.ahorrado'), alinear: 'right' },
+                { titulo: t('pdf.col.objetivo'), alinear: 'right' },
+                { titulo: t('pdf.col.progreso'), alinear: 'right', ancho: 24 },
+            ],
+            filas: metas.map(m => {
+                const objetivo = Number(m.monto_objetivo) || 0;
+                const actual = Number(m.monto_actual) || 0;
+                const porcentaje = objetivo > 0 ? Math.min(Math.round((actual / objetivo) * 100), 100) : 0;
+                return [
+                    m.nombre_meta,
+                    formatearFecha(m.fecha_objetivo, { day: 'numeric', month: 'short', year: 'numeric' }) || t('metas.sinFechaLimite'),
+                    pesos(actual),
+                    pesos(objetivo),
+                    { texto: `${porcentaje}%`, tono: porcentaje >= 100 ? 'positivo' : 'teal' },
+                ];
+            }),
+        });
+    }
+
     function abrirEdicion(meta) {
         setMetaEditar(meta);
         setModalVisible(true);
@@ -91,7 +124,7 @@ function Metas({ metas, setMetas, sesion }) {
                     <p>{t('metas.subtitulo')}</p>
                 </div>
                 <div className="header-acciones">
-                    <button className="btn-pildora-secundario" onClick={() => exportarCSV(metas, 'metas')}>
+                    <button className="btn-pildora-secundario" onClick={exportar}>
                         <Icon name="download" size={16} /> {t('comun.exportar')}
                     </button>
                     <button className="btn-pildora-acento" onClick={() => setModalVisible(true)}>

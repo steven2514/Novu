@@ -1,13 +1,14 @@
 <svg width="140" height="140" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+    <!-- Logo de Novu: barras de crecimiento con el punto de la meta -->
     <defs>
-        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#8B7FFF" />
-            <stop offset="100%" stop-color="#4338CA" />
+        <linearGradient id="fondo" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#13807F" />
+            <stop offset="100%" stop-color="#0A3A40" />
         </linearGradient>
     </defs>
-    <rect width="140" height="140" rx="28" fill="url(#grad)" />
-    <rect x="35" y="80" width="14" height="30" rx="6" fill="white" />
-    <rect x="58" y="65" width="14" height="45" rx="6" fill="white" />
-    <rect x="81" y="45" width="14" height="65" rx="6" fill="white" />
-    <circle cx="88" cy="35" r="5" fill="white" />
+    <rect width="140" height="140" rx="32" fill="url(#fondo)" />
+    <rect x="35" y="80" width="14" height="30" rx="6" fill="#FFFFFF" />
+    <rect x="58" y="65" width="14" height="45" rx="6" fill="#FFFFFF" />
+    <rect x="81" y="45" width="14" height="65" rx="6" fill="#FFFFFF" />
+    <circle cx="88" cy="33" r="7" fill="#FF6B4A" />
 </svg>
