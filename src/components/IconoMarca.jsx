@@ -1,4 +1,5 @@
 import { buscarMarca } from '../utils/marcas';
+import { rem } from '../utils/escala';
 
 // Ícono circular con el logo de la marca. Devuelve null si no reconoce la marca
 // (el componente que lo usa debe hacer fallback al ícono genérico en ese caso).
@@ -14,8 +15,8 @@ export function IconoMarca({ nombre, size = 20, badgeSize, borderRadius = '12px'
         <div
             className={`icono-marca ${className}`}
             style={{
-                width: tamañoBadge,
-                height: tamañoBadge,
+                width: rem(tamañoBadge),
+                height: rem(tamañoBadge),
                 borderRadius,
                 backgroundColor: bg,
                 display: 'flex',
@@ -25,7 +26,7 @@ export function IconoMarca({ nombre, size = 20, badgeSize, borderRadius = '12px'
                 boxShadow: bg === '#ffffff' ? 'inset 0 0 0 1px rgba(0,0,0,0.08)' : 'none',
             }}
         >
-            <Comp size={size} color={fg} />
+            <Comp size={rem(size)} color={fg} />
         </div>
     );
 }

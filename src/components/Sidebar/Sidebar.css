@@ -3,17 +3,17 @@
    ========================================================= */
 
 .sidebar {
-    width: 264px;
+    width: 16.5rem;
     flex-shrink: 0;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 24px 16px 20px;
+    gap: 1.25rem;
+    padding: 1.5rem 1rem 1.25rem;
     overflow-y: auto;
     color: #fff;
     background:
-        radial-gradient(420px 320px at 0% 100%, color-mix(in srgb, var(--acento) 14%, transparent), transparent 70%),
+        radial-gradient(26.25rem 20rem at 0% 100%, color-mix(in srgb, var(--acento) 14%, transparent), transparent 70%),
         linear-gradient(180deg, var(--sidebar-fondo) 0%, var(--sidebar-fondo-fin) 100%);
     scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
@@ -22,15 +22,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 8px;
+    padding: 0 0.5rem;
 }
 
 .sidebar-marca {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.625rem;
     font-family: var(--fuente-titulo);
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 700;
     letter-spacing: -0.02em;
     color: #fff;
@@ -40,17 +40,17 @@
 .sidebar-marca-icono {
     display: grid;
     place-items: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
+    width: 2.125rem;
+    height: 2.125rem;
+    border-radius: 0.625rem;
     background: #fff;
     color: var(--sidebar-fondo);
-    font-size: 17px;
+    font-size: 1.0625rem;
     font-weight: 800;
 }
 
 .sidebar-marca-app {
-    margin-left: -10px;
+    margin-left: -0.625rem;
     color: var(--marca-brillo);
 }
 
@@ -58,15 +58,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 0.5rem;
     width: 100%;
-    padding: 13px 16px;
+    padding: 0.8125rem 1rem;
     border: none;
-    border-radius: 12px;
+    border-radius: 0.75rem;
     background: var(--acento);
     color: #fff;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 0.875rem;
     box-shadow: var(--sombra-coral);
     transition: background 0.15s ease, transform 0.15s ease;
 }
@@ -79,7 +79,7 @@
 .sidebar-nav {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 1.125rem;
 }
 
 .sidebar-seccion {
@@ -89,8 +89,8 @@
 }
 
 .sidebar-seccion-titulo {
-    padding: 0 12px 6px;
-    font-size: 11px;
+    padding: 0 0.75rem 0.375rem;
+    font-size: 0.6875rem;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -101,14 +101,14 @@
 .sidebar-nav-btn {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0.75rem;
     width: 100%;
-    padding: 10px 12px;
+    padding: 0.625rem 0.75rem;
     border: none;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     background: transparent;
     color: var(--sidebar-texto);
-    font-size: 14.5px;
+    font-size: 0.9063rem;
     font-weight: 600;
     text-align: left;
     text-decoration: none;
@@ -130,11 +130,11 @@
 .sidebar-nav a.active::before {
     content: '';
     position: absolute;
-    left: -16px;
-    top: 8px;
-    bottom: 8px;
-    width: 3px;
-    border-radius: 0 3px 3px 0;
+    left: -1rem;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 0.1875rem;
+    border-radius: 0 0.1875rem 0.1875rem 0;
     background: var(--acento);
 }
 
@@ -146,17 +146,17 @@
     margin-top: auto;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding-top: 16px;
+    gap: 0.5rem;
+    padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-perfil-chip {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px;
-    border-radius: 12px;
+    gap: 0.75rem;
+    padding: 0.625rem;
+    border-radius: 0.75rem;
     color: #fff;
     text-decoration: none;
     transition: background 0.15s ease;
@@ -170,8 +170,8 @@
 .sidebar-perfil-avatar {
     display: grid;
     place-items: center;
-    width: 36px;
-    height: 36px;
+    width: 2.25rem;
+    height: 2.25rem;
     flex-shrink: 0;
     border-radius: 50%;
     background: color-mix(in srgb, var(--marca-brillo) 70%, #fff);
@@ -186,14 +186,14 @@
 }
 
 .sidebar-perfil-info b {
-    font-size: 14px;
+    font-size: 0.875rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .sidebar-perfil-info small {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.55);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -203,13 +203,13 @@
 .sidebar-btn-salir {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 9px 12px;
+    gap: 0.625rem;
+    padding: 0.5625rem 0.75rem;
     border: none;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     background: transparent;
     color: rgba(255, 255, 255, 0.6);
-    font-size: 13.5px;
+    font-size: 0.8438rem;
     font-weight: 600;
     transition: background 0.15s ease, color 0.15s ease;
 }
@@ -221,9 +221,9 @@
 
 .sidebar-legal-links {
     display: flex;
-    gap: 6px;
-    padding: 4px 12px 0;
-    font-size: 12px;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem 0;
+    font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.35);
 }
 

@@ -5,16 +5,16 @@
 .aprendizaje-resumen {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 20px;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 .resumen-caja {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 20px 22px;
+    gap: 1rem;
+    padding: 1.25rem 1.375rem;
     border: 1px solid var(--borde);
     border-radius: var(--radio);
     background: var(--tarjeta);
@@ -23,7 +23,7 @@
 }
 
 .resumen-caja p {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -32,7 +32,7 @@
 
 .resumen-caja h2 {
     margin-top: 2px;
-    font-size: 28px;
+    font-size: 1.75rem;
     font-weight: 700;
     letter-spacing: -0.03em;
 }
@@ -40,10 +40,10 @@
 .resumen-caja-icono {
     display: grid;
     place-items: center;
-    width: 44px;
-    height: 44px;
+    width: 2.75rem;
+    height: 2.75rem;
     flex-shrink: 0;
-    border-radius: 12px;
+    border-radius: 0.75rem;
 }
 
 .icono-pendiente {
@@ -66,7 +66,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 4px;
+    height: 0.25rem;
     background: var(--superficie-suave);
 }
 
@@ -88,19 +88,19 @@
 
 .filtros-tabs {
     display: flex;
-    gap: 4px;
-    padding: 14px 20px;
+    gap: 0.25rem;
+    padding: 0.875rem 1.25rem;
     border-bottom: 1px solid var(--borde);
     overflow-x: auto;
 }
 
 .filtros-tabs button {
-    padding: 8px 14px;
+    padding: 0.5rem 0.875rem;
     border: 1px solid transparent;
-    border-radius: 99px;
+    border-radius: 6.1875rem;
     background: transparent;
     color: var(--texto-gris);
-    font-size: 13.5px;
+    font-size: 0.8438rem;
     font-weight: 700;
     white-space: nowrap;
 }
@@ -118,8 +118,8 @@
 .tarea-item {
     display: flex;
     align-items: flex-start;
-    gap: 14px;
-    padding: 16px 20px;
+    gap: 0.875rem;
+    padding: 1rem 1.25rem;
     border-bottom: 1px solid var(--borde);
     transition: background 0.15s ease;
 }
@@ -135,13 +135,13 @@
 .check-tarea {
     display: grid;
     place-items: center;
-    width: 24px;
-    height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
     flex-shrink: 0;
     margin-top: 1px;
     padding: 0;
     border: 2px solid var(--borde-fuerte);
-    border-radius: 8px;
+    border-radius: 0.5rem;
     background: var(--tarjeta);
     color: #fff;
     transition: all 0.15s ease;
@@ -163,7 +163,7 @@
 
 .tarea-titulo {
     font-weight: 700;
-    font-size: 15px;
+    font-size: 0.9375rem;
 }
 
 .tarea-completada .tarea-titulo {
@@ -172,25 +172,25 @@
 }
 
 .tarea-descripcion {
-    margin-top: 3px;
-    font-size: 13.5px;
+    margin-top: 0.1875rem;
+    font-size: 0.8438rem;
     color: var(--texto-gris);
 }
 
 .tarea-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 10px;
+    gap: 0.375rem;
+    margin-top: 0.625rem;
 }
 
 .tarea-meta > span {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 3px 9px;
-    border-radius: 6px;
-    font-size: 12px;
+    gap: 0.3125rem;
+    padding: 0.1875rem 0.5625rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
     font-weight: 700;
 }
 
@@ -234,35 +234,35 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
-    padding: 56px 20px;
+    gap: 0.375rem;
+    padding: 3.5rem 1.25rem;
     text-align: center;
 }
 
 .check-circulo {
     display: grid;
     place-items: center;
-    width: 60px;
-    height: 60px;
-    margin-bottom: 8px;
-    border-radius: 18px;
+    width: 3.75rem;
+    height: 3.75rem;
+    margin-bottom: 0.5rem;
+    border-radius: 1.125rem;
     background: var(--principal-claro);
     color: var(--principal);
 }
 
 .vacio-titulo {
     font-family: var(--fuente-titulo);
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 600;
 }
 
 .vacio-subtitulo {
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--texto-gris);
 }
 
 .tareas-vacio .btn-pildora-acento {
-    margin-top: 14px;
+    margin-top: 0.875rem;
 }
 
 /* ---------- Responsive ---------- */

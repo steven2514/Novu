@@ -54,7 +54,7 @@
 }
 
 .lp-contenedor {
-    width: min(1180px, 100% - 32px);
+    width: min(73.75rem, 100% - 2rem);
     margin-inline: auto;
 }
 
@@ -64,9 +64,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 14px 22px;
-    border-radius: 12px;
+    gap: 0.5rem;
+    padding: 0.875rem 1.375rem;
+    border-radius: 0.75rem;
     font-weight: 700;
     white-space: nowrap;
     transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
@@ -79,7 +79,7 @@
 .lp-btn-coral {
     background: var(--lp-coral);
     color: #fff;
-    box-shadow: 0 10px 24px rgba(255, 107, 74, 0.35);
+    box-shadow: 0 0.625rem 1.5rem rgba(255, 107, 74, 0.35);
 }
 
 .lp-btn-coral:hover {
@@ -92,13 +92,13 @@
 }
 
 .lp-btn-sm {
-    padding: 11px 16px;
-    font-size: 14px;
+    padding: 0.6875rem 1rem;
+    font-size: 0.875rem;
 }
 
 .lp-overline {
     display: inline-block;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -108,13 +108,13 @@
 .lp-overline-linea {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 0.75rem;
     color: #fff;
 }
 
 .lp-overline-linea::before {
     content: '';
-    width: 24px;
+    width: 1.5rem;
     height: 2px;
     background: var(--lp-coral);
 }
@@ -124,10 +124,10 @@
 .lp-marca {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.625rem;
     font-family: 'Manrope', sans-serif;
     font-weight: 700;
-    font-size: 21px;
+    font-size: 1.3125rem;
     letter-spacing: -0.02em;
     color: #fff;
 }
@@ -135,18 +135,18 @@
 .lp-marca-icono {
     display: grid;
     place-items: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.625rem;
     background: #fff;
     color: var(--lp-teal);
     font-weight: 800;
-    font-size: 18px;
+    font-size: 1.125rem;
 }
 
 .lp-marca-app {
     color: #7FD6CF;
-    margin-left: -10px;
+    margin-left: -0.625rem;
 }
 
 /* =========================================================
@@ -155,15 +155,15 @@
 
 .lp-hero {
     position: relative;
-    min-height: min(100vh, 860px);
+    min-height: min(100vh, 53.75rem);
     display: flex;
     flex-direction: column;
     color: #fff;
     overflow: hidden;
     isolation: isolate;
     background:
-        radial-gradient(900px 600px at 85% 40%, rgba(127, 214, 207, 0.28), transparent 60%),
-        radial-gradient(700px 500px at 100% 100%, rgba(255, 107, 74, 0.22), transparent 60%),
+        radial-gradient(56.25rem 37.5rem at 85% 40%, rgba(127, 214, 207, 0.28), transparent 60%),
+        radial-gradient(43.75rem 31.25rem at 100% 100%, rgba(255, 107, 74, 0.22), transparent 60%),
         linear-gradient(115deg, #0A3A40 0%, #0B5E66 55%, #13807F 100%);
 }
 
@@ -176,26 +176,26 @@
     background-image:
         linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 56px 56px;
+    background-size: 3.5rem 3.5rem;
     mask-image: linear-gradient(90deg, transparent 0%, #000 55%, #000 100%);
 }
 
 .lp-nav {
-    width: min(1180px, 100% - 32px);
+    width: min(73.75rem, 100% - 2rem);
     margin-inline: auto;
     display: flex;
     align-items: center;
-    gap: 32px;
-    padding: 22px 0;
+    gap: 2rem;
+    padding: 1.375rem 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .lp-nav-links {
     display: flex;
-    gap: 34px;
+    gap: 2.125rem;
     margin-inline: auto;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 0.9375rem;
 }
 
 .lp-nav-links a {
@@ -205,38 +205,38 @@
 .lp-nav-links a:hover {
     opacity: 1;
     text-decoration: underline;
-    text-underline-offset: 6px;
+    text-underline-offset: 0.375rem;
 }
 
 .lp-nav-acciones {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 1.25rem;
 }
 
 .lp-link {
     font-weight: 600;
-    font-size: 15px;
+    font-size: 0.9375rem;
 }
 
 .lp-nav .lp-btn {
-    padding: 12px 20px;
+    padding: 0.75rem 1.25rem;
 }
 
 .lp-hero-contenido {
     flex: 1;
-    width: min(1180px, 100% - 32px);
+    width: min(73.75rem, 100% - 2rem);
     margin-inline: auto;
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
     align-items: center;
-    gap: 48px;
-    padding: 72px 0 88px;
+    gap: 3rem;
+    padding: 4.5rem 0 5.5rem;
 }
 
 .lp-hero-texto h1 {
-    margin: 22px 0 22px;
-    font-size: clamp(44px, 6.6vw, 88px);
+    margin: 1.375rem 0 1.375rem;
+    font-size: clamp(2.75rem, 6.6vw, 5.5rem);
     line-height: 0.98;
     font-weight: 600;
     letter-spacing: -0.055em;
@@ -244,31 +244,31 @@
 }
 
 .lp-hero-texto > p {
-    max-width: 490px;
-    font-size: 18px;
+    max-width: 30.625rem;
+    font-size: 1.125rem;
     line-height: 1.65;
     color: rgba(255, 255, 255, 0.86);
 }
 
 /* Barra tipo buscador */
 .lp-buscador {
-    margin-top: 40px;
+    margin-top: 2.5rem;
     display: flex;
     align-items: center;
-    gap: 12px;
-    max-width: 720px;
-    padding: 12px 12px 12px 26px;
-    border-radius: 18px;
+    gap: 0.75rem;
+    max-width: 45rem;
+    padding: 0.75rem 0.75rem 0.75rem 1.625rem;
+    border-radius: 1.125rem;
     background: #fff;
     color: var(--lp-texto);
-    box-shadow: 0 24px 60px rgba(4, 30, 33, 0.35);
+    box-shadow: 0 1.5rem 3.75rem rgba(4, 30, 33, 0.35);
 }
 
 .lp-buscador-campo {
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 0.875rem;
     min-width: 0;
     color: var(--lp-teal);
 }
@@ -276,12 +276,12 @@
 .lp-buscador-campo > span {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 0.1875rem;
     min-width: 0;
 }
 
 .lp-buscador-campo small {
-    font-size: 11px;
+    font-size: 0.6875rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -289,7 +289,7 @@
 }
 
 .lp-buscador-campo strong {
-    font-size: 15px;
+    font-size: 0.9375rem;
     color: var(--lp-texto);
     white-space: nowrap;
     overflow: hidden;
@@ -305,21 +305,21 @@
 .lp-buscador-separador {
     width: 1px;
     align-self: stretch;
-    margin: 6px 8px;
+    margin: 0.375rem 0.5rem;
     background: var(--lp-borde);
 }
 
 .lp-buscador-btn {
-    padding: 18px 26px;
-    font-size: 16px;
+    padding: 1.125rem 1.625rem;
+    font-size: 1rem;
 }
 
 .lp-prueba-social {
-    margin-top: 26px;
+    margin-top: 1.625rem;
     display: flex;
     align-items: center;
-    gap: 14px;
-    font-size: 14px;
+    gap: 0.875rem;
+    font-size: 0.875rem;
     color: rgba(255, 255, 255, 0.85);
 }
 
@@ -334,12 +334,12 @@
 .lp-avatares span {
     display: grid;
     place-items: center;
-    width: 32px;
-    height: 32px;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
-    margin-left: -8px;
+    margin-left: -0.5rem;
     border: 2px solid var(--lp-teal);
-    font-size: 11px;
+    font-size: 0.6875rem;
     font-weight: 700;
     color: var(--lp-teal-oscuro);
     background: #FFD8CC;
@@ -362,45 +362,45 @@
 }
 
 .lp-telefono {
-    width: 300px;
-    padding: 22px 18px;
-    border-radius: 38px;
+    width: 18.75rem;
+    padding: 1.375rem 1.125rem;
+    border-radius: 2.375rem;
     background: #fff;
     color: var(--lp-texto);
-    border: 8px solid #0E2E33;
-    box-shadow: 0 40px 80px rgba(3, 25, 28, 0.45);
+    border: 0.5rem solid #0E2E33;
+    box-shadow: 0 2.5rem 5rem rgba(3, 25, 28, 0.45);
     transform: rotate(4deg);
 }
 
 .lp-telefono-saldo {
-    padding: 18px;
-    border-radius: 20px;
+    padding: 1.125rem;
+    border-radius: 1.25rem;
     background: linear-gradient(135deg, var(--lp-teal) 0%, #13807F 100%);
     color: #fff;
 }
 
 .lp-telefono-saldo small {
-    font-size: 12px;
+    font-size: 0.75rem;
     opacity: 0.8;
 }
 
 .lp-telefono-saldo strong {
     display: block;
-    margin: 4px 0 12px;
+    margin: 0.25rem 0 0.75rem;
     font-family: 'Manrope', sans-serif;
-    font-size: 28px;
+    font-size: 1.75rem;
     letter-spacing: -0.03em;
 }
 
 .lp-telefono-pills {
     display: flex;
-    gap: 8px;
+    gap: 0.5rem;
 }
 
 .lp-telefono-pills span {
-    padding: 5px 9px;
-    border-radius: 8px;
-    font-size: 11px;
+    padding: 0.3125rem 0.5625rem;
+    border-radius: 0.5rem;
+    font-size: 0.6875rem;
     font-weight: 700;
     background: rgba(255, 255, 255, 0.16);
 }
@@ -408,14 +408,14 @@
 .lp-telefono-barras {
     display: flex;
     align-items: flex-end;
-    gap: 8px;
-    height: 90px;
-    margin: 20px 4px;
+    gap: 0.5rem;
+    height: 5.625rem;
+    margin: 1.25rem 0.25rem;
 }
 
 .lp-telefono-barras span {
     flex: 1;
-    border-radius: 6px 6px 3px 3px;
+    border-radius: 0.375rem 0.375rem 0.1875rem 0.1875rem;
     background: #D4ECE9;
 }
 
@@ -428,16 +428,16 @@
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 6px;
+    gap: 0.375rem;
 }
 
 .lp-telefono-lista li {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 9px 8px;
-    border-radius: 12px;
-    font-size: 13px;
+    gap: 0.625rem;
+    padding: 0.5625rem 0.5rem;
+    border-radius: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     background: var(--lp-crema);
 }
@@ -445,15 +445,15 @@
 .lp-telefono-lista li span {
     display: grid;
     place-items: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.5rem;
     background: #fff;
 }
 
 .lp-telefono-lista b {
     margin-left: auto;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .lp .positivo {
@@ -473,41 +473,41 @@
     position: absolute;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    border-radius: 14px;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.875rem;
     background: #fff;
     color: var(--lp-texto);
-    box-shadow: 0 18px 40px rgba(3, 25, 28, 0.3);
+    box-shadow: 0 1.125rem 2.5rem rgba(3, 25, 28, 0.3);
 }
 
 .lp-flotante svg {
     flex-shrink: 0;
-    padding: 8px;
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
+    padding: 0.5rem;
+    width: 2.125rem;
+    height: 2.125rem;
+    border-radius: 0.625rem;
     background: var(--lp-menta);
     color: var(--lp-teal);
 }
 
 .lp-flotante small {
     display: block;
-    font-size: 11px;
+    font-size: 0.6875rem;
     color: var(--lp-gris);
 }
 
 .lp-flotante strong {
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .lp-flotante-meta {
-    left: -24px;
+    left: -1.5rem;
     top: 44%;
 }
 
 .lp-flotante-pago {
-    right: -24px;
+    right: -1.5rem;
     bottom: -2%;
 }
 
@@ -521,7 +521,7 @@
    ========================================================= */
 
 .lp-seccion {
-    padding: 96px 0;
+    padding: 6rem 0;
 }
 
 .lp-crema {
@@ -536,13 +536,13 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 40px;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
 }
 
 .lp h2 {
-    margin: 12px 0 10px;
-    font-size: clamp(34px, 4.2vw, 48px);
+    margin: 0.75rem 0 0.625rem;
+    font-size: clamp(2.125rem, 4.2vw, 3rem);
     line-height: 1.05;
     font-weight: 500;
     letter-spacing: -0.045em;
@@ -551,21 +551,21 @@
 
 .lp-encabezado p,
 .lp-pasos-intro p {
-    font-size: 17px;
+    font-size: 1.0625rem;
     color: var(--lp-gris);
 }
 
 .lp-link-flecha {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     font-weight: 700;
     color: var(--lp-teal) !important;
     white-space: nowrap;
 }
 
 .lp-link-flecha:hover svg {
-    transform: translateX(3px);
+    transform: translateX(0.1875rem);
 }
 
 .lp-link-flecha svg {
@@ -577,7 +577,7 @@
 .lp-areas {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 1rem;
 }
 
 .lp-area {
@@ -586,18 +586,18 @@
     flex-direction: column;
     justify-content: space-between;
     aspect-ratio: 0.95;
-    padding: 20px;
-    border-radius: 18px;
+    padding: 1.25rem;
+    border-radius: 1.125rem;
     overflow: hidden;
     text-align: left;
     color: #fff !important;
-    box-shadow: 0 20px 40px rgba(16, 38, 43, 0.12);
+    box-shadow: 0 1.25rem 2.5rem rgba(16, 38, 43, 0.12);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .lp-area:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 28px 50px rgba(16, 38, 43, 0.2);
+    transform: translateY(-0.25rem);
+    box-shadow: 0 1.75rem 3.125rem rgba(16, 38, 43, 0.2);
 }
 
 .area-teal { background: linear-gradient(160deg, #13807F 0%, #0A3A40 100%); }
@@ -607,11 +607,11 @@
 
 .lp-area-etiqueta {
     position: absolute;
-    top: 16px;
-    left: 16px;
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 11px;
+    top: 1rem;
+    left: 1rem;
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.5rem;
+    font-size: 0.6875rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -622,59 +622,59 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 8px;
+    gap: 0.5rem;
 }
 
 .lp-area h3 {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 700;
     letter-spacing: -0.02em;
 }
 
 .lp-area p {
-    margin-top: 4px;
-    font-size: 14px;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
     opacity: 0.85;
 }
 
 /* Mini ilustraciones dentro de cada área */
 .area-mini {
-    margin-top: 44px;
+    margin-top: 2.75rem;
 }
 
 .area-mini-cuentas {
     display: grid;
-    gap: 8px;
+    gap: 0.5rem;
 }
 
 .area-mini-cuentas span {
     display: flex;
     justify-content: space-between;
-    padding: 10px 12px;
-    border-radius: 10px;
-    font-size: 12px;
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.625rem;
+    font-size: 0.75rem;
     background: rgba(255, 255, 255, 0.14);
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(0.375rem);
 }
 
 .area-mini-meta {
     display: grid;
-    gap: 14px;
+    gap: 0.875rem;
     justify-items: start;
 }
 
 .area-mini-meta svg {
-    padding: 12px;
-    width: 60px;
-    height: 60px;
-    border-radius: 16px;
+    padding: 0.75rem;
+    width: 3.75rem;
+    height: 3.75rem;
+    border-radius: 1rem;
     background: rgba(255, 255, 255, 0.18);
 }
 
 .area-mini-progreso {
     width: 100%;
-    height: 10px;
-    border-radius: 99px;
+    height: 0.625rem;
+    border-radius: 6.1875rem;
     background: rgba(255, 255, 255, 0.25);
 }
 
@@ -692,11 +692,11 @@
 .area-mini-subs span {
     display: grid;
     place-items: center;
-    width: 48px;
-    height: 48px;
-    margin-left: -10px;
+    width: 3rem;
+    height: 3rem;
+    margin-left: -0.625rem;
     border-radius: 50%;
-    border: 3px solid #5A52D6;
+    border: 0.1875rem solid #5A52D6;
     font-weight: 800;
     background: #111;
 }
@@ -704,17 +704,17 @@
 .area-mini-subs span:first-child { margin-left: 0; color: #E50914; }
 .area-mini-subs span:nth-child(2) { color: #1DB954; }
 .area-mini-subs span:nth-child(3) { color: #fff; background: #FF0000; }
-.area-mini-subs span:last-child { font-size: 13px; background: rgba(255, 255, 255, 0.25); }
+.area-mini-subs span:last-child { font-size: 0.8125rem; background: rgba(255, 255, 255, 0.25); }
 
 .area-mini-calendario {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
+    gap: 0.375rem;
 }
 
 .area-mini-calendario span {
     aspect-ratio: 1;
-    border-radius: 6px;
+    border-radius: 0.375rem;
     background: rgba(255, 255, 255, 0.2);
 }
 
@@ -727,37 +727,37 @@
 .lp-en-vivo {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    font-size: 14px;
+    gap: 0.5rem;
+    font-size: 0.875rem;
     font-weight: 700;
     color: var(--lp-positivo);
     white-space: nowrap;
 }
 
 .lp-en-vivo i {
-    width: 9px;
-    height: 9px;
+    width: 0.5625rem;
+    height: 0.5625rem;
     border-radius: 50%;
     background: var(--lp-positivo);
-    box-shadow: 0 0 0 4px rgba(18, 167, 127, 0.18);
+    box-shadow: 0 0 0 0.25rem rgba(18, 167, 127, 0.18);
 }
 
 .lp-metas {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    gap: 1.5rem;
 }
 
 .lp-meta {
     overflow: hidden;
-    border-radius: 18px;
+    border-radius: 1.125rem;
     background: #fff;
-    box-shadow: 0 20px 44px rgba(16, 38, 43, 0.08);
+    box-shadow: 0 1.25rem 2.75rem rgba(16, 38, 43, 0.08);
 }
 
 .lp-meta-portada {
     position: relative;
-    height: 180px;
+    height: 11.25rem;
     display: grid;
     place-items: center;
     color: rgba(255, 255, 255, 0.9);
@@ -769,14 +769,14 @@
 
 .lp-meta-chip {
     position: absolute;
-    top: 14px;
-    left: 14px;
+    top: 0.875rem;
+    left: 0.875rem;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 7px 11px;
-    border-radius: 99px;
-    font-size: 12px;
+    gap: 0.375rem;
+    padding: 0.4375rem 0.6875rem;
+    border-radius: 6.1875rem;
+    font-size: 0.75rem;
     font-weight: 700;
     color: var(--lp-texto);
     background: rgba(255, 255, 255, 0.92);
@@ -784,19 +784,19 @@
 
 .lp-meta-fav {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 0.75rem;
+    right: 0.75rem;
     display: grid;
     place-items: center;
-    width: 36px;
-    height: 36px;
+    width: 2.25rem;
+    height: 2.25rem;
     border-radius: 50%;
     color: var(--lp-texto);
     background: rgba(255, 255, 255, 0.92);
 }
 
 .lp-meta-cuerpo {
-    padding: 22px;
+    padding: 1.375rem;
 }
 
 .lp-meta-fila {
@@ -806,25 +806,25 @@
 }
 
 .lp-meta-fila .lp-overline {
-    font-size: 11px;
+    font-size: 0.6875rem;
 }
 
 .lp-meta-porcentaje {
     font-weight: 800;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .lp-meta h3 {
-    margin: 8px 0 16px;
-    font-size: 22px;
+    margin: 0.5rem 0 1rem;
+    font-size: 1.375rem;
     font-weight: 500;
     letter-spacing: -0.02em;
     color: var(--lp-tinta);
 }
 
 .lp-meta-barra {
-    height: 8px;
-    border-radius: 99px;
+    height: 0.5rem;
+    border-radius: 6.1875rem;
     background: var(--lp-menta);
 }
 
@@ -839,24 +839,24 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 12px;
-    margin-top: 18px;
-    padding-top: 18px;
+    gap: 0.75rem;
+    margin-top: 1.125rem;
+    padding-top: 1.125rem;
     border-top: 1px solid var(--lp-borde);
 }
 
 .lp-meta-pie small {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: var(--lp-gris);
 }
 
 .lp-meta-pie p {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--lp-gris);
 }
 
 .lp-meta-pie strong {
-    font-size: 20px;
+    font-size: 1.25rem;
     color: var(--lp-tinta);
 }
 
@@ -865,7 +865,7 @@
 .lp-pasos-grid {
     display: grid;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    gap: 64px;
+    gap: 4rem;
     align-items: center;
 }
 
@@ -879,7 +879,7 @@
     padding: 0;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
+    gap: 1.75rem;
 }
 
 .lp-pasos li {
@@ -890,9 +890,9 @@
 .lp-pasos li:not(:last-child)::after {
     content: '';
     position: absolute;
-    top: 26px;
-    left: 70px;
-    right: -18px;
+    top: 1.625rem;
+    left: 4.375rem;
+    right: -1.125rem;
     height: 1px;
     background: #C7DCD8;
 }
@@ -900,30 +900,30 @@
 .lp-paso-icono {
     display: grid;
     place-items: center;
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 0.875rem;
     background: #DCEDEA;
     color: var(--lp-teal);
 }
 
 .lp-pasos small {
     display: block;
-    margin: 22px 0 6px;
-    font-size: 11px;
+    margin: 1.375rem 0 0.375rem;
+    font-size: 0.6875rem;
     font-weight: 700;
     color: var(--lp-coral);
 }
 
 .lp-pasos h3 {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 500;
     color: var(--lp-tinta);
 }
 
 .lp-pasos p {
-    margin-top: 10px;
-    font-size: 14px;
+    margin-top: 0.625rem;
+    font-size: 0.875rem;
     line-height: 1.6;
     color: var(--lp-gris);
 }
@@ -931,7 +931,7 @@
 /* ---------- Banda y footer ---------- */
 
 .lp-banda {
-    padding: 32px 0;
+    padding: 2rem 0;
     background: var(--lp-teal);
     color: #fff;
 }
@@ -940,58 +940,58 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 24px;
+    gap: 1.5rem;
 }
 
 .lp-banda-texto {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 1rem;
 }
 
 .lp-banda-icono {
     display: grid;
     place-items: center;
-    width: 52px;
-    height: 52px;
+    width: 3.25rem;
+    height: 3.25rem;
     flex-shrink: 0;
-    border-radius: 14px;
+    border-radius: 0.875rem;
     background: rgba(255, 255, 255, 0.12);
 }
 
 .lp-banda h3 {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 700;
 }
 
 .lp-banda p {
-    margin-top: 4px;
-    font-size: 14px;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
     opacity: 0.8;
 }
 
 .lp-footer {
-    padding: 32px 0;
+    padding: 2rem 0;
     background: var(--lp-tinta);
     color: rgba(255, 255, 255, 0.75);
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .lp-footer-contenido {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 1rem;
 }
 
 .lp-footer .lp-marca-icono {
-    width: 30px;
-    height: 30px;
-    font-size: 15px;
+    width: 1.875rem;
+    height: 1.875rem;
+    font-size: 0.9375rem;
 }
 
 .lp-footer .lp-marca {
-    font-size: 18px;
+    font-size: 1.125rem;
 }
 
 /* =========================================================
@@ -1000,7 +1000,7 @@
 
 @media (max-width: 1024px) {
     .area-mini {
-        margin-top: 36px;
+        margin-top: 2.25rem;
     }
 
     .area-mini-cuentas span:nth-child(3) {
@@ -1009,7 +1009,7 @@
 
     .lp-hero-contenido {
         grid-template-columns: 1fr;
-        padding: 56px 0 72px;
+        padding: 3.5rem 0 4.5rem;
     }
 
     .lp-hero-visual {
@@ -1030,7 +1030,7 @@
 
     .lp-pasos-grid {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 2.5rem;
     }
 }
 
@@ -1047,8 +1047,8 @@
     .lp-buscador {
         flex-direction: column;
         align-items: stretch;
-        padding: 18px;
-        gap: 16px;
+        padding: 1.125rem;
+        gap: 1rem;
     }
 
     .lp-buscador-separador {
@@ -1062,7 +1062,7 @@
     }
 
     .lp-seccion {
-        padding: 64px 0;
+        padding: 4rem 0;
     }
 
     .lp-encabezado {
@@ -1088,12 +1088,12 @@
 
 @media (max-width: 480px) {
     .lp-nav .lp-btn {
-        padding: 10px 14px;
-        font-size: 14px;
+        padding: 0.625rem 0.875rem;
+        font-size: 0.875rem;
     }
 
     .lp-marca {
-        font-size: 18px;
+        font-size: 1.125rem;
     }
 
     .lp-areas {
@@ -1102,10 +1102,10 @@
 
     .lp-area {
         aspect-ratio: auto;
-        min-height: 230px;
+        min-height: 14.375rem;
     }
 
     .lp-hero-texto > p {
-        font-size: 16px;
+        font-size: 1rem;
     }
 }

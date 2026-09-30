@@ -4,15 +4,15 @@
 
 .suscripciones-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 360px;
-    gap: 24px;
+    grid-template-columns: minmax(0, 1fr) 22.5rem;
+    gap: 1.5rem;
     align-items: start;
 }
 
 .suscripciones-col-lista {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1.25rem;
     min-width: 0;
 }
 
@@ -21,18 +21,18 @@
 .subs-total {
     display: grid;
     grid-template-columns: 1.4fr 1fr 1fr;
-    gap: 20px;
-    padding: 22px 24px;
+    gap: 1.25rem;
+    padding: 1.375rem 1.5rem;
     border-radius: var(--radio);
     color: #fff;
     background:
-        radial-gradient(300px 200px at 100% 0%, color-mix(in srgb, var(--marca-brillo) 30%, transparent), transparent 70%),
+        radial-gradient(18.75rem 12.5rem at 100% 0%, color-mix(in srgb, var(--marca-brillo) 30%, transparent), transparent 70%),
         linear-gradient(135deg, var(--principal-solido) 0%, var(--principal-oscuro) 100%);
     box-shadow: var(--sombra-principal);
 }
 
 .subs-total p {
-    font-size: 12px;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -40,36 +40,36 @@
 }
 
 .subs-total h2 {
-    margin-top: 4px;
-    font-size: 30px;
+    margin-top: 0.25rem;
+    font-size: 1.875rem;
     font-weight: 700;
     letter-spacing: -0.03em;
     color: #fff;
 }
 
 .subs-total-dato {
-    padding-left: 20px;
+    padding-left: 1.25rem;
     border-left: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .subs-total-dato h2 {
-    font-size: 22px;
+    font-size: 1.375rem;
 }
 
 /* ---------- Tarjetas ---------- */
 
 .suscripciones-lista {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(auto-fill, minmax(15.625rem, 1fr));
+    gap: 1.125rem;
 }
 
 .sub-card {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    padding: 20px;
+    gap: 0.875rem;
+    padding: 1.25rem;
     overflow: hidden;
     border: 1px solid var(--borde);
     border-radius: var(--radio);
@@ -82,7 +82,7 @@
     content: '';
     position: absolute;
     inset: 0 0 auto 0;
-    height: 4px;
+    height: 0.25rem;
     background: var(--accent);
 }
 
@@ -90,46 +90,46 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 0.625rem;
 }
 
 .sub-card-icono {
     display: grid;
     place-items: center;
-    width: 46px;
-    height: 46px;
-    border-radius: 13px;
+    width: 2.875rem;
+    height: 2.875rem;
+    border-radius: 0.8125rem;
     background: var(--accent);
     overflow: hidden;
 }
 
 .sub-card-icono .icono-marca {
-    width: 46px !important;
-    height: 46px !important;
+    width: 2.875rem !important;
+    height: 2.875rem !important;
 }
 
 .sub-card-header-derecha {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 0.25rem;
 }
 
 .badge-estado {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    margin-right: 4px;
-    padding: 4px 10px;
-    border-radius: 99px;
-    font-size: 12px;
+    gap: 0.375rem;
+    margin-right: 0.25rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 6.1875rem;
+    font-size: 0.75rem;
     font-weight: 700;
     background: var(--positivo-claro);
     color: var(--positivo);
 }
 
 .badge-estado .punto {
-    width: 7px;
-    height: 7px;
+    width: 0.4375rem;
+    height: 0.4375rem;
     border-radius: 50%;
     background: currentColor;
 }
@@ -144,10 +144,10 @@
 .sub-card-cerrar {
     display: grid;
     place-items: center;
-    width: 30px;
-    height: 30px;
+    width: 1.875rem;
+    height: 1.875rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     background: transparent;
     color: var(--texto-muted);
     transition: background 0.15s ease, color 0.15s ease;
@@ -165,13 +165,13 @@
 }
 
 .sub-card-nombre {
-    font-size: 19px;
+    font-size: 1.1875rem;
     font-weight: 600;
     letter-spacing: -0.02em;
 }
 
 .sub-card-categoria {
-    font-size: 12.5px;
+    font-size: 0.7813rem;
     font-weight: 600;
     color: var(--texto-muted);
 }
@@ -179,18 +179,18 @@
 .sub-card-precio {
     display: flex;
     align-items: baseline;
-    gap: 4px;
+    gap: 0.25rem;
 }
 
 .sub-card-precio .monto {
     font-family: var(--fuente-titulo);
-    font-size: 26px;
+    font-size: 1.625rem;
     font-weight: 700;
     letter-spacing: -0.03em;
 }
 
 .sub-card-precio .periodo {
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: var(--texto-muted);
 }
 
@@ -205,7 +205,7 @@
 .sub-card-pago {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 0.875rem;
 }
 
 .pago-anillo {
@@ -213,8 +213,8 @@
     position: relative;
     display: grid;
     place-items: center;
-    width: 48px;
-    height: 48px;
+    width: 3rem;
+    height: 3rem;
     flex-shrink: 0;
     border-radius: 50%;
     background: conic-gradient(var(--accent) var(--progreso), var(--superficie-suave) 0);
@@ -223,7 +223,7 @@
 .pago-anillo::before {
     content: '';
     position: absolute;
-    inset: 5px;
+    inset: 0.3125rem;
     border-radius: 50%;
     background: var(--tarjeta);
 }
@@ -231,7 +231,7 @@
 .pago-anillo span {
     position: relative;
     font-weight: 800;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .pago-info {
@@ -241,7 +241,7 @@
 }
 
 .pago-info .etiqueta {
-    font-size: 11px;
+    font-size: 0.6875rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -250,11 +250,11 @@
 
 .pago-info .dias {
     font-weight: 700;
-    font-size: 14.5px;
+    font-size: 0.9063rem;
 }
 
 .pago-info .fecha {
-    font-size: 12.5px;
+    font-size: 0.7813rem;
     color: var(--texto-gris);
 }
 
@@ -262,14 +262,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 0.5rem;
     width: 100%;
-    padding: 11px 14px;
+    padding: 0.6875rem 0.875rem;
     border: 1px solid var(--borde);
     border-radius: var(--radio-sm);
     background: var(--superficie-suave);
     color: var(--principal);
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 700;
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
@@ -285,7 +285,7 @@
 .suscripciones-form-panel {
     position: sticky;
     top: 0;
-    padding: 24px;
+    padding: 1.5rem;
     border: 1px solid var(--borde);
     border-radius: var(--radio);
     background: var(--tarjeta);

@@ -32,7 +32,7 @@ function miniCuentas(t) {
 
 const MINI_META = (
     <div className="area-mini area-mini-meta">
-        <PiggyBank size={34} strokeWidth={1.6} />
+        <PiggyBank size="2.125rem" strokeWidth={1.6} />
         <div className="area-mini-progreso"><span style={{ width: '68%' }}></span></div>
     </div>
 );
@@ -53,15 +53,15 @@ const MINI_CALENDARIO = (
 
 // Metas de ejemplo: la clave apunta a landing.metas.<clave> y <clave>Nombre
 const METAS = [
-    { clave: 'viajes', fecha: new Date(2026, 11, 1), progreso: 68, aporte: 250000, icono: <TrendingUp size={40} strokeWidth={1.4} />, tono: 'meta-teal' },
-    { clave: 'emergencias', fecha: new Date(2027, 5, 1), progreso: 41, aporte: 180000, icono: <ShieldCheck size={40} strokeWidth={1.4} />, tono: 'meta-oscuro' },
-    { clave: 'tecnologia', fecha: new Date(2027, 2, 1), progreso: 23, aporte: 320000, icono: <Target size={40} strokeWidth={1.4} />, tono: 'meta-coral' },
+    { clave: 'viajes', fecha: new Date(2026, 11, 1), progreso: 68, aporte: 250000, icono: <TrendingUp size="2.5rem" strokeWidth={1.4} />, tono: 'meta-teal' },
+    { clave: 'emergencias', fecha: new Date(2027, 5, 1), progreso: 41, aporte: 180000, icono: <ShieldCheck size="2.5rem" strokeWidth={1.4} />, tono: 'meta-oscuro' },
+    { clave: 'tecnologia', fecha: new Date(2027, 2, 1), progreso: 23, aporte: 320000, icono: <Target size="2.5rem" strokeWidth={1.4} />, tono: 'meta-coral' },
 ];
 
 const PASOS = [
-    { clave: 'registra', icono: <Wallet size={20} /> },
-    { clave: 'planea', icono: <CalendarDays size={20} /> },
-    { clave: 'ahorra', icono: <PiggyBank size={20} /> },
+    { clave: 'registra', icono: <Wallet size="1.25rem" /> },
+    { clave: 'planea', icono: <CalendarDays size="1.25rem" /> },
+    { clave: 'ahorra', icono: <PiggyBank size="1.25rem" /> },
 ];
 
 function Landing() {
@@ -114,18 +114,18 @@ function Landing() {
 
                         <div className="lp-buscador">
                             <label className="lp-buscador-campo">
-                                <Target size={20} />
+                                <Target size="1.25rem" />
                                 <span>
                                     <small>{t('landing.hero.queLograr')}</small>
                                     <strong>{t('landing.hero.unViaje')}</strong>
                                 </span>
-                                <ChevronDown size={18} className="lp-buscador-chevron" />
+                                <ChevronDown size="1.125rem" className="lp-buscador-chevron" />
                             </label>
 
                             <span className="lp-buscador-separador"></span>
 
                             <label className="lp-buscador-campo">
-                                <CalendarDays size={20} />
+                                <CalendarDays size="1.25rem" />
                                 <span>
                                     <small>{t('landing.hero.cuantoMes')}</small>
                                     <strong>{formatoPesos(250000)}</strong>
@@ -133,7 +133,7 @@ function Landing() {
                             </label>
 
                             <button className="lp-btn lp-btn-coral lp-buscador-btn" onClick={irALogin}>
-                                <Search size={18} />
+                                <Search size="1.125rem" />
                                 {t('landing.hero.crearPlan')}
                             </button>
                         </div>
@@ -169,7 +169,7 @@ function Landing() {
                         </div>
 
                         <div className="lp-flotante lp-flotante-meta">
-                            <PiggyBank size={18} />
+                            <PiggyBank size="1.125rem" />
                             <div>
                                 <small>{t('landing.telefono.meta')}</small>
                                 <strong>{t('landing.telefono.completado', { p: 68 })}</strong>
@@ -177,7 +177,7 @@ function Landing() {
                         </div>
 
                         <div className="lp-flotante lp-flotante-pago">
-                            <CreditCard size={18} />
+                            <CreditCard size="1.125rem" />
                             <div>
                                 <small>{t('landing.telefono.pago')}</small>
                                 <strong>{formatoPesos(16900)}</strong>
@@ -197,7 +197,7 @@ function Landing() {
                             <p>{t('landing.areas.texto')}</p>
                         </div>
                         <button className="lp-link-flecha" onClick={irALogin}>
-                            {t('landing.areas.verFunciones')} <ArrowRight size={18} />
+                            {t('landing.areas.verFunciones')} <ArrowRight size="1.125rem" />
                         </button>
                     </div>
 
@@ -211,7 +211,7 @@ function Landing() {
                                         <h3>{t(`landing.areas.${area.clave}`)}</h3>
                                         <p>{t(`landing.areas.${area.clave}Texto`)}</p>
                                     </div>
-                                    <ChevronRight size={20} />
+                                    <ChevronRight size="1.25rem" />
                                 </div>
                             </button>
                         ))}
@@ -235,8 +235,8 @@ function Landing() {
                         {METAS.map((meta) => (
                             <article key={meta.clave} className="lp-meta">
                                 <div className={`lp-meta-portada ${meta.tono}`}>
-                                    <span className="lp-meta-chip"><CalendarDays size={14} />{mesYAnio(meta.fecha)}</span>
-                                    <span className="lp-meta-fav"><Heart size={18} /></span>
+                                    <span className="lp-meta-chip"><CalendarDays size="0.875rem" />{mesYAnio(meta.fecha)}</span>
+                                    <span className="lp-meta-fav"><Heart size="1.125rem" /></span>
                                     {meta.icono}
                                 </div>
 
@@ -255,7 +255,7 @@ function Landing() {
                                             <p><strong>{formatoPesos(meta.aporte)}</strong> {t('landing.metas.porMes')}</p>
                                         </div>
                                         <button className="lp-btn lp-btn-coral lp-btn-sm" onClick={irALogin}>
-                                            {t('landing.metas.crear')} <ArrowRight size={16} />
+                                            {t('landing.metas.crear')} <ArrowRight size="1rem" />
                                         </button>
                                     </div>
                                 </div>
@@ -291,14 +291,14 @@ function Landing() {
             <section className="lp-banda">
                 <div className="lp-contenedor lp-banda-contenido">
                     <div className="lp-banda-texto">
-                        <span className="lp-banda-icono"><ShieldCheck size={24} /></span>
+                        <span className="lp-banda-icono"><ShieldCheck size="1.5rem" /></span>
                         <div>
                             <h3>{t('landing.banda.titulo')}</h3>
                             <p>{t('landing.banda.texto')}</p>
                         </div>
                     </div>
                     <button className="lp-btn lp-btn-blanco" onClick={irALogin}>
-                        {t('landing.banda.empezar')} <ArrowRight size={18} />
+                        {t('landing.banda.empezar')} <ArrowRight size="1.125rem" />
                     </button>
                 </div>
             </section>
