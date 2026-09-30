@@ -5,7 +5,7 @@ import { IconoMarca } from '../components/IconoMarca';
 import { buscarMarca } from '../utils/marcas';
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
-import exportarCSV from '../utils/exportarCSV';
+import { exportarPDF, pesos } from '../utils/exportarPDF';
 import { formatearFecha, compararFechas } from '../utils/fechas';
 import { useIdioma, nombreCategoria } from '../i18n/idioma';
 
@@ -52,6 +52,45 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
         setPaginaActual(1);
     }
 
+    // El PDF lleva lo que se está viendo: con el filtro y la búsqueda aplicados.
+    function exportar() {
+        const suma = (tipo) => transaccionesFiltradas.filter(mov => mov.tipo === tipo).reduce((acc, mov) => acc + Number(mov.monto), 0);
+        const ingresos = suma('ingreso');
+        const gastos = suma('gasto');
+        const neto = ingresos - gastos;
+
+        exportarPDF({
+            titulo: t('transacciones.titulo'),
+            subtitulo: [
+                t('pdf.registros', { n: transaccionesFiltradas.length }),
+                filtro !== 'todos' ? t(`transacciones.${filtro === 'ingreso' ? 'ingresos' : 'gastos'}`) : null,
+                busqueda.trim() ? t('pdf.busqueda', { texto: busqueda.trim() }) : null,
+            ].filter(Boolean).join('  ·  '),
+            archivo: 'novu-movimientos',
+            resumen: [
+                { etiqueta: t('transacciones.totalIngresos'), valor: pesos(ingresos), tono: 'positivo' },
+                { etiqueta: t('transacciones.totalGastos'), valor: pesos(gastos), tono: 'negativo' },
+                { etiqueta: t('transacciones.flujoNeto'), valor: pesos(neto), tono: neto < 0 ? 'negativo' : 'teal' },
+            ],
+            columnas: [
+                { titulo: t('pdf.col.fecha'), ancho: 26 },
+                { titulo: t('pdf.col.descripcion'), negrita: true },
+                { titulo: t('pdf.col.categoria') },
+                { titulo: t('pdf.col.cuenta') },
+                { titulo: t('pdf.col.monto'), alinear: 'right', ancho: 32 },
+            ],
+            filas: transaccionesFiltradas.map(mov => [
+                formatearFecha(mov.fecha, { day: 'numeric', month: 'short', year: 'numeric' }),
+                mov.descripcion || t('comun.sinDescripcion'),
+                nombreCategoria(mov.categoria),
+                mov.cuenta || '',
+                mov.tipo === 'ingreso'
+                    ? { texto: '+' + pesos(mov.monto), tono: 'positivo' }
+                    : { texto: '-' + pesos(mov.monto), tono: 'negativo' },
+            ]),
+        });
+    }
+
     return (
         <div className="transacciones-page contenido-pagina">
             {mostrarTour && <Tour onCerrar={cerrarTour} pasos={[
@@ -66,7 +105,7 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
                     <p>{t('transacciones.subtitulo')}</p>
                 </div>
                 <div className="header-acciones">
-                    <button className="btn-pildora-secundario" onClick={() => exportarCSV(transacciones, 'transacciones')}>
+                    <button className="btn-pildora-secundario" onClick={exportar}>
                         <Icon name="download" size={16} /> {t('comun.exportar')}
                     </button>
                     <button className="btn-pildora-acento" onClick={() => abrirModal('gasto')}>

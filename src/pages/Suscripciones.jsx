@@ -7,7 +7,7 @@ import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
 import { IconoMarca } from '../components/IconoMarca';
 import { buscarMarca } from '../utils/marcas';
-import exportarCSV from '../utils/exportarCSV';
+import { exportarPDF, pesos } from '../utils/exportarPDF';
 import { useToast } from '../Context/toast';
 import { parseFecha, aISO, hoyISO, formatearFecha } from '../utils/fechas';
 import { useIdioma } from '../i18n/idioma';
@@ -90,6 +90,36 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
 
     // Pagar = registrar el gasto, descontarlo de la cuenta y avanzar la fecha de
     // renovación. Si un paso falla se deshacen los anteriores.
+    function exportar() {
+        const ordenadas = suscripciones.slice().sort((a, b) => (parseFecha(a.fecha_renovacion) || 0) - (parseFecha(b.fecha_renovacion) || 0));
+        exportarPDF({
+            titulo: t('suscripciones.titulo'),
+            subtitulo: t('pdf.registros', { n: suscripciones.length }),
+            archivo: 'novu-suscripciones',
+            resumen: [
+                { etiqueta: t('suscripciones.totalMensual'), valor: pesos(gastoMensual), tono: 'teal' },
+                { etiqueta: t('suscripciones.alAnio'), valor: pesos(gastoAnual), tono: 'negativo' },
+                { etiqueta: t('suscripciones.activas'), valor: String(suscripciones.length) },
+            ],
+            columnas: [
+                { titulo: t('pdf.col.suscripcion'), negrita: true },
+                { titulo: t('pdf.col.frecuencia') },
+                { titulo: t('pdf.col.proximoCobro') },
+                { titulo: t('pdf.col.cuenta') },
+                { titulo: t('pdf.col.monto'), alinear: 'right' },
+                { titulo: t('pdf.col.costoMensual'), alinear: 'right' },
+            ],
+            filas: ordenadas.map(sus => [
+                sus.nombre,
+                t(`suscripciones.frecuencias.${frecuencia(sus)}`),
+                formatearFecha(sus.fecha_renovacion, { day: 'numeric', month: 'short', year: 'numeric' }),
+                sus.cuenta || '—',
+                pesos(sus.monto),
+                { texto: pesos(montoMensual(sus)), tono: 'teal' },
+            ]),
+        });
+    }
+
     async function pagarSuscripcion(sus) {
         const nuevaFecha = sumarCiclo(sus.fecha_renovacion, sus.frecuencia);
 
@@ -161,7 +191,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                     <p>{t('suscripciones.subtitulo')}</p>
                 </div>
                 <div className="header-acciones">
-                    <button className="btn-pildora-secundario" onClick={() => exportarCSV(suscripciones, 'suscripciones')}>
+                    <button className="btn-pildora-secundario" onClick={exportar}>
                         <Icon name="download" size={16} /> {t('comun.exportar')}
                     </button>
                     <button className="btn-pildora-acento" onClick={() => setSuscripcionEditar(null)}>

@@ -1,7 +1,7 @@
 // English texts. Same structure as es.js.
 const en = {
     comun: {
-        exportar: 'Export',
+        exportar: 'Export PDF',
         guardar: 'Save',
         guardando: 'Saving...',
         guardarCambios: 'Save changes',
@@ -513,6 +513,33 @@ const en = {
         tareaNoActualizada: "Couldn't update the task",
         tareaCreada: 'Task created',
         tareaNoCreada: "Couldn't create the task",
+    },
+
+    pdf: {
+        generado: 'Generated on {fecha}',
+        pagina: 'Page {n} of {total}',
+        sinDatos: 'No data to show',
+        registros: { uno: '{n} record', otros: '{n} records' },
+        busqueda: 'Search: "{texto}"',
+        col: {
+            fecha: 'Date',
+            descripcion: 'Description',
+            categoria: 'Category',
+            cuenta: 'Account',
+            monto: 'Amount',
+            tipo: 'Type',
+            banco: 'Bank',
+            saldo: 'Balance',
+            meta: 'Goal',
+            fechaLimite: 'Deadline',
+            ahorrado: 'Saved',
+            objetivo: 'Target',
+            progreso: 'Progress',
+            suscripcion: 'Subscription',
+            frecuencia: 'Frequency',
+            proximoCobro: 'Next charge',
+            costoMensual: 'Monthly cost',
+        },
     },
 
     confirmar: {

@@ -1,7 +1,7 @@
 // Textos en español (idioma base). Cualquier clave que falte en en.js usa esta.
 const es = {
     comun: {
-        exportar: 'Exportar',
+        exportar: 'Exportar PDF',
         guardar: 'Guardar',
         guardando: 'Guardando...',
         guardarCambios: 'Guardar cambios',
@@ -514,6 +514,33 @@ const es = {
         tareaNoActualizada: 'No se pudo actualizar la tarea',
         tareaCreada: 'Tarea creada correctamente',
         tareaNoCreada: 'No se pudo crear la tarea',
+    },
+
+    pdf: {
+        generado: 'Generado el {fecha}',
+        pagina: 'Página {n} de {total}',
+        sinDatos: 'No hay datos para mostrar',
+        registros: { uno: '{n} registro', otros: '{n} registros' },
+        busqueda: 'Búsqueda: "{texto}"',
+        col: {
+            fecha: 'Fecha',
+            descripcion: 'Descripción',
+            categoria: 'Categoría',
+            cuenta: 'Cuenta',
+            monto: 'Monto',
+            tipo: 'Tipo',
+            banco: 'Banco',
+            saldo: 'Saldo',
+            meta: 'Meta',
+            fechaLimite: 'Fecha límite',
+            ahorrado: 'Ahorrado',
+            objetivo: 'Objetivo',
+            progreso: 'Progreso',
+            suscripcion: 'Suscripción',
+            frecuencia: 'Frecuencia',
+            proximoCobro: 'Próximo cobro',
+            costoMensual: 'Costo mensual',
+        },
     },
 
     confirmar: {
