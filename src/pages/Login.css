@@ -431,14 +431,23 @@
 /* ---------- Responsive ---------- */
 
 @media (max-width: 960px) {
+    /* En una columna se apila con flex: la cuadrícula de 100vh repartía el alto
+       entre panel y formulario y, en pantallas bajas, el panel tapaba el
+       selector de idioma (en las altas se estiraba de más). */
     .login-page {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
     }
 
     .login-panel {
         position: static;
+        flex-shrink: 0;
         height: auto;
         padding: 1.5rem;
+    }
+
+    .login-contenido {
+        flex: 1 0 auto;
     }
 
     .login-panel-texto h2 {

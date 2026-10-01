@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import './Tour.css';
 import { useIdioma } from '../../i18n/idioma';
 
@@ -14,7 +15,8 @@ function Tour({ onCerrar, pasos }) {
         }
     }
 
-    return (
+    // En <body>, igual que Modal, para cubrir toda la pantalla.
+    return createPortal(
         <div className="tour-overlay">
             <div className="tour-tarjeta">
                 <h3>{pasos[pasoActual].titulo}</h3>
@@ -27,7 +29,8 @@ function Tour({ onCerrar, pasos }) {
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 

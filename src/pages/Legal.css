@@ -48,7 +48,7 @@
     font-weight: 700;
 }
 
-@media (max-width: 560px) {
+@container pagina (max-width: 30rem) {
     .legal-page {
         padding: 1.75rem 1.25rem;
     }

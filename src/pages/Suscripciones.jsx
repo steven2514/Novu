@@ -120,6 +120,11 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
         });
     }
 
+    // En pantallas angostas el formulario queda debajo de la lista: se lleva la vista hasta él.
+    function irAlFormulario() {
+        document.getElementById('formulario-suscripcion')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     async function pagarSuscripcion(sus) {
         const nuevaFecha = sumarCiclo(sus.fecha_renovacion, sus.frecuencia);
 
@@ -194,7 +199,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                     <button className="btn-pildora-secundario" onClick={exportar}>
                         <Icon name="download" size={16} /> {t('comun.exportar')}
                     </button>
-                    <button className="btn-pildora-acento" onClick={() => setSuscripcionEditar(null)}>
+                    <button className="btn-pildora-acento" onClick={() => { setSuscripcionEditar(null); irAlFormulario(); }}>
                         <Icon name="plus" size={16} /> {t('suscripciones.nueva')}
                     </button>
                 </div>
@@ -261,7 +266,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                                                 <button
                                                     className={`sub-card-editar ${suscripcionEditar?.id === sus.id ? 'sub-card-editando' : ''}`}
                                                     title={t('comun.editar')}
-                                                    onClick={() => setSuscripcionEditar(sus)}
+                                                    onClick={() => { setSuscripcionEditar(sus); irAlFormulario(); }}
                                                 >
                                                     <Icon name="pencil" size={14} />
                                                 </button>
@@ -309,7 +314,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                     )}
                 </div>
 
-                <div className="suscripciones-form-panel">
+                <div className="suscripciones-form-panel" id="formulario-suscripcion">
                     <FormularioSuscripcion
                         key={suscripcionEditar ? suscripcionEditar.id : 'nuevo'}
                         setSuscripciones={setSuscripciones}

@@ -647,11 +647,20 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 1200px) {
+/* Tarjetas de arriba: 4 por fila, luego 2 y en pantallas muy angostas 1 */
+@container pagina (max-width: 52rem) {
     .dashboard-stats {
         grid-template-columns: 1fr 1fr;
     }
+}
 
+@container pagina (max-width: 26rem) {
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@container pagina (max-width: 60rem) {
     .dashboard-grid-main {
         grid-template-columns: 1fr 1fr;
         grid-template-areas:
@@ -662,7 +671,7 @@
     }
 }
 
-@media (max-width: 760px) {
+@container pagina (max-width: 40rem) {
     .dashboard-top-actions {
         width: 100%;
     }
@@ -674,10 +683,6 @@
 
     .dashboard-top-actions .btn-pildora-acento {
         width: 100%;
-    }
-
-    .dashboard-stats {
-        grid-template-columns: 1fr;
     }
 
     .dashboard-grid-main {

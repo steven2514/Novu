@@ -299,18 +299,20 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 1100px) {
+@container pagina (max-width: 56rem) {
     .suscripciones-layout {
         grid-template-columns: 1fr;
     }
 
+    /* En una sola columna primero van las suscripciones y después el formulario
+       (el botón "Nueva suscripción" lleva hasta él). */
     .suscripciones-form-panel {
         position: static;
-        order: -1;
+        scroll-margin-top: 1rem;
     }
 }
 
-@media (max-width: 560px) {
+@container pagina (max-width: 30rem) {
     .subs-total {
         grid-template-columns: 1fr 1fr;
     }

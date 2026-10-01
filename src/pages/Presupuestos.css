@@ -326,7 +326,7 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 900px) {
+@container pagina (max-width: 48rem) {
     .pres-resumen {
         grid-template-columns: 1fr 1fr 1fr;
     }
@@ -341,7 +341,7 @@
     }
 }
 
-@media (max-width: 560px) {
+@container pagina (max-width: 30rem) {
     .pres-resumen {
         grid-template-columns: 1fr;
         gap: 0.875rem;

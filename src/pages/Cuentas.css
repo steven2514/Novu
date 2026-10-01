@@ -299,7 +299,7 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 900px) {
+@container pagina (max-width: 44rem) {
     .resumen-metricas {
         grid-template-columns: 1fr;
         gap: 1rem;

@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import './Modal.css';
 
 function Modal({ visible, onClose, children }) {
@@ -15,12 +16,15 @@ function Modal({ visible, onClose, children }) {
 
     if (!visible) return null;
 
-    return (
+    // Se dibuja directo en <body>: así cubre toda la pantalla aunque la página
+    // que lo abre esté dentro de un contenedor con container queries.
+    return createPortal(
         <div className="modal-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose && onClose(); }}>
             <div className="modal-contenido" role="dialog" aria-modal="true">
                 {children}
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 

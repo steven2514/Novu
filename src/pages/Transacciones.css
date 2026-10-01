@@ -181,6 +181,7 @@
 
 .transaccion-meta {
     display: flex;
+    flex-wrap: wrap;   /* categoría y cuenta bajan de línea en vez de tapar el monto */
     align-items: center;
     gap: 0.5rem;
     margin-top: 0.1875rem;
@@ -290,10 +291,33 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 900px) {
+/* Totales: 3 en fila mientras quepan; en pantallas medianas se compactan
+   (sin icono) y sólo en celulares se apilan. */
+@container pagina (max-width: 52rem) {
+    .tarjeta-total {
+        padding: 1rem 1.125rem;
+    }
+
+    .tarjeta-total-icono {
+        display: none;
+    }
+
+    .tarjeta-total h2 {
+        font-size: 1.25rem;
+    }
+}
+
+@container pagina (max-width: 30rem) {
     .trans-totales {
         grid-template-columns: 1fr;
     }
+
+    .tarjeta-total-icono {
+        display: grid;
+    }
+}
+
+@container pagina (max-width: 48rem) {
 
     .trans-barra {
         flex-direction: column;
