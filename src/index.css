@@ -9,7 +9,7 @@
      El tamaño se adapta solo al ancho de la pantalla (ver la regla html más
      abajo). Este número es un ajuste fino sobre eso: 1 = normal,
      1.1 = todo un 10% más grande, 0.9 = un 10% más pequeño. */
-  --escala: 1;
+  --escala: 1.12;
 
   /* ---- Colores base de la paleta (paletas.css los sobrescribe) ---- */
   --principal: #0B5E66;
