@@ -267,7 +267,7 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 760px) {
+@container pagina (max-width: 40rem) {
     .aprendizaje-resumen {
         grid-template-columns: 1fr;
     }

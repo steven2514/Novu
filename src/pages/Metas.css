@@ -250,7 +250,7 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 900px) {
+@container pagina (max-width: 48rem) {
     .metas-resumen {
         grid-template-columns: 1fr 1fr 1fr;
     }
@@ -265,7 +265,7 @@
     }
 }
 
-@media (max-width: 560px) {
+@container pagina (max-width: 30rem) {
     .metas-resumen {
         grid-template-columns: 1fr;
         gap: 1rem;

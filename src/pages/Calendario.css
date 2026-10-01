@@ -218,7 +218,7 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 760px) {
+@container pagina (max-width: 40rem) {
     .calendario-card {
         padding: 1rem 0.75rem;
     }

@@ -397,7 +397,7 @@
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 1000px) {
+@container pagina (max-width: 46rem) {
     .perfil-grid {
         grid-template-columns: 1fr;
     }

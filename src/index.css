@@ -6,9 +6,10 @@
 
 :root {
   /* ---- Tamaño general de la interfaz ----
-     Todo el CSS usa rem: subir este número agranda textos, espacios, tarjetas
-     e iconos a la vez (1 = 16px, 1.14 ≈ 18,2px, 1.25 = 20px). */
-  --escala: 1.5;
+     El tamaño se adapta solo al ancho de la pantalla (ver la regla html más
+     abajo). Este número es un ajuste fino sobre eso: 1 = normal,
+     1.1 = todo un 10% más grande, 0.9 = un 10% más pequeño. */
+  --escala: 1;
 
   /* ---- Colores base de la paleta (paletas.css los sobrescribe) ---- */
   --principal: #0B5E66;
@@ -145,8 +146,12 @@
   box-sizing: border-box;
 }
 
+/* Tamaño fluido: el texto base pasa de 16px (pantallas de hasta 1280px, como
+   portátiles con la escala de Windows al 125-150%) a ~23px en monitores de
+   1920px, y no supera 26px. Así se ve proporcionado en cualquier equipo sin
+   elegir un porcentaje fijo. --escala multiplica el resultado (ajuste fino). */
 html {
-  font-size: calc(100% * var(--escala));
+  font-size: calc(var(--escala) * clamp(1rem, 1.094vw + 0.125rem, 1.625rem));
 }
 
 html,
@@ -237,6 +242,9 @@ a {
   overflow-x: hidden;
   padding: 2.25rem 2.75rem 3.5rem;
   background: var(--fondo);
+  /* Las páginas se adaptan al ancho de ESTA zona (@container pagina), no al de
+     la ventana: así responden igual con o sin menú lateral y con cualquier escala. */
+  container: pagina / inline-size;
 }
 
 .contenido-pagina {
