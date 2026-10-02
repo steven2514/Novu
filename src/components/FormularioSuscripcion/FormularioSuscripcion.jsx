@@ -8,6 +8,8 @@ import { ICONOS_SUSCRIPCION } from '../../utils/iconos';
 import { supabase } from '../../supabase';
 import { useToast } from '../../Context/toast';
 import { useIdioma } from '../../i18n/idioma';
+import { aPesos, montoParaCampo } from '../../utils/moneda';
+import { usePreferencias } from '../../Context/preferencias';
 
 function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, sesion, suscripcionEditar }) {
     // Ids para conectar cada etiqueta con su campo (accesibilidad)
@@ -17,7 +19,7 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, sesion, sus
     // le pasa key={id}: al elegir otra suscripción React lo monta de nuevo y
     // estos valores iniciales se vuelven a calcular.
     const [nombre, setNombre] = useState(suscripcionEditar?.nombre ?? '');
-    const [monto, setMonto] = useState(suscripcionEditar?.monto);
+    const [monto, setMonto] = useState(() => montoParaCampo(suscripcionEditar?.monto));
     const [cuenta, setCuenta] = useState(suscripcionEditar?.cuenta ?? '');
     const [fechaRenovacion, setFechaRenovacion] = useState(() => aInputFecha(suscripcionEditar?.fecha_renovacion));
     const [frecuencia, setFrecuencia] = useState(suscripcionEditar?.frecuencia ?? 'mensual');
@@ -26,18 +28,20 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, sesion, sus
     const [guardando, setGuardando] = useState(false);
     const { mostrarToast } = useToast();
     const { t } = useIdioma();
+    const { moneda } = usePreferencias();
     const ICONOS = ICONOS_SUSCRIPCION;
     const COLORES = PALETA_ELEMENTOS;
 
     async function guardar() {
         setGuardando(true);
+        const montoPesos = aPesos(monto, suscripcionEditar?.monto);
         if (suscripcionEditar) {
-            const { error } = await supabase.from('suscripciones').update({ nombre, monto, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color }).eq('id', suscripcionEditar.id);
+            const { error } = await supabase.from('suscripciones').update({ nombre, monto: montoPesos, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color }).eq('id', suscripcionEditar.id);
             if (error) { mostrarToast(t('formularios.suscripcionNoActualizada'), 'error'); setGuardando(false); return; }
-            setSuscripciones(prev => prev.map(s => s.id === suscripcionEditar.id ? { ...s, nombre, monto, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color } : s));
+            setSuscripciones(prev => prev.map(s => s.id === suscripcionEditar.id ? { ...s, nombre, monto: montoPesos, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color } : s));
             mostrarToast(t('formularios.suscripcionActualizada'), 'exito');
         } else {
-            const nueva = { nombre, monto, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color, user_id: sesion.user.id };
+            const nueva = { nombre, monto: montoPesos, cuenta, fecha_renovacion: fechaRenovacion, frecuencia, icono, color, user_id: sesion.user.id };
             const { data, error } = await supabase.from('suscripciones').insert([nueva]).select().single();
             if (error) { mostrarToast(t('formularios.suscripcionNoCreada'), 'error'); setGuardando(false); return; }
             setSuscripciones(prev => [...prev, data]);
@@ -66,8 +70,8 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, sesion, sus
 
                 <div className="formulario-suscripcion-fila-doble">
                     <div>
-                        <label htmlFor={`${idForm}-2`}>{t('comun.monto')}</label>
-                        <input id={`${idForm}-2`} className="campo-pildora" type="number" value={monto} onChange={(e) => setMonto(e.target.value)} placeholder="0.00" />
+                        <label htmlFor={`${idForm}-2`}>{t('comun.monto')} ({moneda})</label>
+                        <input id={`${idForm}-2`} className="campo-pildora" type="number" step="any" value={monto} onChange={(e) => setMonto(e.target.value)} placeholder="0.00" />
                     </div>
                     <div>
                         <label htmlFor={`${idForm}-3`}>{t('formularios.ciclo')}</label>

@@ -6,6 +6,8 @@ import { SelectorColor } from '../Selectores';
 import { supabase } from '../../supabase';
 import { useToast } from '../../Context/toast';
 import { useIdioma } from '../../i18n/idioma';
+import { aPesos, montoParaCampo } from '../../utils/moneda';
+import { usePreferencias } from '../../Context/preferencias';
 import { nombreDuplicado, renombrarCuenta } from '../../utils/cuentas';
 
 function FormularioCuenta({ setCuenta, onClose, cuentaEditar, cuentas = [], onRenombrada }) {
@@ -16,12 +18,13 @@ function FormularioCuenta({ setCuenta, onClose, cuentaEditar, cuentas = [], onRe
     // se abre se vuelve a inicializar; no hace falta un useEffect.
     const [nombre, setNombre] = useState(cuentaEditar?.nombre ?? '');
     const [tipo, setTipo] = useState(cuentaEditar?.tipo ?? 'debito');
-    const [saldo, setSaldo] = useState(cuentaEditar?.saldo ?? '');
+    const [saldo, setSaldo] = useState(() => montoParaCampo(cuentaEditar?.saldo));
     const [banco, setBanco] = useState(cuentaEditar?.banco || '');
     const [color, setColor] = useState(cuentaEditar?.color ?? PALETA_ELEMENTOS[0]);
     const [guardando, setGuardando] = useState(false);
     const { mostrarToast } = useToast();
     const { t } = useIdioma();
+    const { moneda } = usePreferencias();
 
     async function guardar() {
         const nombreLimpio = nombre.trim();
@@ -33,7 +36,7 @@ function FormularioCuenta({ setCuenta, onClose, cuentaEditar, cuentas = [], onRe
             return;
         }
         setGuardando(true);
-        const saldoFinal = saldo === '' ? 0 : Number(saldo);
+        const saldoFinal = saldo === '' ? 0 : aPesos(saldo, cuentaEditar?.saldo);
         if (cuentaEditar) {
             // El nombre se cambia aparte porque arrastra movimientos,
             // suscripciones y transferencias (ver utils/cuentas.js).
@@ -84,8 +87,8 @@ function FormularioCuenta({ setCuenta, onClose, cuentaEditar, cuentas = [], onRe
                         </select>
                     </div>
                     <div>
-                        <label htmlFor={`${idForm}-3`}>{cuentaEditar ? t('formularios.saldo') : t('agregar.saldoInicial')}</label>
-                        <input id={`${idForm}-3`} className="campo-pildora" type="number" value={saldo} onChange={(e) => setSaldo(e.target.value)} placeholder="0.00" />
+                        <label htmlFor={`${idForm}-3`}>{cuentaEditar ? t('formularios.saldo') : t('agregar.saldoInicial')} ({moneda})</label>
+                        <input id={`${idForm}-3`} className="campo-pildora" type="number" step="any" value={saldo} onChange={(e) => setSaldo(e.target.value)} placeholder="0.00" />
                     </div>
                 </div>
 

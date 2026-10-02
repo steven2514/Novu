@@ -74,9 +74,17 @@ function Perfil({ sesion, setSesion }) {
     if (error) {
       mostrarToast(t('ajustes.errorGuardar'), 'error');
     } else {
-      cambiarMoneda(moneda);
       mostrarToast(t('ajustes.perfilActualizado'), 'exito');
     }
+  }
+
+  // La moneda se aplica al instante (todos los montos se convierten) y se
+  // guarda en el perfil para que se mantenga en otros dispositivos.
+  async function elegirMoneda(codigo) {
+    setMoneda(codigo);
+    cambiarMoneda(codigo);
+    const { error } = await supabase.from('perfiles').update({ moneda: codigo }).eq('user_id', sesion.user.id);
+    if (error) mostrarToast(t('ajustes.errorGuardar'), 'error');
   }
 
   // ─── Cambiar contraseña ───
@@ -201,7 +209,7 @@ function Perfil({ sesion, setSesion }) {
               <input id={`${idForm}-2`} type="email" value={email} disabled className="perfil-input-disabled" />
 
               <label htmlFor={`${idForm}-3`}>{t('ajustes.moneda')}</label>
-              <select id={`${idForm}-3`} value={moneda} onChange={(e) => setMoneda(e.target.value)}>
+              <select id={`${idForm}-3`} value={moneda} onChange={(e) => elegirMoneda(e.target.value)}>
                 <option value="COP">{t('ajustes.monedas.COP')}</option>
                 <option value="USD">{t('ajustes.monedas.USD')}</option>
                 <option value="EUR">{t('ajustes.monedas.EUR')}</option>

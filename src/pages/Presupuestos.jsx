@@ -8,9 +8,10 @@ import { useConfirmar } from '../Context/confirmar';
 import { useIdioma, nombreCategoria } from '../i18n/idioma';
 import { parseFecha, mismoMes } from '../utils/fechas';
 import { CATEGORIAS_GASTO, ICONO_CATEGORIA } from '../utils/categorias';
-import { dinero } from '../utils/moneda';
+import { dinero, aPesos, montoParaCampo } from '../utils/moneda';
+import { usePreferencias } from '../Context/preferencias';
+import CampoMonto from '../components/CampoMonto';
 
-const soloDigitos = (valor) => String(valor).replace(/\D/g, '');
 
 // A partir del 80% del límite se avisa; por encima del 100% está excedido
 function estadoDe(porcentaje) {
@@ -24,13 +25,14 @@ function FormularioPresupuesto({ presupuesto, categoriaInicial, disponibles, onG
     const idForm = useId();
     const { t } = useIdioma();
     const [categoria, setCategoria] = useState(presupuesto?.categoria || categoriaInicial || disponibles[0] || '');
-    const [monto, setMonto] = useState(presupuesto ? soloDigitos(presupuesto.monto) : '');
+    const { moneda } = usePreferencias();
+    const [monto, setMonto] = useState(() => montoParaCampo(presupuesto?.monto));
     const [guardando, setGuardando] = useState(false);
     const opciones = presupuesto ? [presupuesto.categoria] : disponibles;
 
     async function guardar() {
         setGuardando(true);
-        const ok = await onGuardar({ categoria, monto: Number(monto) });
+        const ok = await onGuardar({ categoria, monto: aPesos(monto, presupuesto?.monto) });
         setGuardando(false);
         if (ok) onClose();
     }
@@ -59,15 +61,8 @@ function FormularioPresupuesto({ presupuesto, categoriaInicial, disponibles, onG
                     ))}
                 </div>
 
-                <label htmlFor={`${idForm}-1`}>{t('presupuestos.limiteMensual')}</label>
-                <input id={`${idForm}-1`}
-                    className="campo-pildora"
-                    type="text"
-                    inputMode="numeric"
-                    value={monto ? Number(monto).toLocaleString('es-CO') : ''}
-                    onChange={(e) => setMonto(soloDigitos(e.target.value))}
-                    placeholder="0"
-                />
+                <label htmlFor={`${idForm}-1`}>{t('presupuestos.limiteMensual')} ({moneda})</label>
+                <CampoMonto id={`${idForm}-1`} value={monto} onChange={setMonto} />
                 <p className="pres-form-ayuda">{t('presupuestos.ayudaLimite')}</p>
             </div>
 

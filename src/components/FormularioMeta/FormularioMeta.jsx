@@ -8,6 +8,8 @@ import { ICONOS_META } from '../../utils/iconos';
 import { supabase } from '../../supabase';
 import { useToast } from '../../Context/toast';
 import { useIdioma } from '../../i18n/idioma';
+import { aPesos, montoParaCampo } from '../../utils/moneda';
+import { usePreferencias } from '../../Context/preferencias';
 
 function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
     // Ids para conectar cada etiqueta con su campo (accesibilidad)
@@ -16,26 +18,29 @@ function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
     // vive dentro de un Modal que se desmonta al cerrarse: cada apertura lo
     // inicializa de nuevo, sin necesidad de un useEffect.
     const [nombreMeta, setNombreMeta] = useState(metaEditar?.nombre_meta ?? '');
-    const [montoObjetivo, setMontoObjetivo] = useState(metaEditar?.monto_objetivo ?? '');
-    const [montoActual, setMontoActual] = useState(metaEditar?.monto_actual);
+    const [montoObjetivo, setMontoObjetivo] = useState(() => montoParaCampo(metaEditar?.monto_objetivo));
+    const [montoActual, setMontoActual] = useState(() => montoParaCampo(metaEditar?.monto_actual));
     const [fechaObjetivo, setFechaObjetivo] = useState(() => aInputFecha(metaEditar?.fecha_objetivo));
     const [icono, setIcono] = useState(metaEditar?.icono ?? '');
     const [color, setColor] = useState(metaEditar?.color ?? '');
     const [guardando, setGuardando] = useState(false);
     const { mostrarToast } = useToast();
     const { t } = useIdioma();
+    const { moneda } = usePreferencias();
     const ICONOS = ICONOS_META;
     const COLORES = PALETA_ELEMENTOS;
 
     async function guardar() {
         setGuardando(true);
+        const objetivoPesos = aPesos(montoObjetivo, metaEditar?.monto_objetivo);
+        const actualPesos = aPesos(montoActual, metaEditar?.monto_actual);
         if (metaEditar) {
-            const { error } = await supabase.from('metas').update({ nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual, fecha_objetivo: fechaObjetivo, icono, color }).eq('id', metaEditar.id);
+            const { error } = await supabase.from('metas').update({ nombre_meta: nombreMeta, monto_objetivo: objetivoPesos, monto_actual: actualPesos, fecha_objetivo: fechaObjetivo, icono, color }).eq('id', metaEditar.id);
             if (error) { mostrarToast(t('formularios.metaNoActualizada'), 'error'); setGuardando(false); return; }
-            setMetas(prev => prev.map(m => m.id === metaEditar.id ? { ...m, nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual, fecha_objetivo: fechaObjetivo, icono, color } : m));
+            setMetas(prev => prev.map(m => m.id === metaEditar.id ? { ...m, nombre_meta: nombreMeta, monto_objetivo: objetivoPesos, monto_actual: actualPesos, fecha_objetivo: fechaObjetivo, icono, color } : m));
             mostrarToast(t('formularios.metaActualizada'), 'exito');
         } else {
-            const nueva = { nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual || 0, fecha_objetivo: fechaObjetivo, icono, color, user_id: sesion.user.id };
+            const nueva = { nombre_meta: nombreMeta, monto_objetivo: objetivoPesos, monto_actual: actualPesos, fecha_objetivo: fechaObjetivo, icono, color, user_id: sesion.user.id };
             // .select().single() devuelve la fila creada con su id: sin él, editar,
             // borrar o aportar a la meta antes de recargar no hacía nada.
             const { data, error } = await supabase.from('metas').insert([nueva]).select().single();
@@ -62,8 +67,8 @@ function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
 
                 <div className="formulario-meta-fila-doble">
                     <div>
-                        <label htmlFor={`${idForm}-2`}>{t('agregar.objetivo')}</label>
-                        <input id={`${idForm}-2`} className="campo-pildora" type="number" value={montoObjetivo} onChange={(e) => setMontoObjetivo(e.target.value)} placeholder="0" />
+                        <label htmlFor={`${idForm}-2`}>{t('agregar.objetivo')} ({moneda})</label>
+                        <input id={`${idForm}-2`} className="campo-pildora" type="number" step="any" value={montoObjetivo} onChange={(e) => setMontoObjetivo(e.target.value)} placeholder="0" />
                     </div>
                     <div>
                         <label htmlFor={`${idForm}-3`}>{t('agregar.fechaLimite')}</label>
@@ -71,8 +76,8 @@ function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
                     </div>
                 </div>
 
-                <label htmlFor={`${idForm}-4`}>{t('formularios.montoActual')}</label>
-                <input id={`${idForm}-4`} className="campo-pildora" type="text" value={montoActual} onChange={(e) => setMontoActual(e.target.value)} placeholder="0" />
+                <label htmlFor={`${idForm}-4`}>{t('formularios.montoActual')} ({moneda})</label>
+                <input id={`${idForm}-4`} className="campo-pildora" type="number" step="any" value={montoActual} onChange={(e) => setMontoActual(e.target.value)} placeholder="0" />
 
                 <p className="etiqueta-campo">{t('comun.color')}</p>
                 <SelectorColor colores={COLORES} valor={color} onChange={setColor} />

@@ -9,22 +9,13 @@ import { useIdioma, nombreCategoria } from '../../i18n/idioma';
 import { CATEGORIAS_GASTO, CATEGORIAS_INGRESO } from '../../utils/categorias';
 import { conSaldosNuevos } from '../../utils/saldos';
 import { crearMovimiento, editarMovimiento, transferir } from '../../utils/operaciones';
+import { aPesos, montoParaCampo } from '../../utils/moneda';
+import { usePreferencias } from '../../Context/preferencias';
+import CampoMonto from '../CampoMonto';
 
 
 
 
-// ─── Helpers de formato de monto (7000 -> "7.000") ───
-function limpiarNumero(valor) {
-    // Deja solo dígitos (quita puntos, letras, etc.)
-    return String(valor).replace(/\D/g, '');
-}
-// Se crea una sola vez: construir un Intl.NumberFormat en cada tecla es costoso.
-const FORMATO_NUMERO = new Intl.NumberFormat('es-CO');
-function formatearNumero(valor) {
-    const limpio = limpiarNumero(valor);
-    if (!limpio) return '';
-    return FORMATO_NUMERO.format(Number(limpio));
-}
 
 // ─── Iconos SVG propios (no dependen del mapeo de Icon) ───
 function ChevronDownIcon() {
@@ -194,11 +185,12 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     const [guardando, setGuardando] = useState(false);
 
     // ─── Campos: Gasto / Ingreso ───
-    // "monto" guarda SOLO dígitos (ej: "7000"), lo que se envía a Supabase.
-    // En el input se muestra formateado con formatearNumero(monto) (ej: "7.000").
+    // "monto" está en la moneda elegida (ej: "7000" o "8.12"); al guardar se
+    // pasa a pesos con aPesos(). CampoMonto lo muestra con sus separadores.
     // Al editar un movimiento, los campos arrancan con sus datos. El modal se
     // desmonta al cerrarse, así que cada apertura vuelve a inicializarlos.
-    const [monto, setMonto] = useState(() => (transaccionEditar ? limpiarNumero(transaccionEditar.monto) : ''));
+    const [monto, setMonto] = useState(() => montoParaCampo(transaccionEditar?.monto));
+    const { moneda } = usePreferencias();
     const [categoria, setCategoria] = useState(transaccionEditar?.categoria ?? '');
     const [cuenta, setCuenta] = useState(transaccionEditar?.cuenta ?? '');
     const [fecha, setFecha] = useState(() => (transaccionEditar?.fecha ? aInputFecha(transaccionEditar.fecha) : hoyISO()));
@@ -223,8 +215,8 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
         if (!fecha) { mostrarToast(t('agregar.seleccionaFecha'), 'error'); return; }
         setGuardando(true);
         // Al editar se deshace el efecto del movimiento original y se aplica el nuevo
-        const campos = { monto, categoria, cuenta, fecha, descripcion: nota, cuentas };
         const anterior = transaccionEditar;
+        const campos = { monto: aPesos(monto, anterior?.monto), categoria, cuenta, fecha, descripcion: nota, cuentas };
         const r = anterior
             ? await editarMovimiento({ ...campos, anterior })
             : await crearMovimiento({ ...campos, tipo: tab, userId: sesion.user.id });
@@ -246,7 +238,7 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     async function guardarTransferencia() {
         setGuardando(true);
         const r = await transferir({
-            origen, destino, monto, cuentas, metas, userId: sesion.user.id,
+            origen, destino, monto: monto && aPesos(monto), cuentas, metas, userId: sesion.user.id,
             tipoDestino: tab === 'aporte' ? 'meta' : 'cuenta',
         });
         setGuardando(false);
@@ -298,15 +290,8 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
 
             {esTransaccion && (
                 <div className="modal-agregar-body">
-                    <label htmlFor={`${idForm}-1`}>{t('comun.monto')}</label>
-                    <input id={`${idForm}-1`}
-                        className="campo-pildora"
-                        type="text"
-                        inputMode="numeric"
-                        value={formatearNumero(monto)}
-                        onChange={(e) => setMonto(limpiarNumero(e.target.value))}
-                        placeholder="0"
-                    />
+                    <label htmlFor={`${idForm}-1`}>{t('comun.monto')} ({moneda})</label>
+                    <CampoMonto id={`${idForm}-1`} value={monto} onChange={setMonto} />
 
                     <label htmlFor={`${idForm}-2`}>{t('comun.categoria')}</label>
                     <DropdownPildora id={`${idForm}-2`} value={categoria} onChange={setCategoria} opciones={categorias} placeholder={t('agregar.seleccionarCategoria')} />
@@ -347,15 +332,8 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                         placeholder={tab === 'aporte' ? t('agregar.seleccionarMeta') : t('agregar.seleccionarDestino')}
                     />
 
-                    <label htmlFor={`${idForm}-8`}>{t('comun.monto')}</label>
-                    <input id={`${idForm}-8`}
-                        className="campo-pildora"
-                        type="text"
-                        inputMode="numeric"
-                        value={formatearNumero(monto)}
-                        onChange={(e) => setMonto(limpiarNumero(e.target.value))}
-                        placeholder="0"
-                    />
+                    <label htmlFor={`${idForm}-8`}>{t('comun.monto')} ({moneda})</label>
+                    <CampoMonto id={`${idForm}-8`} value={monto} onChange={setMonto} />
                 </div>
             )}
 
