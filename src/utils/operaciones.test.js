@@ -166,6 +166,29 @@ describe('transferir entre cuentas', () => {
     });
 });
 
+describe('cuentas en dólares', () => {
+    // Tasa de respaldo de los tests: 1 COP = 0.000302 USD (US$1 ≈ $3.311)
+    const ahorrosUSD = { id: 3, nombre: 'Ahorros USD', saldo: 100, moneda: 'USD' };
+
+    it('transferir 33.113 pesos desde una cuenta en dólares le resta US$10', async () => {
+        saldos[3] = 100;
+        const r = await transferir({ origen: 'Ahorros USD', destino: 'Nu', monto: 33113, tipoDestino: 'cuenta', cuentas: [...cuentas, ahorrosUSD], metas: [], userId: 'u1' });
+
+        expect(r.error).toBeUndefined();
+        expect(rpc).toHaveBeenCalledWith('ajustar_saldo', { p_cuenta_id: '3', p_delta: -10 });
+        expect(rpc).toHaveBeenCalledWith('ajustar_saldo', { p_cuenta_id: '2', p_delta: 33113 });
+        expect(r.saldos.get(3)).toBe(90);
+    });
+
+    it('el saldo insuficiente se compara en pesos', async () => {
+        // US$100 ≈ $331.126: alcanza para $300.000 pero no para $400.000
+        const base = { origen: 'Ahorros USD', destino: 'Nu', tipoDestino: 'cuenta', cuentas: [...cuentas, ahorrosUSD], metas: [], userId: 'u1' };
+        saldos[3] = 100;
+        expect((await transferir({ ...base, monto: 400000 })).error).toBe('agregar.saldoInsuficiente');
+        expect((await transferir({ ...base, monto: 300000 })).error).toBeUndefined();
+    });
+});
+
 describe('aportar a una meta', () => {
     const aporte = { origen: 'Nequi', destino: 'Viaje', monto: '40000', tipoDestino: 'meta', cuentas, metas: [viaje], userId: 'u1' };
 

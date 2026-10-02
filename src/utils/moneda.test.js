@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { dinero, aPesos, aMonedaElegida, montoParaCampo, establecerMoneda, establecerSaldosOcultos, obtenerTasas } from './moneda';
+import { dinero, dineroEn, aPesos, aMonedaElegida, montoParaCampo, saldoEnPesos, pesosEnCuenta, establecerMoneda, establecerSaldosOcultos, obtenerTasas } from './moneda';
 
 // Sin internet en los tests: se usan las tasas de respaldo
 // (1 COP = 0.000302 USD = 0.000268 EUR)
@@ -65,5 +65,24 @@ describe('formularios', () => {
     it('un campo vacío queda vacío', () => {
         expect(montoParaCampo(undefined)).toBe('');
         expect(montoParaCampo(null)).toBe('');
+    });
+});
+
+describe('cuentas en otra moneda', () => {
+    const enDolares = { saldo: 100, moneda: 'USD' };
+
+    it('el saldo se muestra en la moneda de la cuenta, sin convertir', () => {
+        expect(dineroEn(120.5, 'USD')).toBe('US$120.50');
+        expect(dineroEn(30000, 'COP')).toBe('$30.000');
+    });
+
+    it('para sumar con otras cuentas se pasa a pesos', () => {
+        expect(Math.round(saldoEnPesos(enDolares))).toBe(331126); // 100 / 0.000302
+        expect(saldoEnPesos({ saldo: 5000 })).toBe(5000);          // sin moneda = pesos
+    });
+
+    it('un movimiento en pesos se descuenta convertido a la moneda de la cuenta', () => {
+        expect(pesosEnCuenta(-33113, enDolares)).toBe(-10);
+        expect(pesosEnCuenta(-25000, { moneda: 'COP' })).toBe(-25000);
     });
 });

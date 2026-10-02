@@ -1,4 +1,5 @@
 import { supabase } from '../supabase';
+import { pesosEnCuenta } from './moneda';
 
 // ─── Cambios de saldo ───────────────────────────────────────────────────────
 //
@@ -55,9 +56,11 @@ async function sumarEnBase({ funcion, parametros, tabla, campo, id, valorConocid
 /**
  * Aplica cambios de saldo en Supabase.
  *
- * Recibe una lista de { cuenta, delta } (una misma cuenta puede aparecer
- * varias veces; sus deltas se suman). Si alguna actualización falla, deshace
- * las que ya se habían aplicado para que los saldos no queden descuadrados.
+ * Recibe una lista de { cuenta, delta } con delta EN PESOS (una misma cuenta
+ * puede aparecer varias veces; sus deltas se suman). Si la cuenta está en
+ * otra moneda, el delta se convierte a esa moneda antes de aplicarlo. Si
+ * alguna actualización falla, deshace las que ya se habían aplicado para que
+ * los saldos no queden descuadrados.
  *
  * Devuelve { error } si algo falló, o { saldos, aplicados }: saldos es un Map
  * id de cuenta → saldo nuevo, para actualizar el estado de React.
@@ -74,7 +77,8 @@ export async function ajustarSaldos(cambios) {
     }
 
     const aplicados = [];
-    for (const { cuenta, delta } of porCuenta.values()) {
+    for (const { cuenta, delta: deltaPesos } of porCuenta.values()) {
+        const delta = pesosEnCuenta(deltaPesos, cuenta);
         if (delta === 0) continue;
         const resultado = await sumarEnBase({
             funcion: 'ajustar_saldo',

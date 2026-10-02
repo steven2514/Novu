@@ -11,7 +11,7 @@ import { exportarPDF, pesos } from '../utils/exportarPDF';
 import { useIdioma } from '../i18n/idioma';
 import { useToast } from '../Context/toast';
 import { useConfirmar } from '../Context/confirmar';
-import { dinero } from '../utils/moneda';
+import { dinero, dineroEn, saldoEnPesos, monedaDeCuenta } from '../utils/moneda';
 
 const TIPO_ICONO = { debito: 'landmark', ahorros: 'piggy-bank', credito: 'credit-card', efectivo: 'wallet' };
 
@@ -53,21 +53,20 @@ function Cuentas({ cuentas = SIN_CUENTAS, setCuentas, sesion, abrirModalTransfer
     const cuentasActivos = useMemo(() => cuentas.filter(c => c.tipo !== 'credito'), [cuentas]);
     const cuentasDeuda = useMemo(() => cuentas.filter(c => c.tipo === 'credito'), [cuentas]);
 
-    const totalActivos = useMemo(() => cuentasActivos.reduce((acc, c) => acc + Number(c.saldo || 0), 0), [cuentasActivos]);
-    const totalDeuda = useMemo(() => cuentasDeuda.reduce((acc, c) => acc + Math.abs(Number(c.saldo || 0)), 0), [cuentasDeuda]);
+    // Se suman en pesos: una cuenta puede estar en dólares o euros. No se
+    // memorizan porque dependen de la tasa del día, que cambia sin que cambien las cuentas.
+    const totalActivos = cuentasActivos.reduce((acc, c) => acc + saldoEnPesos(c), 0);
+    const totalDeuda = cuentasDeuda.reduce((acc, c) => acc + Math.abs(saldoEnPesos(c)), 0);
     const patrimonioNeto = totalActivos - totalDeuda;
 
-    const segmentos = useMemo(() => {
-        if (totalActivos <= 0) return [];
-        return cuentasActivos
-            .filter(c => Number(c.saldo) > 0)
-            .map(c => ({
-                id: c.id,
-                nombre: c.nombre,
-                color: c.color || TIPO_COLOR[c.tipo] || '#94A3B8',
-                porcentaje: (Number(c.saldo) / totalActivos) * 100
-            }));
-    }, [cuentasActivos, totalActivos]);
+    const segmentos = totalActivos <= 0 ? [] : cuentasActivos
+        .filter(c => saldoEnPesos(c) > 0)
+        .map(c => ({
+            id: c.id,
+            nombre: c.nombre,
+            color: c.color || TIPO_COLOR[c.tipo] || '#94A3B8',
+            porcentaje: (saldoEnPesos(c) / totalActivos) * 100
+        }));
 
     function exportar() {
         exportarPDF({
@@ -90,8 +89,8 @@ function Cuentas({ cuentas = SIN_CUENTAS, setCuentas, sesion, abrirModalTransfer
                 tipoCuenta(c.tipo),
                 c.banco || '—',
                 c.tipo === 'credito'
-                    ? { texto: pesos(Math.abs(Number(c.saldo || 0))), tono: 'negativo' }
-                    : pesos(c.saldo),
+                    ? { texto: dineroEn(Math.abs(Number(c.saldo || 0)), monedaDeCuenta(c), { ocultable: false }), tono: 'negativo' }
+                    : dineroEn(c.saldo, monedaDeCuenta(c), { ocultable: false }),
             ]),
         });
     }
@@ -231,7 +230,7 @@ function Cuentas({ cuentas = SIN_CUENTAS, setCuentas, sesion, abrirModalTransfer
                                 <div className="cuenta-tarjeta-bottom">
                                     <div className="cuenta-saldo-bloque">
                                         <span className="cuenta-saldo-label">{t('cuentas.saldo')}</span>
-                                        <span className="cuenta-saldo">{dinero(cuenta.saldo)}</span>
+                                        <span className="cuenta-saldo">{dineroEn(cuenta.saldo, monedaDeCuenta(cuenta))}</span>
                                     </div>
                                     <button
                                         className="cuenta-btn-transferir"
