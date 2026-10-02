@@ -427,6 +427,9 @@ const en = {
     agregar: {
         titulo: 'Add',
         tituloEditar: 'Edit transaction',
+        necesitas: 'Need a new account or goal?',
+        crearCuenta: 'Create account',
+        crearMeta: 'Create goal',
         tabs: {
             gasto: 'Expense',
             ingreso: 'Income',
