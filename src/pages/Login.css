@@ -5,7 +5,9 @@
 .login-page {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    height: 100vh;
+    height: var(--alto-pantalla);
+    /* En la app instalada en iPhone, la muesca no tapa el contenido */
+    padding-top: env(safe-area-inset-top);
     overflow-y: auto;
     background: var(--fondo);
 }
@@ -15,7 +17,7 @@
 .login-panel {
     position: sticky;
     top: 0;
-    height: 100vh;
+    height: var(--alto-pantalla);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -431,7 +433,7 @@
 /* ---------- Responsive ---------- */
 
 @media (max-width: 960px) {
-    /* En una columna se apila con flex: la cuadrícula de 100vh repartía el alto
+    /* En una columna se apila con flex: la cuadrícula de var(--alto-pantalla) repartía el alto
        entre panel y formulario y, en pantallas bajas, el panel tapaba el
        selector de idioma (en las altas se estiraba de más). */
     .login-page {
@@ -440,7 +442,11 @@
     }
 
     .login-panel {
-        position: static;
+        /* relative y no static: la cuadrícula decorativa (::before, absolute)
+           debe quedar dentro del panel. Con static se estiraba a toda la
+           pantalla, invisible, encima del formulario, y bloqueaba los toques
+           ("Iniciar sesión" no respondía en el celular). */
+        position: relative;
         flex-shrink: 0;
         height: auto;
         padding: 1.5rem;

@@ -47,10 +47,10 @@ function filtrar(filas, params) {
 }
 
 /**
- * Prepara la página: sesión iniciada y Supabase falso.
+ * Prepara la página: Supabase falso y, salvo conSesion: false, sesión iniciada.
  * Devuelve { db, llamadas } para revisar lo que la app guardó.
  */
-export async function prepararApp(page, { moneda } = {}) {
+export async function prepararApp(page, { moneda, conSesion = true } = {}) {
     const db = datosIniciales();
     // La moneda la decide el perfil (como en la app real)
     if (moneda) db.perfiles[0].moneda = moneda;
@@ -58,10 +58,10 @@ export async function prepararApp(page, { moneda } = {}) {
     let siguienteId = 1000;
 
     await page.addInitScript(({ clave, sesion, moneda }) => {
-        localStorage.setItem(clave, JSON.stringify(sesion));
+        if (sesion) localStorage.setItem(clave, JSON.stringify(sesion));
         localStorage.setItem('idioma', 'es');
         if (moneda) localStorage.setItem('moneda', moneda);
-    }, { clave: `sb-${PROYECTO}-auth-token`, sesion: sesionFalsa(), moneda });
+    }, { clave: `sb-${PROYECTO}-auth-token`, sesion: conSesion ? sesionFalsa() : null, moneda });
 
     // Tasas de cambio fijas: 1 COP = 0.00025 USD (US$1 = $4.000)
     await page.route('https://open.er-api.com/**', (ruta) => ruta.fulfill({
@@ -76,6 +76,11 @@ export async function prepararApp(page, { moneda } = {}) {
         const unObjeto = (pedido.headers().accept || '').includes('vnd.pgrst.object');
 
         if (url.pathname.startsWith('/auth/v1/user')) return ruta.fulfill({ json: sesionFalsa().user });
+        // Iniciar sesión con correo y contraseña
+        if (url.pathname.startsWith('/auth/v1/token')) {
+            llamadas.push({ tipo: 'login', datos: cuerpo });
+            return ruta.fulfill({ json: sesionFalsa() });
+        }
         if (url.pathname.startsWith('/auth/v1/')) return ruta.fulfill({ json: {} });
 
         // Funciones SQL: suman dentro de la "base de datos"

@@ -5,7 +5,7 @@
 .sidebar {
     width: 16.5rem;
     flex-shrink: 0;
-    height: 100vh;
+    height: var(--alto-pantalla);
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
