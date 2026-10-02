@@ -7,8 +7,8 @@
 :root {
   /* ---- Tamaño general de la interfaz ----
      Todo el CSS usa rem: este número agranda textos, espacios e iconos por
-     igual en todos los dispositivos (1 = normal, 1.12 = 12% más grande). */
-  --escala: 1.12;
+     igual en todos los dispositivos (1 = normal, 1.2 = 20% más grande). */
+  --escala: 1.2;
 
   /* ---- Colores base de la paleta (paletas.css los sobrescribe) ---- */
   --principal: #0B5E66;
