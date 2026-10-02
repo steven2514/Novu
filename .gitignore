@@ -26,3 +26,7 @@ dist-ssr
 # Archivos que crea Windows/OneDrive en cada carpeta
 desktop.ini
 Thumbs.db
+
+# Resultados de Playwright
+test-results
+playwright-report

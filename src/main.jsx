@@ -10,21 +10,26 @@ import IdiomaProvider from './i18n/IdiomaProvider';
 import { obtenerIdioma } from './i18n/idioma';
 import ConfirmarProvider from './Context/ConfirmarProvider';
 import PreferenciasProvider from './Context/PreferenciasProvider';
+import LimiteErrores from './components/LimiteErrores';
+import { iniciarMonitoreo } from './utils/monitoreo';
 
 // Aplica tema y color guardados antes del primer render para evitar parpadeos.
 iniciarApariencia();
 document.documentElement.lang = obtenerIdioma();
+iniciarMonitoreo();
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <IdiomaProvider>
-            <PreferenciasProvider>
-                <ToastProvider>
-                    <ConfirmarProvider>
-                        <App />
-                    </ConfirmarProvider>
-                </ToastProvider>
-            </PreferenciasProvider>
-        </IdiomaProvider>
+        <LimiteErrores>
+            <IdiomaProvider>
+                <PreferenciasProvider>
+                    <ToastProvider>
+                        <ConfirmarProvider>
+                            <App />
+                        </ConfirmarProvider>
+                    </ToastProvider>
+                </PreferenciasProvider>
+            </IdiomaProvider>
+        </LimiteErrores>
     </StrictMode>,
 )

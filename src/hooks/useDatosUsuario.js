@@ -3,6 +3,7 @@ import { supabase } from '../supabase';
 import { useToast } from '../Context/toast';
 import { useIdioma } from '../i18n/idioma';
 import { usePreferencias } from '../Context/preferencias';
+import { identificarUsuario } from '../utils/monitoreo';
 
 // Sesión y datos del usuario (movimientos, cuentas, metas, suscripciones,
 // tareas, presupuestos y perfil). Antes vivía todo dentro de App.jsx.
@@ -31,6 +32,7 @@ export function useDatosUsuario() {
     // Depende del id y no del objeto sesión: la sesión cambia cada vez que
     // Supabase renueva el token (≈ cada hora) y eso recargaba todo sin motivo.
     const userId = sesion?.user?.id;
+    useEffect(() => { identificarUsuario(userId); }, [userId]);
 
     // Los efectos de carga avisan con toasts traducidos, pero no deben volver a
     // cargar los datos porque cambie el idioma: por eso leen t desde una ref.

@@ -7,7 +7,7 @@ import { aplicarTema, temaGuardado } from '../utils/tema';
 import { useIdioma, nombreCategoria } from '../i18n/idioma';
 import { montoMensual } from '../utils/suscripciones';
 import { pxEscalados } from '../utils/escala';
-import { dinero } from '../utils/moneda';
+import { dinero, saldoEnPesos } from '../utils/moneda';
 import { usePreferencias } from '../Context/preferencias';
 import { totalPorTipo, delMes, calcularTendencia, gastosPorCategoria, datosResumen } from '../utils/resumen';
 import TarjetasResumen from '../components/Inicio/TarjetasResumen';
@@ -105,7 +105,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = SIN_DATOS, pres
             </div>
 
             <TarjetasResumen
-                balance={cuentas.reduce((acc, c) => acc + Number(c.saldo), 0)}
+                balance={cuentas.reduce((acc, c) => acc + saldoEnPesos(c), 0)}
                 numCuentas={cuentas.length}
                 ingresos={totalIngresos}
                 gastos={totalGasto}

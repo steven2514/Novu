@@ -6,8 +6,7 @@ import { SelectorColor } from '../Selectores';
 import { supabase } from '../../supabase';
 import { useToast } from '../../Context/toast';
 import { useIdioma } from '../../i18n/idioma';
-import { aPesos, montoParaCampo } from '../../utils/moneda';
-import { usePreferencias } from '../../Context/preferencias';
+import { MONEDAS, monedaDeCuenta } from '../../utils/moneda';
 import { nombreDuplicado, renombrarCuenta } from '../../utils/cuentas';
 
 function FormularioCuenta({ setCuenta, onClose, cuentaEditar, cuentas = [], onRenombrada }) {
@@ -18,13 +17,14 @@ function FormularioCuenta({ setCuenta, onClose, cuentaEditar, cuentas = [], onRe
     // se abre se vuelve a inicializar; no hace falta un useEffect.
     const [nombre, setNombre] = useState(cuentaEditar?.nombre ?? '');
     const [tipo, setTipo] = useState(cuentaEditar?.tipo ?? 'debito');
-    const [saldo, setSaldo] = useState(() => montoParaCampo(cuentaEditar?.saldo));
+    // El saldo se escribe en la moneda de la cuenta (ej: 120.50 en una cuenta en dólares)
+    const [monedaCuenta, setMonedaCuenta] = useState(() => monedaDeCuenta(cuentaEditar));
+    const [saldo, setSaldo] = useState(cuentaEditar?.saldo ?? '');
     const [banco, setBanco] = useState(cuentaEditar?.banco || '');
     const [color, setColor] = useState(cuentaEditar?.color ?? PALETA_ELEMENTOS[0]);
     const [guardando, setGuardando] = useState(false);
     const { mostrarToast } = useToast();
     const { t } = useIdioma();
-    const { moneda } = usePreferencias();
 
     async function guardar() {
         const nombreLimpio = nombre.trim();
@@ -36,7 +36,15 @@ function FormularioCuenta({ setCuenta, onClose, cuentaEditar, cuentas = [], onRe
             return;
         }
         setGuardando(true);
-        const saldoFinal = saldo === '' ? 0 : aPesos(saldo, cuentaEditar?.saldo);
+        const saldoFinal = saldo === '' ? 0 : Number(saldo);
+        // La columna "moneda" existe tras la migración v4. Antes de ejecutarla
+        // sólo se envía si se eligió otra moneda (y Supabase avisará).
+        const migrada = cuentas.some(c => 'moneda' in c);
+        const datosMoneda = migrada || monedaCuenta !== 'COP' ? { moneda: monedaCuenta } : {};
+        const avisarError = (error, clave) => {
+            mostrarToast(t(error.code === 'PGRST204' ? 'formularios.monedaSinMigrar' : clave), 'error');
+            setGuardando(false);
+        };
         if (cuentaEditar) {
             // El nombre se cambia aparte porque arrastra movimientos,
             // suscripciones y transferencias (ver utils/cuentas.js).
@@ -50,15 +58,16 @@ function FormularioCuenta({ setCuenta, onClose, cuentaEditar, cuentas = [], onRe
                 }
                 onRenombrada?.(cuentaEditar.nombre, nombreLimpio);
             }
-            const { error } = await supabase.from('cuentas').update({ tipo, saldo: saldoFinal, banco, color }).eq('id', cuentaEditar.id);
-            if (error) { mostrarToast(t('formularios.cuentaNoActualizada'), 'error'); setGuardando(false); return; }
-            setCuenta(prev => prev.map(c => c.id === cuentaEditar.id ? { ...c, nombre: nombreLimpio, tipo, saldo: saldoFinal, banco, color } : c));
+            const cambios = { tipo, saldo: saldoFinal, banco, color, ...datosMoneda };
+            const { error } = await supabase.from('cuentas').update(cambios).eq('id', cuentaEditar.id);
+            if (error) { avisarError(error, 'formularios.cuentaNoActualizada'); return; }
+            setCuenta(prev => prev.map(c => c.id === cuentaEditar.id ? { ...c, nombre: nombreLimpio, ...cambios } : c));
             mostrarToast(t('formularios.cuentaActualizada'), 'exito');
         } else {
             const { data: { user } } = await supabase.auth.getUser();
-            const nueva = { nombre: nombreLimpio, tipo, saldo: saldoFinal, banco, color, user_id: user.id };
+            const nueva = { nombre: nombreLimpio, tipo, saldo: saldoFinal, banco, color, ...datosMoneda, user_id: user.id };
             const { data, error } = await supabase.from('cuentas').insert([nueva]).select().single();
-            if (error) { mostrarToast(t('formularios.cuentaNoCreada'), 'error'); setGuardando(false); return; }
+            if (error) { avisarError(error, 'formularios.cuentaNoCreada'); return; }
             setCuenta(prev => [...prev, data]);
             mostrarToast(t('formularios.cuentaCreada'), 'exito');
         }
@@ -87,13 +96,25 @@ function FormularioCuenta({ setCuenta, onClose, cuentaEditar, cuentas = [], onRe
                         </select>
                     </div>
                     <div>
-                        <label htmlFor={`${idForm}-3`}>{cuentaEditar ? t('formularios.saldo') : t('agregar.saldoInicial')} ({moneda})</label>
+                        <label htmlFor={`${idForm}-3`}>{cuentaEditar ? t('formularios.saldo') : t('agregar.saldoInicial')} ({monedaCuenta})</label>
                         <input id={`${idForm}-3`} className="campo-pildora" type="number" step="any" value={saldo} onChange={(e) => setSaldo(e.target.value)} placeholder="0.00" />
                     </div>
                 </div>
 
-                <label htmlFor={`${idForm}-4`}>{t('agregar.banco')}</label>
-                <input id={`${idForm}-4`} className="campo-pildora" type="text" value={banco} onChange={(e) => setBanco(e.target.value)} placeholder={t('agregar.ejBanco')} />
+                <div className="formulario-cuenta-fila-doble">
+                    <div>
+                        <label htmlFor={`${idForm}-4`}>{t('agregar.banco')}</label>
+                        <input id={`${idForm}-4`} className="campo-pildora" type="text" value={banco} onChange={(e) => setBanco(e.target.value)} placeholder={t('agregar.ejBanco')} />
+                    </div>
+                    <div>
+                        <label htmlFor={`${idForm}-5`}>{t('ajustes.moneda')}</label>
+                        <select id={`${idForm}-5`} className="campo-pildora" value={monedaCuenta} onChange={(e) => setMonedaCuenta(e.target.value)}>
+                            {Object.keys(MONEDAS).map(codigo => (
+                                <option key={codigo} value={codigo}>{codigo}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
 
                 <p className="etiqueta-campo">{t('comun.color')}</p>
                 <SelectorColor colores={PALETA_ELEMENTOS} valor={color} onChange={setColor} />

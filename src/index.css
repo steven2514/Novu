@@ -663,6 +663,25 @@ select.campo-pildora {
 }
 
 /* Aviso cuando no se pudieron cargar los datos (App.jsx). */
+/* Pantalla de error inesperado (components/LimiteErrores.jsx) */
+.limite-errores {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+.limite-errores p {
+  color: var(--texto-gris);
+  max-width: 28rem;
+}
+
 .aviso-carga {
   display: flex;
   align-items: center;

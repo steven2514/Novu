@@ -12,6 +12,7 @@ import { supabase } from '../supabase';
 import { ajustarSaldos, ajustarMeta, revertirSaldos, efectoEnSaldo } from './saldos';
 import { sumarCiclo } from './suscripciones';
 import { hoyISO } from './fechas';
+import { saldoEnPesos } from './moneda';
 
 /**
  * Registra un gasto o ingreso y mueve el saldo de su cuenta.
@@ -66,7 +67,8 @@ export async function transferir({ origen, destino, monto, tipoDestino, cuentas,
     if (Number(monto) <= 0) return { error: 'agregar.montoMayor' };
 
     const cuentaOrigen = cuentas.find(c => c.nombre === origen);
-    if (!cuentaOrigen || Number(cuentaOrigen.saldo) < Number(monto)) return { error: 'agregar.saldoInsuficiente' };
+    // El saldo se compara en pesos (la cuenta puede estar en dólares o euros)
+    if (!cuentaOrigen || Math.round(saldoEnPesos(cuentaOrigen)) < Number(monto)) return { error: 'agregar.saldoInsuficiente' };
     const cuentaDestino = tipoDestino === 'cuenta' ? cuentas.find(c => c.nombre === destino) : null;
     const meta = tipoDestino === 'meta' ? metas.find(m => m.nombre_meta === destino) : null;
     if (!cuentaDestino && !meta) return { error: 'agregar.completaCampos' };

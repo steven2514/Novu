@@ -496,6 +496,7 @@ const es = {
         cuentaDuplicada: 'Ya tienes una cuenta con ese nombre',
         cuentaCreada: 'Cuenta creada correctamente',
         cuentaNoCreada: 'No se pudo crear la cuenta',
+        monedaSinMigrar: 'Para usar cuentas en dólares o euros, ejecuta primero la migración v4 en Supabase.',
         metaActualizada: 'Meta actualizada correctamente',
         metaNoActualizada: 'No se pudo actualizar la meta',
         metaCreada: 'Meta creada correctamente',
@@ -623,6 +624,9 @@ const es = {
         saldo: 'No se pudo actualizar el saldo. No se guardó ningún cambio.',
         transferencia: 'No se pudo completar la transferencia. No se movió dinero.',
         tareaEstado: 'No se pudo actualizar la tarea',
+        inesperado: 'Algo salió mal',
+        inesperadoTexto: 'Tuvimos un problema al mostrar esta pantalla. Tus datos están a salvo.',
+        recargar: 'Recargar',
     },
 
     presupuestos: {

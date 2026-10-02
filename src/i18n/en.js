@@ -495,6 +495,7 @@ const en = {
         cuentaDuplicada: 'You already have an account with that name',
         cuentaCreada: 'Account created',
         cuentaNoCreada: "Couldn't create the account",
+        monedaSinMigrar: 'To use dollar or euro accounts, run the v4 migration in Supabase first.',
         metaActualizada: 'Goal updated',
         metaNoActualizada: "Couldn't update the goal",
         metaCreada: 'Goal created',
@@ -622,6 +623,9 @@ const en = {
         saldo: "Couldn't update the balance. No changes were saved.",
         transferencia: "Couldn't complete the transfer. No money was moved.",
         tareaEstado: "Couldn't update the task",
+        inesperado: 'Something went wrong',
+        inesperadoTexto: 'We had a problem showing this screen. Your data is safe.',
+        recargar: 'Reload',
     },
 
     presupuestos: {

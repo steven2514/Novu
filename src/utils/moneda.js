@@ -79,6 +79,7 @@ export async function actualizarTasas() {
     if (guardado && Date.now() - guardado.fecha < UN_DIA) return false;
     try {
         const respuesta = await fetch(URL_TASAS);
+        if (!respuesta.ok) return false;
         const { result, rates } = await respuesta.json();
         if (result !== 'success' || !(rates?.USD > 0) || !(rates?.EUR > 0)) return false;
         tasas = { COP: 1, USD: rates.USD, EUR: rates.EUR };
@@ -116,13 +117,49 @@ function formateador(codigo, compacto) {
  */
 export function dinero(valor, { signo = false, compacto = false, ocultable = true } = {}) {
     if (ocultable && saldosOcultos) return OCULTO;
-    const n = Number(valor || 0) * tasas[monedaActual];
+    return formatear(Number(valor || 0) * tasas[monedaActual], monedaActual, { signo, compacto });
+}
+
+/**
+ * Formatea un valor que YA está en la moneda indicada, sin convertir.
+ * Se usa para el saldo de una cuenta en su propia moneda: dineroEn(120.5, 'USD') → "US$120.50"
+ */
+export function dineroEn(valor, codigo, { ocultable = true } = {}) {
+    if (ocultable && saldosOcultos) return OCULTO;
+    return formatear(Number(valor || 0), MONEDAS[codigo] ? codigo : 'COP', {});
+}
+
+function formatear(n, codigo, { signo = false, compacto = false }) {
     // En pesos colombianos se escribe "$1.000" (sin el espacio de Intl)
-    let texto = formateador(monedaActual, compacto).format(Math.abs(n)).replace(/^\$\s/, '$');
+    let texto = formateador(codigo, compacto).format(Math.abs(n)).replace(/^\$\s/, '$');
     // "US$" para que el dólar no se confunda con el peso, que también usa "$"
-    if (monedaActual === 'USD') texto = texto.replace(/^\$/, 'US$');
+    if (codigo === 'USD') texto = texto.replace(/^\$/, 'US$');
     if (n < 0) return `-${texto}`;
     return signo && n > 0 ? `+${texto}` : texto;
+}
+
+// ─── Cuentas en otra moneda ───
+// El saldo de una cuenta está en SU moneda (cuenta.moneda; sin ella, pesos).
+// Todo lo demás está en pesos, así que al sumar saldos o mover dinero entre
+// una cuenta y el resto de la app se pasa por pesos con la tasa del día.
+
+export function monedaDeCuenta(cuenta) {
+    return MONEDAS[cuenta?.moneda] ? cuenta.moneda : 'COP';
+}
+
+/** Saldo de la cuenta expresado en pesos (para sumarlo con otros). */
+export function saldoEnPesos(cuenta) {
+    const saldo = Number(cuenta?.saldo || 0);
+    const codigo = monedaDeCuenta(cuenta);
+    return codigo === 'COP' ? saldo : saldo / tasas[codigo];
+}
+
+/** Un monto en pesos expresado en la moneda de la cuenta (redondeado a sus decimales). */
+export function pesosEnCuenta(pesos, cuenta) {
+    const codigo = monedaDeCuenta(cuenta);
+    if (codigo === 'COP') return Number(pesos);
+    const factor = 10 ** MONEDAS[codigo].decimales;
+    return Math.round(Number(pesos) * tasas[codigo] * factor) / factor;
 }
 
 // ─── Formularios ───
