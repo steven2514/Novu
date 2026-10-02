@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useId } from "react";
 import './FormularioTarea.css';
 import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
@@ -7,6 +7,8 @@ import { useIdioma } from '../../i18n/idioma';
 import { aInputFecha } from '../../utils/fechas';
 
 function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
+    // Ids para conectar cada etiqueta con su campo (accesibilidad)
+    const idForm = useId();
     // Al editar, los campos arrancan con los datos de la tarea. El formulario
     // vive dentro de un Modal que se desmonta al cerrarse: cada apertura lo
     // inicializa de nuevo, sin necesidad de un useEffect.
@@ -44,24 +46,24 @@ function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
                 <h2>{tareaEditar ? t('formularios.editarTarea') : t('formularios.nuevaTarea')}</h2>
                 <button className="btn-cerrar-modal" onClick={onClose} aria-label={t('comun.cerrar')}><Icon name="x" /></button>
             </div>
-            <label>{t('formularios.tituloTarea')}</label>
-            <input type="text" placeholder={t('formularios.ejTarea')} value={titulo} onChange={(e) => setTitulo(e.target.value)} />
-            <label>{t('formularios.descripcion')}</label>
-            <textarea placeholder={t('formularios.detalles')} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
-            <label>{t('comun.categoria')}</label>
-            <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+            <label htmlFor={`${idForm}-1`}>{t('formularios.tituloTarea')}</label>
+            <input id={`${idForm}-1`} type="text" placeholder={t('formularios.ejTarea')} value={titulo} onChange={(e) => setTitulo(e.target.value)} />
+            <label htmlFor={`${idForm}-2`}>{t('formularios.descripcion')}</label>
+            <textarea id={`${idForm}-2`} placeholder={t('formularios.detalles')} value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+            <label htmlFor={`${idForm}-3`}>{t('comun.categoria')}</label>
+            <select id={`${idForm}-3`} value={categoria} onChange={(e) => setCategoria(e.target.value)}>
                 <option value="Actividad Diaria">{t('tareas.categorias.Actividad Diaria')}</option>
                 <option value="Tarea">{t('tareas.categorias.Tarea')}</option>
                 <option value="Compromiso">{t('tareas.categorias.Compromiso')}</option>
             </select>
-            <label>{t('formularios.prioridad')}</label>
-            <select value={prioridad} onChange={(e) => setPrioridad(e.target.value)}>
+            <label htmlFor={`${idForm}-4`}>{t('formularios.prioridad')}</label>
+            <select id={`${idForm}-4`} value={prioridad} onChange={(e) => setPrioridad(e.target.value)}>
                 <option value="alta">{t('tareas.prioridades.alta')}</option>
                 <option value="media">{t('tareas.prioridades.media')}</option>
                 <option value="baja">{t('tareas.prioridades.baja')}</option>
             </select>
-            <label>{t('formularios.fechaLimiteOpcional')}</label>
-            <input type="date" value={fechaLimite} onChange={(e) => setFechaLimite(e.target.value)} />
+            <label htmlFor={`${idForm}-5`}>{t('formularios.fechaLimiteOpcional')}</label>
+            <input id={`${idForm}-5`} type="date" value={fechaLimite} onChange={(e) => setFechaLimite(e.target.value)} />
             <button className="btn-crear-tarea" onClick={guardar} disabled={guardando}>
                 {guardando ? t('comun.guardando') : tareaEditar ? t('comun.guardarCambios') : t('formularios.crearTarea')}
             </button>

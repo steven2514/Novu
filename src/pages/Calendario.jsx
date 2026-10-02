@@ -5,6 +5,7 @@ import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
 import { useIdioma } from '../i18n/idioma';
+import { dinero } from '../utils/moneda';
 
 
 function Calendario({ metas, transacciones, suscripciones, tareas, sesion }) {
@@ -15,8 +16,9 @@ function Calendario({ metas, transacciones, suscripciones, tareas, sesion }) {
     const diasEnElMes = new Date(anio, mes + 1, 0).getDate();
     const primerDiaSemana = new Date(anio, mes, 1).getDay();
     const diasDelMes = Array.from({ length: diasEnElMes }, (_, i) => i + 1);
-    const celdasVacias = Array.from({ length: primerDiaSemana }, () => null);
-    const celdas = [...celdasVacias, ...diasDelMes];
+    // Cada celda lleva su propia clave estable: las vacías del inicio de mes y los días
+    const celdasVacias = Array.from({ length: primerDiaSemana }, (_, i) => ({ clave: `vacia-${i}`, dia: null }));
+    const celdas = [...celdasVacias, ...diasDelMes.map(dia => ({ clave: `dia-${dia}`, dia }))];
     const { t, locale } = useIdioma();
     const nombreMes = fechaActual.toLocaleDateString(locale, { month: 'long' });
     // 4 de enero de 2026 fue domingo: de ahí salen los 7 nombres cortos de la semana
@@ -86,13 +88,13 @@ function Calendario({ metas, transacciones, suscripciones, tareas, sesion }) {
                 </div>
 
                 <div className="calendario-dias-semana">
-                    {nombresDias.map((dia, index) => (
-                        <div key={index} className="dia-semana-nombre">{dia}</div>
+                    {nombresDias.map((dia) => (
+                        <div key={dia} className="dia-semana-nombre">{dia}</div>
                     ))}
                 </div>
 
                 <div className="calendario-grid">
-                    {celdas.map((dia, index) => {
+                    {celdas.map(({ clave, dia }) => {
 
                         const fechaHoy = new Date();
                         const esHoy = dia === fechaHoy.getDate() && mes === fechaHoy.getMonth() && anio === fechaHoy.getFullYear();
@@ -109,14 +111,14 @@ function Calendario({ metas, transacciones, suscripciones, tareas, sesion }) {
                         
 
                         return (
-                            <div key={index} className={`celda-dia  ${dia === null ? 'celda-vacia' : ''} ${esHoy ? 'dia-hoy' : ''}`}>
+                            <div key={clave} className={`celda-dia  ${dia === null ? 'celda-vacia' : ''} ${esHoy ? 'dia-hoy' : ''}`}>
                                 {dia !== null && <span className="celda-numero">{dia}</span>}
                                 <div className="celda-puntos">
-                                    {metasDelDia.map((meta, i) => (
-                                        <span key={i} className="punto-meta" title={meta.nombre_meta}></span>
+                                    {metasDelDia.map((meta) => (
+                                        <span key={meta.id} className="punto-meta" title={meta.nombre_meta}></span>
                                     ))}
-                                    {tareasDelDia.map((tarea, i) => (
-                                        <span key={i} className="punto-tarea" title={tarea.titulo}></span>
+                                    {tareasDelDia.map((tarea) => (
+                                        <span key={tarea.id} className="punto-tarea" title={tarea.titulo}></span>
                                     ))}
                                     {ingresosDelDia.length > 0 && <span className="punto-ingreso" title={t('calendario.ingreso')}></span>}
                                     {gastosDelDia.length > 0 && <span className="punto-gasto" title={t('calendario.gasto')}></span>}
@@ -161,11 +163,11 @@ function Calendario({ metas, transacciones, suscripciones, tareas, sesion }) {
                     <h3>{t('calendario.estadisticas')}</h3>
                     <div className="estadistica-fila">
                         <span>{t('calendario.totalIngresos')}</span>
-                        <span className="estadistica-valor valor-ingreso">${totalIngresos.toLocaleString('es-CO')}</span>
+                        <span className="estadistica-valor valor-ingreso">{dinero(totalIngresos)}</span>
                     </div>
                     <div className="estadistica-fila">
                         <span>{t('calendario.totalGastos')}</span>
-                        <span className="estadistica-valor valor-gasto">${totalGastos.toLocaleString('es-CO')}</span>
+                        <span className="estadistica-valor valor-gasto">{dinero(totalGastos)}</span>
                     </div>
                     <div className="estadistica-fila">
                         <span>{t('calendario.suscripcionesMes')}</span>

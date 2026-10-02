@@ -15,6 +15,7 @@
 //   });
 
 import { traducir, localeActual } from '../i18n/idioma';
+import { dinero } from './moneda';
 
 // Colores de la marca (RGB)
 const COLOR = {
@@ -248,7 +249,7 @@ export async function exportarPDF({ titulo, subtitulo = '', archivo, resumen = [
 }
 
 /** Formato de dinero usado en los reportes (pesos colombianos). */
+// En el PDF los montos siempre se ven, aunque "ocultar saldos" esté activo
 export function pesos(valor) {
-    const n = Math.round(Number(valor || 0));
-    return `${n < 0 ? '-' : ''}$${Math.abs(n).toLocaleString('es-CO')}`;
+    return dinero(valor, { ocultable: false });
 }

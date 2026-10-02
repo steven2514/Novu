@@ -97,6 +97,9 @@
     display: block;
     position: fixed;
     inset: 0;
+    padding: 0;
+    border: none;
+    cursor: default;
     z-index: 999;
     background: rgba(8, 20, 23, 0.5);
     backdrop-filter: blur(2px);

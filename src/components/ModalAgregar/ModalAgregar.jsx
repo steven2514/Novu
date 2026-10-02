@@ -3,12 +3,12 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import './ModalAgregar.css';
 import { Icon } from '../Icon';
-import { supabase } from '../../supabase';
 import { useToast } from '../../Context/toast';
 import { hoyISO, aInputFecha } from '../../utils/fechas';
 import { useIdioma, nombreCategoria } from '../../i18n/idioma';
 import { CATEGORIAS_GASTO, CATEGORIAS_INGRESO } from '../../utils/categorias';
-import { ajustarSaldos, ajustarMeta, revertirSaldos, conSaldosNuevos, efectoEnSaldo } from '../../utils/saldos';
+import { conSaldosNuevos } from '../../utils/saldos';
+import { crearMovimiento, editarMovimiento, transferir } from '../../utils/operaciones';
 
 
 
@@ -18,10 +18,12 @@ function limpiarNumero(valor) {
     // Deja solo dígitos (quita puntos, letras, etc.)
     return String(valor).replace(/\D/g, '');
 }
+// Se crea una sola vez: construir un Intl.NumberFormat en cada tecla es costoso.
+const FORMATO_NUMERO = new Intl.NumberFormat('es-CO');
 function formatearNumero(valor) {
     const limpio = limpiarNumero(valor);
     if (!limpio) return '';
-    return new Intl.NumberFormat('es-CO').format(Number(limpio));
+    return FORMATO_NUMERO.format(Number(limpio));
 }
 
 // ─── Iconos SVG propios (no dependen del mapeo de Icon) ───
@@ -66,7 +68,7 @@ function calcularPosicion(rect, cantidad) {
     };
 }
 
-function DropdownPildora({ value, onChange, opciones, placeholder }) {
+function DropdownPildora({ id, value, onChange, opciones, placeholder }) {
     const [abierto, setAbierto] = useState(false);
     const [pos, setPos] = useState(null);
     const [activa, setActiva] = useState(-1);
@@ -140,7 +142,9 @@ function DropdownPildora({ value, onChange, opciones, placeholder }) {
         <div className="dropdown-pildora">
             <button
                 ref={triggerRef}
+                id={id}
                 type="button"
+                role="combobox"
                 className="campo-pildora dropdown-pildora-trigger"
                 onClick={() => (abierto ? cerrar() : abrir())}
                 onKeyDown={teclado}
@@ -180,6 +184,8 @@ function DropdownPildora({ value, onChange, opciones, placeholder }) {
 }
 
 function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, sesion, onClose, transaccionEditar, tipoInicial }) {
+    // Ids para conectar cada etiqueta con su campo (accesibilidad)
+    const idForm = useId();
 
     // Si estamos editando una transacción existente, se fija en su pestaña y se ocultan las demás
     const [tab, setTab] = useState(transaccionEditar ? transaccionEditar.tipo : (tipoInicial || 'gasto'));
@@ -216,99 +222,38 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
         if (!cuenta) { mostrarToast(t('agregar.seleccionaCuenta'), 'error'); return; }
         if (!fecha) { mostrarToast(t('agregar.seleccionaFecha'), 'error'); return; }
         setGuardando(true);
-        const cuentaObj = cuentas.find(c => c.nombre === cuenta);
+        // Al editar se deshace el efecto del movimiento original y se aplica el nuevo
+        const campos = { monto, categoria, cuenta, fecha, descripcion: nota, cuentas };
+        const anterior = transaccionEditar;
+        const r = anterior
+            ? await editarMovimiento({ ...campos, anterior })
+            : await crearMovimiento({ ...campos, tipo: tab, userId: sesion.user.id });
+        setGuardando(false);
+        if (r.error) { mostrarToast(t(r.error), 'error'); return; }
 
-        if (transaccionEditar) {
-            // Al editar se deshace el efecto del movimiento original en su cuenta
-            // y se aplica el nuevo (puede cambiar el monto y también la cuenta).
-            const anterior = transaccionEditar;
-            const cuentaAnterior = cuentas.find(c => c.nombre === anterior.cuenta);
-            const cambios = { descripcion: nota, monto, categoria, cuenta, fecha };
-
-            const { error } = await supabase.from('transacciones').update(cambios).eq('id', anterior.id);
-            if (error) { mostrarToast(t('agregar.noActualizar'), 'error'); setGuardando(false); return; }
-
-            const ajuste = await ajustarSaldos([
-                { cuenta: cuentaAnterior, delta: -efectoEnSaldo(anterior.tipo, anterior.monto) },
-                { cuenta: cuentaObj, delta: efectoEnSaldo(anterior.tipo, monto) },
-            ]);
-            if (ajuste.error) {
-                // Si el saldo no se pudo corregir, el movimiento vuelve a como estaba
-                await supabase.from('transacciones')
-                    .update({ descripcion: anterior.descripcion, monto: anterior.monto, categoria: anterior.categoria, cuenta: anterior.cuenta, fecha: anterior.fecha })
-                    .eq('id', anterior.id);
-                mostrarToast(t('errores.saldo'), 'error');
-                setGuardando(false);
-                return;
-            }
-
-            setTransacciones(prev => prev.map(mov => mov.id === anterior.id ? { ...mov, ...cambios } : mov));
-            setCuentas(conSaldosNuevos(ajuste.saldos));
+        if (anterior) {
+            setTransacciones(prev => prev.map(mov => mov.id === anterior.id ? { ...mov, ...r.cambios } : mov));
             mostrarToast(t('agregar.transaccionActualizada'), 'exito');
         } else {
-            const nueva = { descripcion: nota, monto, tipo: tab, categoria, cuenta, fecha, fuente: '', user_id: sesion.user.id };
-            const { data, error } = await supabase.from('transacciones').insert([nueva]).select();
-            if (error) { mostrarToast(t('agregar.noGuardar'), 'error'); setGuardando(false); return; }
-
-            const ajuste = await ajustarSaldos([{ cuenta: cuentaObj, delta: efectoEnSaldo(tab, monto) }]);
-            if (ajuste.error) {
-                // Sin saldo actualizado el movimiento quedaría descuadrado: se borra
-                await supabase.from('transacciones').delete().eq('id', data[0].id);
-                mostrarToast(t('errores.saldo'), 'error');
-                setGuardando(false);
-                return;
-            }
-
-            setTransacciones(prev => [...prev, ...data]);
-            setCuentas(conSaldosNuevos(ajuste.saldos));
+            setTransacciones(prev => [...prev, ...r.transacciones]);
             mostrarToast(tab === 'ingreso' ? t('agregar.ingresoAgregado') : t('agregar.gastoAgregado'), 'exito');
         }
-        setGuardando(false);
+        setCuentas(conSaldosNuevos(r.saldos));
         onClose();
     }
 
     // ─── Guardar Transferencia / Aporte a meta ───
     async function guardarTransferencia() {
-        if (!origen || !destino || !monto) { mostrarToast(t('agregar.completaCampos'), 'error'); return; }
-        if (Number(monto) <= 0) { mostrarToast(t('agregar.montoMayor'), 'error'); return; }
-        const cuentaOrigen = cuentas.find(c => c.nombre === origen);
-        if (!cuentaOrigen || Number(cuentaOrigen.saldo) < Number(monto)) { mostrarToast(t('agregar.saldoInsuficiente'), 'error'); return; }
-        const tipoDestino = tab === 'aporte' ? 'meta' : 'cuenta';
-        const cuentaDestino = tipoDestino === 'cuenta' ? cuentas.find(c => c.nombre === destino) : null;
-        const meta = tipoDestino === 'meta' ? metas.find(m => m.nombre_meta === destino) : null;
-        if (!cuentaDestino && !meta) { mostrarToast(t('agregar.completaCampos'), 'error'); return; }
         setGuardando(true);
-
-        // Cada paso se verifica; si uno falla se deshacen los anteriores
-        // para que nunca "desaparezca" ni "aparezca" dinero.
-        const fallar = async (aplicados, idTransferencia) => {
-            await revertirSaldos(aplicados);
-            if (idTransferencia) await supabase.from('transferencias').delete().eq('id', idTransferencia);
-            mostrarToast(t('errores.transferencia'), 'error');
-            setGuardando(false);
-        };
-
-        // 1. Registro de la transferencia (historial)
-        const nuevaTransferencia = { user_id: sesion.user.id, origen, destino, monto, tipo_destino: tipoDestino, fecha: hoyISO() };
-        const { data: registro, error: errorRegistro } = await supabase.from('transferencias').insert([nuevaTransferencia]).select().single();
-        if (errorRegistro) { await fallar([]); return; }
-
-        // 2. Saldos: sale de la cuenta de origen (y entra a la de destino si es entre cuentas)
-        const ajuste = await ajustarSaldos([
-            { cuenta: cuentaOrigen, delta: -Number(monto) },
-            { cuenta: cuentaDestino, delta: Number(monto) },
-        ]);
-        if (ajuste.error) { await fallar([], registro.id); return; }
-
-        // 3. Aporte a meta
-        if (meta) {
-            const { montoActual, error: errorMeta } = await ajustarMeta(meta, Number(monto));
-            if (errorMeta) { await fallar(ajuste.aplicados, registro.id); return; }
-            setMetas(prev => prev.map(m => m.id === meta.id ? { ...m, monto_actual: montoActual } : m));
-        }
-
-        setCuentas(conSaldosNuevos(ajuste.saldos));
+        const r = await transferir({
+            origen, destino, monto, cuentas, metas, userId: sesion.user.id,
+            tipoDestino: tab === 'aporte' ? 'meta' : 'cuenta',
+        });
         setGuardando(false);
+        if (r.error) { mostrarToast(t(r.error), 'error'); return; }
+
+        if (r.meta) setMetas(prev => prev.map(m => m.id === r.meta.id ? { ...m, monto_actual: r.meta.montoActual } : m));
+        setCuentas(conSaldosNuevos(r.saldos));
         mostrarToast(tab === 'aporte' ? t('agregar.aporteOk') : t('agregar.transferenciaOk'), 'exito');
         onClose();
     }
@@ -353,8 +298,8 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
 
             {esTransaccion && (
                 <div className="modal-agregar-body">
-                    <label>{t('comun.monto')}</label>
-                    <input
+                    <label htmlFor={`${idForm}-1`}>{t('comun.monto')}</label>
+                    <input id={`${idForm}-1`}
                         className="campo-pildora"
                         type="text"
                         inputMode="numeric"
@@ -363,20 +308,20 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                         placeholder="0"
                     />
 
-                    <label>{t('comun.categoria')}</label>
-                    <DropdownPildora value={categoria} onChange={setCategoria} opciones={categorias} placeholder={t('agregar.seleccionarCategoria')} />
+                    <label htmlFor={`${idForm}-2`}>{t('comun.categoria')}</label>
+                    <DropdownPildora id={`${idForm}-2`} value={categoria} onChange={setCategoria} opciones={categorias} placeholder={t('agregar.seleccionarCategoria')} />
 
-                    <label>{t('comun.cuenta')}</label>
-                    <DropdownPildora value={cuenta} onChange={setCuenta} opciones={opcionesCuentas} placeholder={t('comun.seleccionarCuenta')} />
+                    <label htmlFor={`${idForm}-3`}>{t('comun.cuenta')}</label>
+                    <DropdownPildora id={`${idForm}-3`} value={cuenta} onChange={setCuenta} opciones={opcionesCuentas} placeholder={t('comun.seleccionarCuenta')} />
 
                     <div className="modal-agregar-fila-doble">
                         <div>
-                            <label>{t('comun.fecha')}</label>
-                            <input className="campo-pildora" type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
+                            <label htmlFor={`${idForm}-4`}>{t('comun.fecha')}</label>
+                            <input id={`${idForm}-4`} className="campo-pildora" type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
                         </div>
                         <div>
-                            <label>{t('agregar.nota')}</label>
-                            <input className="campo-pildora" type="text" value={nota} onChange={(e) => setNota(e.target.value)} placeholder={t('comun.opcional')} />
+                            <label htmlFor={`${idForm}-5`}>{t('agregar.nota')}</label>
+                            <input id={`${idForm}-5`} className="campo-pildora" type="text" value={nota} onChange={(e) => setNota(e.target.value)} placeholder={t('comun.opcional')} />
                         </div>
                     </div>
                 </div>
@@ -384,16 +329,16 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
 
             {esTransferencia && (
                 <div className="modal-agregar-body">
-                    <label>{t('agregar.desde')}</label>
-                    <DropdownPildora
+                    <label htmlFor={`${idForm}-6`}>{t('agregar.desde')}</label>
+                    <DropdownPildora id={`${idForm}-6`}
                         value={origen}
                         onChange={setOrigen}
                         opciones={opcionesCuentas}
                         placeholder={t('agregar.seleccionarOrigen')}
                     />
 
-                    <label>{tab === 'aporte' ? t('agregar.meta') : t('agregar.hacia')}</label>
-                    <DropdownPildora
+                    <label htmlFor={`${idForm}-7`}>{tab === 'aporte' ? t('agregar.meta') : t('agregar.hacia')}</label>
+                    <DropdownPildora id={`${idForm}-7`}
                         value={destino}
                         onChange={setDestino}
                         opciones={tab === 'aporte'
@@ -402,8 +347,8 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                         placeholder={tab === 'aporte' ? t('agregar.seleccionarMeta') : t('agregar.seleccionarDestino')}
                     />
 
-                    <label>{t('comun.monto')}</label>
-                    <input
+                    <label htmlFor={`${idForm}-8`}>{t('comun.monto')}</label>
+                    <input id={`${idForm}-8`}
                         className="campo-pildora"
                         type="text"
                         inputMode="numeric"

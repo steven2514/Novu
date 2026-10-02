@@ -22,7 +22,7 @@ export function SelectorColor({ colores, valor, onChange }) {
     return (
         <div className="color-selector-grid" role="radiogroup" aria-label={t('comun.color')}
              onKeyDown={(e) => moverConFlechas(e, colores, valor, onChange)}>
-            {colores.map((c, i) => (
+            {colores.map((c, i, lista) => (
                 <button
                     key={c}
                     type="button"
@@ -30,7 +30,7 @@ export function SelectorColor({ colores, valor, onChange }) {
                     aria-checked={valor === c}
                     aria-label={`${t('comun.color')} ${i + 1}`}
                     // Sólo la opción elegida (o la primera) entra en el orden de Tab.
-                    tabIndex={valor === c || (!colores.includes(valor) && i === 0) ? 0 : -1}
+                    tabIndex={valor === c || (i === 0 && !lista.includes(valor)) ? 0 : -1}
                     className={`color-selector-opcion ${valor === c ? 'seleccionado' : ''}`}
                     style={{ backgroundColor: c }}
                     onClick={() => onChange(c)}
@@ -45,14 +45,14 @@ export function SelectorIcono({ iconos, valor, onChange }) {
     return (
         <div className="icono-selector-grid" role="radiogroup" aria-label={t('comun.icono')}
              onKeyDown={(e) => moverConFlechas(e, iconos, valor, onChange)}>
-            {iconos.map((ic, i) => (
+            {iconos.map((ic, i, lista) => (
                 <button
                     key={ic}
                     type="button"
                     role="radio"
                     aria-checked={valor === ic}
                     aria-label={ic.replace(/-/g, ' ')}
-                    tabIndex={valor === ic || (!iconos.includes(valor) && i === 0) ? 0 : -1}
+                    tabIndex={valor === ic || (i === 0 && !lista.includes(valor)) ? 0 : -1}
                     className={`icono-selector-opcion ${valor === ic ? 'seleccionado' : ''}`}
                     onClick={() => onChange(ic)}
                 >

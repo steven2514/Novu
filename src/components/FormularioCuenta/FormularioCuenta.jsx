@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useId } from "react";
 import { PALETA_ELEMENTOS } from '../../utils/tema';
 import './FormularioCuenta.css';
 import { Icon } from '../Icon';
@@ -9,6 +9,8 @@ import { useIdioma } from '../../i18n/idioma';
 import { nombreDuplicado, renombrarCuenta } from '../../utils/cuentas';
 
 function FormularioCuenta({ setCuenta, onClose, cuentaEditar, cuentas = [], onRenombrada }) {
+    // Ids para conectar cada etiqueta con su campo (accesibilidad)
+    const idForm = useId();
     // Al editar, los campos arrancan con los datos de la cuenta. El formulario
     // vive dentro de un Modal que se desmonta al cerrarse, así que cada vez que
     // se abre se vuelve a inicializar; no hace falta un useEffect.
@@ -69,28 +71,28 @@ function FormularioCuenta({ setCuenta, onClose, cuentaEditar, cuentas = [], onRe
             </div>
 
             <div className="modal-kaipo-body">
-                <label>{t('comun.nombre')}</label>
-                <input className="campo-pildora" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={t('agregar.ejCuenta')} />
+                <label htmlFor={`${idForm}-1`}>{t('comun.nombre')}</label>
+                <input id={`${idForm}-1`} className="campo-pildora" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={t('agregar.ejCuenta')} />
 
                 <div className="formulario-cuenta-fila-doble">
                     <div>
-                        <label>{t('agregar.tipo')}</label>
-                        <select className="campo-pildora" value={tipo} onChange={(e) => setTipo(e.target.value)}>
+                        <label htmlFor={`${idForm}-2`}>{t('agregar.tipo')}</label>
+                        <select id={`${idForm}-2`} className="campo-pildora" value={tipo} onChange={(e) => setTipo(e.target.value)}>
                             <option value="debito">{t('agregar.tipos.debito')}</option>
                             <option value="efectivo">{t('agregar.tipos.efectivo')}</option>
                             <option value="credito">{t('agregar.tipos.credito')}</option>
                         </select>
                     </div>
                     <div>
-                        <label>{cuentaEditar ? t('formularios.saldo') : t('agregar.saldoInicial')}</label>
-                        <input className="campo-pildora" type="number" value={saldo} onChange={(e) => setSaldo(e.target.value)} placeholder="0.00" />
+                        <label htmlFor={`${idForm}-3`}>{cuentaEditar ? t('formularios.saldo') : t('agregar.saldoInicial')}</label>
+                        <input id={`${idForm}-3`} className="campo-pildora" type="number" value={saldo} onChange={(e) => setSaldo(e.target.value)} placeholder="0.00" />
                     </div>
                 </div>
 
-                <label>{t('agregar.banco')}</label>
-                <input className="campo-pildora" type="text" value={banco} onChange={(e) => setBanco(e.target.value)} placeholder={t('agregar.ejBanco')} />
+                <label htmlFor={`${idForm}-4`}>{t('agregar.banco')}</label>
+                <input id={`${idForm}-4`} className="campo-pildora" type="text" value={banco} onChange={(e) => setBanco(e.target.value)} placeholder={t('agregar.ejBanco')} />
 
-                <label>{t('comun.color')}</label>
+                <p className="etiqueta-campo">{t('comun.color')}</p>
                 <SelectorColor colores={PALETA_ELEMENTOS} valor={color} onChange={setColor} />
             </div>
 

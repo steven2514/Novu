@@ -104,13 +104,10 @@ export async function ajustarSaldos(cambios) {
  * vuelve a escribir el saldo original.
  */
 export async function revertirSaldos(aplicados = []) {
-    for (const a of aplicados) {
-        if (a.modo === 'atomico') {
-            await supabase.rpc('ajustar_saldo', { p_cuenta_id: String(a.id), p_delta: -a.delta });
-        } else {
-            await supabase.from('cuentas').update({ saldo: a.saldoOriginal }).eq('id', a.id);
-        }
-    }
+    // Cada cuenta se revierte por separado: pueden ir en paralelo.
+    await Promise.all(aplicados.map(a => (a.modo === 'atomico'
+        ? supabase.rpc('ajustar_saldo', { p_cuenta_id: String(a.id), p_delta: -a.delta })
+        : supabase.from('cuentas').update({ saldo: a.saldoOriginal }).eq('id', a.id))));
 }
 
 /**

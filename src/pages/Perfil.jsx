@@ -1,19 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import './Perfil.css';
 import { supabase } from '../supabase';
 import { useToast } from '../Context/toast';
 import { Icon } from '../components/Icon';
 import { PALETAS, aplicarPaleta, paletaGuardada, aplicarTema, temaGuardado } from '../utils/tema';
 import { useIdioma } from '../i18n/idioma';
-
-const CONEXIONES_DISPONIBLES = [
-  { nombre: 'Nequi', icono: 'smartphone' },
-  { nombre: 'Bancolombia', icono: 'landmark' },
-  { nombre: 'Daviplata', icono: 'wallet' },
-  { nombre: 'Nu', icono: 'circle' },
-  { nombre: 'Davivienda', icono: 'landmark' },
-  { nombre: 'Banco de Bogotá', icono: 'landmark' },
-];
+import { usePreferencias } from '../Context/preferencias';
 
 const IDIOMAS = [
   { codigo: 'es', nombre: 'Español' },
@@ -21,6 +13,8 @@ const IDIOMAS = [
 ];
 
 function Perfil({ sesion, setSesion }) {
+    // Ids para conectar cada etiqueta con su campo (accesibilidad)
+    const idForm = useId();
 
   const { mostrarToast } = useToast();
   const { t, idioma, cambiarIdioma } = useIdioma();
@@ -28,6 +22,7 @@ function Perfil({ sesion, setSesion }) {
 
   // ─── Datos del perfil ───
   const [nombre, setNombre] = useState('');
+  const { cambiarMoneda, saldosOcultos, cambiarSaldosOcultos } = usePreferencias();
   const [moneda, setMoneda] = useState('COP');
   const [cargandoPerfil, setCargandoPerfil] = useState(true);
 
@@ -79,6 +74,7 @@ function Perfil({ sesion, setSesion }) {
     if (error) {
       mostrarToast(t('ajustes.errorGuardar'), 'error');
     } else {
+      cambiarMoneda(moneda);
       mostrarToast(t('ajustes.perfilActualizado'), 'exito');
     }
   }
@@ -137,7 +133,7 @@ function Perfil({ sesion, setSesion }) {
           <div className="perfil-card-body">
             <div className="perfil-apariencia-fila">
               <div>
-                <label>{t('ajustes.tema')}</label>
+                <p className="etiqueta-campo">{t('ajustes.tema')}</p>
                 <div className="perfil-toggle-grande">
                   <button className={tema === 'claro' ? 'activo' : ''} onClick={() => cambiarTema('claro')}>
                     <Icon name="sun" size={16} /> {t('ajustes.claro')}
@@ -148,7 +144,7 @@ function Perfil({ sesion, setSesion }) {
                 </div>
               </div>
               <div>
-                <label>{t('ajustes.idioma')}</label>
+                <p className="etiqueta-campo">{t('ajustes.idioma')}</p>
                 <div className="perfil-toggle-grande">
                   {IDIOMAS.map((opcion) => (
                     <button key={opcion.codigo} className={idioma === opcion.codigo ? 'activo' : ''} onClick={() => cambiarIdioma(opcion.codigo)}>
@@ -159,7 +155,7 @@ function Perfil({ sesion, setSesion }) {
               </div>
             </div>
 
-            <label>{t('ajustes.paleta')}</label>
+            <p className="etiqueta-campo">{t('ajustes.paleta')}</p>
             <div className="perfil-paletas">
               {PALETAS.map((p) => {
                 const [sidebar, principal, acento, fondo] = p.muestra;
@@ -198,14 +194,14 @@ function Perfil({ sesion, setSesion }) {
           <section className="tarjeta-lista">
             <h2 className="perfil-card-titulo"><Icon name="user" size={18} /> {t('ajustes.perfil')}</h2>
             <div className="perfil-card-body">
-              <label>{t('ajustes.nombre')}</label>
-              <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={t('ajustes.tuNombre')} />
+              <label htmlFor={`${idForm}-1`}>{t('ajustes.nombre')}</label>
+              <input id={`${idForm}-1`} type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={t('ajustes.tuNombre')} />
 
-              <label>{t('ajustes.correo')}</label>
-              <input type="email" value={email} disabled className="perfil-input-disabled" />
+              <label htmlFor={`${idForm}-2`}>{t('ajustes.correo')}</label>
+              <input id={`${idForm}-2`} type="email" value={email} disabled className="perfil-input-disabled" />
 
-              <label>{t('ajustes.moneda')}</label>
-              <select value={moneda} onChange={(e) => setMoneda(e.target.value)}>
+              <label htmlFor={`${idForm}-3`}>{t('ajustes.moneda')}</label>
+              <select id={`${idForm}-3`} value={moneda} onChange={(e) => setMoneda(e.target.value)}>
                 <option value="COP">{t('ajustes.monedas.COP')}</option>
                 <option value="USD">{t('ajustes.monedas.USD')}</option>
                 <option value="EUR">{t('ajustes.monedas.EUR')}</option>
@@ -219,48 +215,29 @@ function Perfil({ sesion, setSesion }) {
           <section className="tarjeta-lista">
             <h2 className="perfil-card-titulo"><Icon name="shield-check" size={18} /> {t('ajustes.seguridad')}</h2>
             <div className="perfil-card-body">
-              <label>{t('ajustes.nuevaContrasena')}</label>
-              <input type="password" value={passNueva} onChange={(e) => setPassNueva(e.target.value)} placeholder={t('ajustes.nuevaContrasena')} />
-              <input type="password" value={passConfirmar} onChange={(e) => setPassConfirmar(e.target.value)} placeholder={t('ajustes.confirmarContrasena')} />
+              <label htmlFor={`${idForm}-4`}>{t('ajustes.nuevaContrasena')}</label>
+              <input id={`${idForm}-4`} type="password" value={passNueva} onChange={(e) => setPassNueva(e.target.value)} placeholder={t('ajustes.nuevaContrasena')} />
+              <input type="password" value={passConfirmar} onChange={(e) => setPassConfirmar(e.target.value)} placeholder={t('ajustes.confirmarContrasena')} aria-label={t('ajustes.confirmarContrasena')} />
               {passError && <p className="perfil-error">{passError}</p>}
               <button className="btn-pildora-acento" onClick={cambiarPassword} disabled={guardandoPass}>
                 {guardandoPass ? t('comun.guardando') : t('ajustes.cambiarContrasena')}
               </button>
 
-              {[
-                ['dosPasos', 'dosPasosTexto'],
-                ['biometria', 'biometriaTexto'],
-                ['ocultarSaldos', 'ocultarSaldosTexto'],
-              ].map(([titulo, texto]) => (
-                <div key={titulo} className="perfil-switch-row">
-                  <div>
-                    <p className="perfil-switch-label">{t(`ajustes.${titulo}`)}</p>
-                    <p className="perfil-switch-desc">{t(`ajustes.${texto}`)}</p>
-                  </div>
-                  <label className="perfil-switch" title={t('ajustes.proximamente')}>
-                    <input type="checkbox" disabled />
-                    <span className="perfil-switch-slider"></span>
-                  </label>
+              <div className="perfil-switch-row">
+                <div>
+                  <p className="perfil-switch-label" id={`${idForm}-ocultar`}>{t('ajustes.ocultarSaldos')}</p>
+                  <p className="perfil-switch-desc">{t('ajustes.ocultarSaldosTexto')}</p>
                 </div>
-              ))}
-            </div>
-          </section>
-
-          {/* ─── Conexiones (placeholder visual, sin lógica todavía) ─── */}
-          <section className="tarjeta-lista">
-            <h2 className="perfil-card-titulo"><Icon name="link" size={18} /> {t('ajustes.conexiones')}</h2>
-            <div className="perfil-card-body">
-              <p className="perfil-card-desc perfil-conexiones-desc">{t('ajustes.conexionesTexto')}</p>
-              {CONEXIONES_DISPONIBLES.map((con) => (
-                <div key={con.nombre} className="fila-item">
-                  <span className="icono-circulo icono-circulo-neutro"><Icon name={con.icono} size={18} /></span>
-                  <div className="perfil-cat-info">
-                    <p className="perfil-cat-nombre">{con.nombre}</p>
-                    <p className="perfil-conexion-estado">{t('ajustes.sinConectar')}</p>
-                  </div>
-                  <button className="btn-conectar" disabled title={t('ajustes.proximamente')}>{t('ajustes.conectar')}</button>
-                </div>
-              ))}
+                <label className="perfil-switch">
+                  <input
+                    type="checkbox"
+                    checked={saldosOcultos}
+                    onChange={(e) => cambiarSaldosOcultos(e.target.checked)}
+                    aria-labelledby={`${idForm}-ocultar`}
+                  />
+                  <span className="perfil-switch-slider"></span>
+                </label>
+              </div>
             </div>
           </section>
 

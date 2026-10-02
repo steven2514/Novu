@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useId } from "react";
 import { PALETA_ELEMENTOS } from '../../utils/tema';
 import { aInputFecha } from '../../utils/fechas';
 import './FormularioMeta.css';
@@ -10,6 +10,8 @@ import { useToast } from '../../Context/toast';
 import { useIdioma } from '../../i18n/idioma';
 
 function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
+    // Ids para conectar cada etiqueta con su campo (accesibilidad)
+    const idForm = useId();
     // Al editar, los campos arrancan con los datos de la meta. El formulario
     // vive dentro de un Modal que se desmonta al cerrarse: cada apertura lo
     // inicializa de nuevo, sin necesidad de un useEffect.
@@ -55,24 +57,24 @@ function FormularioMeta({ setMetas, onClose, sesion, metaEditar }) {
             <div className="modal-kaipo-body">
                 <SelectorIcono iconos={ICONOS} valor={icono} onChange={setIcono} />
 
-                <label>{t('comun.nombre')}</label>
-                <input className="campo-pildora" type="text" value={nombreMeta} onChange={(e) => setNombreMeta(e.target.value)} placeholder={t('agregar.ejMeta')} />
+                <label htmlFor={`${idForm}-1`}>{t('comun.nombre')}</label>
+                <input id={`${idForm}-1`} className="campo-pildora" type="text" value={nombreMeta} onChange={(e) => setNombreMeta(e.target.value)} placeholder={t('agregar.ejMeta')} />
 
                 <div className="formulario-meta-fila-doble">
                     <div>
-                        <label>{t('agregar.objetivo')}</label>
-                        <input className="campo-pildora" type="number" value={montoObjetivo} onChange={(e) => setMontoObjetivo(e.target.value)} placeholder="0" />
+                        <label htmlFor={`${idForm}-2`}>{t('agregar.objetivo')}</label>
+                        <input id={`${idForm}-2`} className="campo-pildora" type="number" value={montoObjetivo} onChange={(e) => setMontoObjetivo(e.target.value)} placeholder="0" />
                     </div>
                     <div>
-                        <label>{t('agregar.fechaLimite')}</label>
-                        <input className="campo-pildora" type="date" value={fechaObjetivo} onChange={(e) => setFechaObjetivo(e.target.value)} />
+                        <label htmlFor={`${idForm}-3`}>{t('agregar.fechaLimite')}</label>
+                        <input id={`${idForm}-3`} className="campo-pildora" type="date" value={fechaObjetivo} onChange={(e) => setFechaObjetivo(e.target.value)} />
                     </div>
                 </div>
 
-                <label>{t('formularios.montoActual')}</label>
-                <input className="campo-pildora" type="text" value={montoActual} onChange={(e) => setMontoActual(e.target.value)} placeholder="0" />
+                <label htmlFor={`${idForm}-4`}>{t('formularios.montoActual')}</label>
+                <input id={`${idForm}-4`} className="campo-pildora" type="text" value={montoActual} onChange={(e) => setMontoActual(e.target.value)} placeholder="0" />
 
-                <label>{t('comun.color')}</label>
+                <p className="etiqueta-campo">{t('comun.color')}</p>
                 <SelectorColor colores={COLORES} valor={color} onChange={setColor} />
             </div>
 

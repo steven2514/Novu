@@ -9,6 +9,7 @@ import { iniciarApariencia } from './utils/tema';
 import IdiomaProvider from './i18n/IdiomaProvider';
 import { obtenerIdioma } from './i18n/idioma';
 import ConfirmarProvider from './Context/ConfirmarProvider';
+import PreferenciasProvider from './Context/PreferenciasProvider';
 
 // Aplica tema y color guardados antes del primer render para evitar parpadeos.
 iniciarApariencia();
@@ -17,11 +18,13 @@ document.documentElement.lang = obtenerIdioma();
 createRoot(document.getElementById('root')).render(
     <StrictMode>
         <IdiomaProvider>
-            <ToastProvider>
-                <ConfirmarProvider>
-                    <App />
-                </ConfirmarProvider>
-            </ToastProvider>
+            <PreferenciasProvider>
+                <ToastProvider>
+                    <ConfirmarProvider>
+                        <App />
+                    </ConfirmarProvider>
+                </ToastProvider>
+            </PreferenciasProvider>
         </IdiomaProvider>
     </StrictMode>,
 )

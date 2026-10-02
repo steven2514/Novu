@@ -733,7 +733,8 @@ select.campo-pildora {
 .modal-kaipo-body label,
 .formulario label,
 .formulario-transferencia label,
-.formulario-tarea label {
+.formulario-tarea label,
+.etiqueta-campo {
   margin-top: 0.5rem;
   font-size: 0.75rem;
   font-weight: 700;
