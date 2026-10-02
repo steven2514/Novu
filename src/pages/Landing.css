@@ -17,7 +17,9 @@
     --lp-negativo: #E5484D;
 
     /* body tiene overflow: hidden para el dashboard; la landing hace su propio scroll */
-    height: 100vh;
+    height: var(--alto-pantalla);
+    /* En la app instalada en iPhone, la muesca no tapa el contenido */
+    padding-top: env(safe-area-inset-top);
     overflow-y: auto;
     overflow-x: hidden;
     scroll-behavior: smooth;
@@ -155,7 +157,7 @@
 
 .lp-hero {
     position: relative;
-    min-height: min(100vh, 53.75rem);
+    min-height: min(var(--alto-pantalla), 53.75rem);
     display: flex;
     flex-direction: column;
     color: #fff;

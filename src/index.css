@@ -11,6 +11,11 @@
      celulares baja (ver el final de este bloque :root). */
   --escala: 1.4;
 
+  /* Alto visible de la pantalla. En iPhone 100vh es más alto que lo que se
+     ve (incluye la zona de las barras del navegador) y cortaba lo de abajo;
+     100dvh es el alto real. */
+  --alto-pantalla: 100vh;
+
   /* ---- Colores base de la paleta (paletas.css los sobrescribe) ---- */
   --principal: #0B5E66;
   --principal-oscuro: #0A3A40;
@@ -146,6 +151,12 @@
   box-sizing: border-box;
 }
 
+@supports (height: 100dvh) {
+  :root {
+    --alto-pantalla: 100dvh;
+  }
+}
+
 /* --escala multiplica el tamaño de toda la interfaz */
 html {
   font-size: calc(100% * var(--escala));
@@ -254,7 +265,7 @@ a {
 
 .layout {
   display: flex;
-  height: 100vh;
+  height: var(--alto-pantalla);
 }
 
 .contenido {
@@ -691,7 +702,7 @@ select.campo-pildora {
 /* Aviso cuando no se pudieron cargar los datos (App.jsx). */
 /* Pantalla de error inesperado (components/LimiteErrores.jsx) */
 .limite-errores {
-  min-height: 100vh;
+  min-height: var(--alto-pantalla);
   display: flex;
   flex-direction: column;
   align-items: center;
