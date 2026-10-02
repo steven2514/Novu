@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import './Metas.css';
 import Modal from '../components/Modal/Modal';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 import FormularioMeta from '../components/FormularioMeta/FormularioMeta';
 import { useTour } from '../hooks/useTour';
@@ -47,7 +48,15 @@ function Metas({ metas, setMetas, sesion }) {
     const { t } = useIdioma();
     const { mostrarToast } = useToast();
     const confirmar = useConfirmar();
-    const [modalVisible, setModalVisible] = useState(false);
+    // Si se llega desde el atajo del modal "Nuevo movimiento", el formulario
+    // de nuevo se abre solo. Luego se limpia el aviso para que no se vuelva
+    // a abrir al recargar la página.
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [modalVisible, setModalVisible] = useState(() => !!location.state?.abrirNuevo);
+    useEffect(() => {
+        if (location.state?.abrirNuevo) navigate(location.pathname, { replace: true, state: null });
+    }, [location.state, location.pathname, navigate]);
     const [metaEditar, setMetaEditar] = useState(null);
 
     const totalAhorrado = metas.reduce((acc, m) => acc + Number(m.monto_actual || 0), 0);

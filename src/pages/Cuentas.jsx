@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Modal from '../components/Modal/Modal';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './Cuentas.css';
 import { supabase } from '../supabase';
 import FormularioCuenta from "../components/FormularioCuenta/FormularioCuenta";
@@ -36,7 +37,15 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia, on
     const confirmar = useConfirmar();
     const tipoCuenta = (tipo) => (tipo ? t(`cuentas.tipos.${tipo}`) : t('comun.cuenta'));
 
-    const [modalVisible, setModalVisible] = useState(false);
+    // Si se llega desde el atajo del modal "Nuevo movimiento", el formulario
+    // de nuevo se abre solo. Luego se limpia el aviso para que no se vuelva
+    // a abrir al recargar la página.
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [modalVisible, setModalVisible] = useState(() => !!location.state?.abrirNuevo);
+    useEffect(() => {
+        if (location.state?.abrirNuevo) navigate(location.pathname, { replace: true, state: null });
+    }, [location.state, location.pathname, navigate]);
     const [cuentaEditar, setCuentaEditar] = useState(null);
 
     // Las cuentas de crédito representan deuda; el resto son activos.

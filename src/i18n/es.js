@@ -428,6 +428,9 @@ const es = {
     agregar: {
         titulo: 'Agregar',
         tituloEditar: 'Editar movimiento',
+        necesitas: '¿Necesitas una cuenta o una meta nueva?',
+        crearCuenta: 'Crear cuenta',
+        crearMeta: 'Crear meta',
         tabs: {
             gasto: 'Gasto',
             ingreso: 'Ingreso',

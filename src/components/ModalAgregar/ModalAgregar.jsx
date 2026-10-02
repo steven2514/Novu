@@ -1,21 +1,17 @@
 import { useState, useEffect, useRef, useId } from "react";
-import { PALETA_ELEMENTOS } from '../../utils/tema';
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import './ModalAgregar.css';
 import { Icon } from '../Icon';
-import { SelectorColor, SelectorIcono } from '../Selectores';
-import { ICONOS_META } from '../../utils/iconos';
 import { supabase } from '../../supabase';
 import { useToast } from '../../Context/toast';
 import { hoyISO, aInputFecha } from '../../utils/fechas';
 import { useIdioma, nombreCategoria } from '../../i18n/idioma';
 import { CATEGORIAS_GASTO, CATEGORIAS_INGRESO } from '../../utils/categorias';
 import { ajustarSaldos, ajustarMeta, revertirSaldos, conSaldosNuevos, efectoEnSaldo } from '../../utils/saldos';
-import { nombreDuplicado } from '../../utils/cuentas';
 
 
 
-const COLORES = PALETA_ELEMENTOS;
 
 // ─── Helpers de formato de monto (7000 -> "7.000") ───
 function limpiarNumero(valor) {
@@ -206,21 +202,6 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
     const [origen, setOrigen] = useState('');
     const [destino, setDestino] = useState('');
 
-    // ─── Campos: Cuenta nueva ───
-    const [nombreCuenta, setNombreCuenta] = useState('');
-    const [tipoCuenta, setTipoCuenta] = useState('debito');
-    const [saldoCuenta, setSaldoCuenta] = useState('');
-    const [bancoCuenta, setBancoCuenta] = useState('');
-    const [colorCuenta, setColorCuenta] = useState(PALETA_ELEMENTOS[0]);
-
-    // ─── Campos: Meta nueva ───
-    const [nombreMeta, setNombreMeta] = useState('');
-    const [montoObjetivo, setMontoObjetivo] = useState('');
-    const [montoActual, setMontoActual] = useState('');
-    const [fechaObjetivo, setFechaObjetivo] = useState('');
-    const [iconoMeta, setIconoMeta] = useState('target');
-    const [colorMeta, setColorMeta] = useState(PALETA_ELEMENTOS[0]);
-
     const esTransaccion = tab === 'gasto' || tab === 'ingreso';
     const esTransferencia = tab === 'transferencia' || tab === 'aporte';
     const categorias = (tab === 'ingreso' ? CATEGORIAS_INGRESO : CATEGORIAS_GASTO)
@@ -332,49 +313,19 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
         onClose();
     }
 
-    // ─── Guardar Cuenta nueva ───
-    async function guardarCuentaNueva() {
-        if (!nombreCuenta.trim()) { mostrarToast(t('agregar.nombreObligatorio'), 'error'); return; }
-        // Los movimientos guardan el nombre de la cuenta: no puede repetirse.
-        if (nombreDuplicado(cuentas, nombreCuenta)) { mostrarToast(t('formularios.cuentaDuplicada'), 'error'); return; }
-        setGuardando(true);
-        const saldoFinal = saldoCuenta === '' ? 0 : Number(saldoCuenta);
-        const { data: { user } } = await supabase.auth.getUser();
-        const nueva = { nombre: nombreCuenta, tipo: tipoCuenta, saldo: saldoFinal, banco: bancoCuenta, color: colorCuenta, user_id: user.id };
-        const { data, error } = await supabase.from('cuentas').insert([nueva]).select().single();
-        if (error) { mostrarToast(t('agregar.noCrearCuenta'), 'error'); setGuardando(false); return; }
-        setCuentas(prev => [...prev, data]);
-        mostrarToast(t('agregar.cuentaCreada'), 'exito');
-        setGuardando(false);
-        onClose();
-    }
-
-    // ─── Guardar Meta nueva ───
-    async function guardarMetaNueva() {
-        if (!nombreMeta.trim()) { mostrarToast(t('agregar.nombreObligatorio'), 'error'); return; }
-        if (!montoObjetivo || Number(montoObjetivo) <= 0) { mostrarToast(t('agregar.objetivoMayor'), 'error'); return; }
-        setGuardando(true);
-        const nueva = { nombre_meta: nombreMeta, monto_objetivo: montoObjetivo, monto_actual: montoActual || 0, fecha_objetivo: fechaObjetivo, icono: iconoMeta, color: colorMeta, user_id: sesion.user.id };
-        // .select().single() devuelve la fila creada con su id: sin él, aportar a
-        // la meta antes de recargar descontaba de la cuenta sin sumar a la meta.
-        const { data, error } = await supabase.from('metas').insert([nueva]).select().single();
-        if (error) { mostrarToast(t('agregar.noCrearMeta'), 'error'); setGuardando(false); return; }
-        setMetas(prev => [...prev, data]);
-        mostrarToast(t('agregar.metaCreada'), 'exito');
-        setGuardando(false);
-        onClose();
-    }
-
     function guardar() {
         if (esTransaccion) {
             guardarTransaccion();
         } else if (esTransferencia) {
             guardarTransferencia();
-        } else if (tab === 'cuenta') {
-            guardarCuentaNueva();
-        } else if (tab === 'meta') {
-            guardarMetaNueva();
         }
+    }
+
+    // Abre la página de Cuentas o Metas con su formulario de "nuevo" ya abierto
+    const navigate = useNavigate();
+    function irA(ruta) {
+        onClose();
+        navigate(ruta, { state: { abrirNuevo: true } });
     }
 
     function cambiarTab(nuevoTab) {
@@ -391,8 +342,8 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
             </div>
 
             {!transaccionEditar && (
-                <div className="tabs-pildora tabs-pildora-scroll">
-                    {['gasto', 'ingreso', 'transferencia', 'aporte', 'cuenta', 'meta'].map((id) => (
+                <div className="tabs-pildora tabs-movimiento">
+                    {['gasto', 'ingreso', 'transferencia', 'aporte'].map((id) => (
                         <button key={id} className={`tab-pildora ${tab === id ? 'activo' : ''}`} onClick={() => cambiarTab(id)}>
                             {t(`agregar.tabs.${id}`)}
                         </button>
@@ -463,86 +414,20 @@ function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, 
                 </div>
             )}
 
-            {tab === 'cuenta' && (
-                <div className="modal-agregar-body">
-                    <label>{t('comun.nombre')}</label>
-                    <input className="campo-pildora" type="text" value={nombreCuenta} onChange={(e) => setNombreCuenta(e.target.value)} placeholder={t('agregar.ejCuenta')} />
-
-                    <div className="modal-agregar-fila-doble">
-                        <div>
-                            <label>{t('agregar.tipo')}</label>
-                            <DropdownPildora
-                                value={tipoCuenta}
-                                onChange={setTipoCuenta}
-                                opciones={['debito', 'efectivo', 'credito'].map(valor => ({ value: valor, label: t(`agregar.tipos.${valor}`) }))}
-                                placeholder={t('agregar.tipoCuenta')}
-                            />
-                        </div>
-                        <div>
-                            <label>{t('agregar.saldoInicial')}</label>
-                            <input
-                                className="campo-pildora"
-                                type="text"
-                                inputMode="numeric"
-                                value={formatearNumero(saldoCuenta)}
-                                onChange={(e) => setSaldoCuenta(limpiarNumero(e.target.value))}
-                                placeholder="0"
-                            />
-                        </div>
-                    </div>
-
-                    <label>{t('agregar.banco')}</label>
-                    <input className="campo-pildora" type="text" value={bancoCuenta} onChange={(e) => setBancoCuenta(e.target.value)} placeholder={t('agregar.ejBanco')} />
-
-                    <label>{t('comun.color')}</label>
-                    <SelectorColor colores={COLORES} valor={colorCuenta} onChange={setColorCuenta} />
-                </div>
-            )}
-
-            {tab === 'meta' && (
-                <div className="modal-agregar-body">
-                    <label>{t('comun.nombre')}</label>
-                    <input className="campo-pildora" type="text" value={nombreMeta} onChange={(e) => setNombreMeta(e.target.value)} placeholder={t('agregar.ejMeta')} />
-
-                    <div className="modal-agregar-fila-doble">
-                        <div>
-                            <label>{t('agregar.objetivo')}</label>
-                            <input
-                                className="campo-pildora"
-                                type="text"
-                                inputMode="numeric"
-                                value={formatearNumero(montoObjetivo)}
-                                onChange={(e) => setMontoObjetivo(limpiarNumero(e.target.value))}
-                                placeholder="0"
-                            />
-                        </div>
-                        <div>
-                            <label>{t('agregar.fechaLimite')}</label>
-                            <input className="campo-pildora" type="date" value={fechaObjetivo} onChange={(e) => setFechaObjetivo(e.target.value)} />
-                        </div>
-                    </div>
-
-                    <label>{t('agregar.montoActual')}</label>
-                    <input
-                        className="campo-pildora"
-                        type="text"
-                        inputMode="numeric"
-                        value={formatearNumero(montoActual)}
-                        onChange={(e) => setMontoActual(limpiarNumero(e.target.value))}
-                        placeholder="0"
-                    />
-
-                    <label>{t('comun.icono')}</label>
-                    <SelectorIcono iconos={ICONOS_META} valor={iconoMeta} onChange={setIconoMeta} />
-
-                    <label>{t('comun.color')}</label>
-                    <SelectorColor colores={COLORES} valor={colorMeta} onChange={setColorMeta} />
-                </div>
-            )}
-
             <button className="btn-guardar-gradiente" onClick={guardar} disabled={guardando}>
                 {guardando ? t('comun.guardando') : transaccionEditar ? t('comun.guardarCambios') : t('comun.guardar')}
             </button>
+
+            {/* Crear cuentas y metas no es un movimiento: se hace en su página,
+                que tiene el formulario completo. Estos atajos la abren directo. */}
+            {!transaccionEditar && (
+                <p className="modal-agregar-atajos">
+                    {t('agregar.necesitas')}{' '}
+                    <button type="button" onClick={() => irA('/cuentas')}>{t('agregar.crearCuenta')}</button>
+                    {' · '}
+                    <button type="button" onClick={() => irA('/Metas')}>{t('agregar.crearMeta')}</button>
+                </p>
+            )}
         </div>
     );
 }
