@@ -172,7 +172,7 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
                 )}
             </div>
 
-            <Modal visible={modalVisible} onClose={() => { setModalVisible(false); setTareaEditar(null); }}>
+            <Modal visible={modalVisible} titulo={tareaEditar ? t('formularios.editarTarea') : t('formularios.nuevaTarea')} onClose={() => { setModalVisible(false); setTareaEditar(null); }}>
                 <FormularioTarea
                     setTareas={setTareas}
                     onClose={() => { setModalVisible(false); setTareaEditar(null); }}

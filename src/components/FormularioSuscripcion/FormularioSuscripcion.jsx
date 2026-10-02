@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useId } from "react";
 import { PALETA_ELEMENTOS } from '../../utils/tema';
 import { aInputFecha } from '../../utils/fechas';
 import './FormularioSuscripcion.css'
@@ -10,6 +10,8 @@ import { useToast } from '../../Context/toast';
 import { useIdioma } from '../../i18n/idioma';
 
 function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, sesion, suscripcionEditar }) {
+    // Ids para conectar cada etiqueta con su campo (accesibilidad)
+    const idForm = useId();
     // Al editar, los campos arrancan con los datos de la suscripción. Este
     // formulario está siempre visible en el panel lateral, así que quien lo usa
     // le pasa key={id}: al elegir otra suscripción React lo monta de nuevo y
@@ -59,17 +61,17 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, sesion, sus
             <div className="modal-kaipo-body">
                 <SelectorIcono iconos={ICONOS} valor={icono} onChange={setIcono} />
 
-                <label>{t('comun.nombre')}</label>
-                <input className="campo-pildora" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={t('formularios.ejSuscripcion')} />
+                <label htmlFor={`${idForm}-1`}>{t('comun.nombre')}</label>
+                <input id={`${idForm}-1`} className="campo-pildora" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder={t('formularios.ejSuscripcion')} />
 
                 <div className="formulario-suscripcion-fila-doble">
                     <div>
-                        <label>{t('comun.monto')}</label>
-                        <input className="campo-pildora" type="number" value={monto} onChange={(e) => setMonto(e.target.value)} placeholder="0.00" />
+                        <label htmlFor={`${idForm}-2`}>{t('comun.monto')}</label>
+                        <input id={`${idForm}-2`} className="campo-pildora" type="number" value={monto} onChange={(e) => setMonto(e.target.value)} placeholder="0.00" />
                     </div>
                     <div>
-                        <label>{t('formularios.ciclo')}</label>
-                        <select className="campo-pildora" value={frecuencia} onChange={(e) => setFrecuencia(e.target.value)}>
+                        <label htmlFor={`${idForm}-3`}>{t('formularios.ciclo')}</label>
+                        <select id={`${idForm}-3`} className="campo-pildora" value={frecuencia} onChange={(e) => setFrecuencia(e.target.value)}>
                             <option value="diario">{t('suscripciones.frecuencias.diario')}</option>
                             <option value="semanal">{t('suscripciones.frecuencias.semanal')}</option>
                             <option value="mensual">{t('suscripciones.frecuencias.mensual')}</option>
@@ -79,19 +81,19 @@ function FormularioSuscripcion({ setSuscripciones, onClose, cuentas, sesion, sus
 
                 <div className="formulario-suscripcion-fila-doble">
                     <div>
-                        <label>{t('formularios.proximoCobro')}</label>
-                        <input className="campo-pildora" type="date" value={fechaRenovacion} onChange={(e) => setFechaRenovacion(e.target.value)} />
+                        <label htmlFor={`${idForm}-4`}>{t('formularios.proximoCobro')}</label>
+                        <input id={`${idForm}-4`} className="campo-pildora" type="date" value={fechaRenovacion} onChange={(e) => setFechaRenovacion(e.target.value)} />
                     </div>
                     <div>
-                        <label>{t('comun.cuenta')}</label>
-                        <select className="campo-pildora" value={cuenta} onChange={(e) => setCuenta(e.target.value)}>
+                        <label htmlFor={`${idForm}-5`}>{t('comun.cuenta')}</label>
+                        <select id={`${idForm}-5`} className="campo-pildora" value={cuenta} onChange={(e) => setCuenta(e.target.value)}>
                             <option value="">{t('comun.seleccionarCuenta')}</option>
-                            {cuentas.map((c, i) => (<option key={i} value={c.nombre}>{c.nombre}</option>))}
+                            {cuentas.map((c) => (<option key={c.id} value={c.nombre}>{c.nombre}</option>))}
                         </select>
                     </div>
                 </div>
 
-                <label>{t('comun.color')}</label>
+                <p className="etiqueta-campo">{t('comun.color')}</p>
                 <SelectorColor colores={COLORES} valor={color} onChange={setColor} />
             </div>
 

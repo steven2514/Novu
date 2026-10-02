@@ -26,7 +26,7 @@ function ConfirmarProvider({ children }) {
     return (
         <ConfirmarContext.Provider value={confirmar}>
             {children}
-            <Modal visible={!!pregunta} onClose={() => responder(false)}>
+            <Modal visible={!!pregunta} titulo={pregunta?.titulo} onClose={() => responder(false)}>
                 {pregunta && (
                     <div className="confirmar">
                         <span className="confirmar-icono"><Icon name="trash-2" size={22} /></span>

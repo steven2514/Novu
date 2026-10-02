@@ -113,24 +113,24 @@ function Landing() {
                         <p>{t('landing.hero.texto')}</p>
 
                         <div className="lp-buscador">
-                            <label className="lp-buscador-campo">
+                            <div className="lp-buscador-campo">
                                 <Target size="1.25rem" />
                                 <span>
                                     <small>{t('landing.hero.queLograr')}</small>
                                     <strong>{t('landing.hero.unViaje')}</strong>
                                 </span>
                                 <ChevronDown size="1.125rem" className="lp-buscador-chevron" />
-                            </label>
+                            </div>
 
                             <span className="lp-buscador-separador"></span>
 
-                            <label className="lp-buscador-campo">
+                            <div className="lp-buscador-campo">
                                 <CalendarDays size="1.25rem" />
                                 <span>
                                     <small>{t('landing.hero.cuantoMes')}</small>
                                     <strong>{formatoPesos(250000)}</strong>
                                 </span>
-                            </label>
+                            </div>
 
                             <button className="lp-btn lp-btn-coral lp-buscador-btn" onClick={irALogin}>
                                 <Search size="1.125rem" />

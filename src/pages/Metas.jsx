@@ -12,6 +12,7 @@ import { parseFecha, formatearFecha } from '../utils/fechas';
 import { useIdioma, traducir, localeActual } from '../i18n/idioma';
 import { useToast } from '../Context/toast';
 import { useConfirmar } from '../Context/confirmar';
+import { dinero } from '../utils/moneda';
 
 const COLOR_POR_DEFECTO = '#0B5E66';
 // "Dic 2026" / "Dec 2026" según el idioma activo
@@ -20,10 +21,6 @@ function mesYAnio(fecha) {
     if (!d) return traducir('comun.sinFecha');
     const mes = d.toLocaleDateString(localeActual(), { month: 'short' }).replace('.', '');
     return `${mes.charAt(0).toUpperCase()}${mes.slice(1)} ${d.getFullYear()}`;
-}
-
-function formatoPesos(valor) {
-    return '$' + Number(valor || 0).toLocaleString('es-CO');
 }
 
 function diasHasta(fecha) {
@@ -148,7 +145,7 @@ function Metas({ metas, setMetas, sesion }) {
                         <span className="metas-resumen-label">{t('metas.progresoGeneral')}</span>
                         <div className="metas-resumen-fila">
                             <strong>{Math.round(progresoGeneral)}%</strong>
-                            <span>{t('metas.deTotal', { actual: formatoPesos(totalAhorrado), objetivo: formatoPesos(totalObjetivo) })}</span>
+                            <span>{t('metas.deTotal', { actual: dinero(totalAhorrado), objetivo: dinero(totalObjetivo) })}</span>
                         </div>
                         <div className="metas-resumen-barra"><span style={{ width: `${progresoGeneral}%` }} /></div>
                     </div>
@@ -162,7 +159,7 @@ function Metas({ metas, setMetas, sesion }) {
                     </div>
                     <div className="metas-resumen-dato">
                         <span className="metas-resumen-label">{t('metas.porAhorrar')}</span>
-                        <strong>{formatoPesos(Math.max(totalObjetivo - totalAhorrado, 0))}</strong>
+                        <strong>{dinero(Math.max(totalObjetivo - totalAhorrado, 0))}</strong>
                     </div>
                 </div>
             )}
@@ -177,7 +174,7 @@ function Metas({ metas, setMetas, sesion }) {
                 </div>
             ) : (
                 <div className="metas-lista">
-                    {metas.map((meta, index) => {
+                    {metas.map((meta) => {
                         const objetivo = Number(meta.monto_objetivo) || 0;
                         const actual = Number(meta.monto_actual) || 0;
                         const porcentaje = objetivo > 0 ? Math.min((actual / objetivo) * 100, 100) : 0;
@@ -186,7 +183,7 @@ function Metas({ metas, setMetas, sesion }) {
                         const dias = diasHasta(meta.fecha_objetivo);
 
                         return (
-                            <article key={meta.id ?? index} className="meta-tarjeta" style={{ '--color': color }}>
+                            <article key={meta.id} className="meta-tarjeta" style={{ '--color': color }}>
                                 <div className="meta-portada">
                                     <span className="meta-chip">
                                         <Icon name="calendar-days" size={13} />
@@ -222,7 +219,7 @@ function Metas({ metas, setMetas, sesion }) {
                                     <div className="meta-pie">
                                         <div>
                                             <small>{t('metas.ahorrado')}</small>
-                                            <p><strong>{formatoPesos(actual)}</strong> / {formatoPesos(objetivo)}</p>
+                                            <p><strong>{dinero(actual)}</strong> / {dinero(objetivo)}</p>
                                         </div>
                                         <button className="btn-agregar-dinero" onClick={() => abrirEdicion(meta)}>
                                             <Icon name="plus" size={15} /> {t('metas.abonar')}
@@ -235,7 +232,7 @@ function Metas({ metas, setMetas, sesion }) {
                 </div>
             )}
 
-            <Modal visible={modalVisible} onClose={cerrarModal}>
+            <Modal visible={modalVisible} titulo={metaEditar ? t('formularios.editarMeta') : t('formularios.nuevaMeta')} onClose={cerrarModal}>
                 <FormularioMeta setMetas={setMetas} onClose={cerrarModal} sesion={sesion} metaEditar={metaEditar} />
             </Modal>
         </div>

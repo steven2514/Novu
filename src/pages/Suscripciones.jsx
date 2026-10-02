@@ -9,11 +9,13 @@ import { IconoMarca } from '../components/IconoMarca';
 import { buscarMarca } from '../utils/marcas';
 import { exportarPDF, pesos } from '../utils/exportarPDF';
 import { useToast } from '../Context/toast';
-import { parseFecha, aISO, hoyISO, formatearFecha } from '../utils/fechas';
+import { parseFecha, formatearFecha } from '../utils/fechas';
 import { useIdioma } from '../i18n/idioma';
 import { useConfirmar } from '../Context/confirmar';
 import { montoMensual, montoAnual } from '../utils/suscripciones';
-import { ajustarSaldos, revertirSaldos, conSaldosNuevos } from '../utils/saldos';
+import { conSaldosNuevos } from '../utils/saldos';
+import { pagarSuscripcion as registrarPago } from '../utils/operaciones';
+import { dinero } from '../utils/moneda';
 
 const DIAS_CICLO = { diario: 1, semanal: 7, mensual: 30 };
 
@@ -44,22 +46,6 @@ const ACENTOS_MARCA = {
     'crunchyroll': '#f47521',
     paramount: '#0064ff',
 };
-
-function sumarCiclo(fecha, frecuencia) {
-    const d = parseFecha(fecha) || new Date();
-    if (frecuencia === 'diario') d.setDate(d.getDate() + 1);
-    else if (frecuencia === 'semanal') d.setDate(d.getDate() + 7);
-    else {
-        // Mensual: el 31 de enero pasa al 28/29 de febrero, no al 3 de marzo.
-        const dia = d.getDate();
-        d.setDate(1);
-        d.setMonth(d.getMonth() + 1);
-        const ultimoDia = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-        d.setDate(Math.min(dia, ultimoDia));
-    }
-    // aISO y no toISOString: este último pasa por UTC y puede cambiar el día.
-    return aISO(d);
-}
 
 function diasRestantes(fecha) {
     const hoy = new Date();
@@ -126,46 +112,12 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
     }
 
     async function pagarSuscripcion(sus) {
-        const nuevaFecha = sumarCiclo(sus.fecha_renovacion, sus.frecuencia);
+        const r = await registrarPago({ suscripcion: sus, cuentas, userId: sesion.user.id });
+        if (r.error) { mostrarToast(t(r.error), 'error'); return; }
 
-        const { data: nuevaTransaccion, error: errorTransaccion } = await supabase
-            .from('transacciones')
-            .insert({
-                descripcion: sus.nombre,
-                monto: sus.monto,
-                tipo: 'gasto',
-                categoria: 'suscripciones',
-                cuenta: sus.cuenta,
-                fecha: hoyISO(),
-                user_id: sesion.user.id,
-            })
-            .select()
-            .single();
-        if (errorTransaccion) { mostrarToast(t('suscripciones.errorPago'), 'error'); return; }
-        const borrarTransaccion = () => supabase.from('transacciones').delete().eq('id', nuevaTransaccion.id);
-
-        const cuenta = cuentas.find(c => c.nombre === sus.cuenta);
-        const ajuste = await ajustarSaldos([{ cuenta, delta: -Number(sus.monto) }]);
-        if (ajuste.error) {
-            await borrarTransaccion();
-            mostrarToast(t('suscripciones.errorSaldo'), 'error');
-            return;
-        }
-
-        const { error: errorFecha } = await supabase
-            .from('suscripciones')
-            .update({ fecha_renovacion: nuevaFecha })
-            .eq('id', sus.id);
-        if (errorFecha) {
-            await revertirSaldos(ajuste.aplicados);
-            await borrarTransaccion();
-            mostrarToast(t('suscripciones.errorActualizar'), 'error');
-            return;
-        }
-
-        setCuentas(conSaldosNuevos(ajuste.saldos));
-        setSuscripciones(prev => prev.map(s => s.id === sus.id ? { ...s, fecha_renovacion: nuevaFecha } : s));
-        setTransacciones(prev => [nuevaTransaccion, ...prev]);
+        setCuentas(conSaldosNuevos(r.saldos));
+        setSuscripciones(prev => prev.map(s => s.id === sus.id ? { ...s, fecha_renovacion: r.nuevaFecha } : s));
+        setTransacciones(prev => [r.transaccion, ...prev]);
         mostrarToast(t('suscripciones.pagada'), 'exito');
     }
 
@@ -210,7 +162,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                     <div className="subs-total">
                         <div>
                             <p>{t('suscripciones.totalMensual')}</p>
-                            <h2>${gastoMensual.toLocaleString('es-CO')}</h2>
+                            <h2>{dinero(gastoMensual)}</h2>
                         </div>
                         <div className="subs-total-dato">
                             <p>{t('suscripciones.activas')}</p>
@@ -218,7 +170,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                         </div>
                         <div className="subs-total-dato">
                             <p>{t('suscripciones.alAnio')}</p>
-                            <h2>${gastoAnual.toLocaleString('es-CO')}</h2>
+                            <h2>{dinero(gastoAnual)}</h2>
                         </div>
                     </div>
 
@@ -229,7 +181,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                         </div>
                     ) : (
                         <div className="suscripciones-lista">
-                            {suscripciones.map((sus, index) => {
+                            {suscripciones.map((sus) => {
                                 const marca = buscarMarca(sus.nombre);
                                 const accent = accentDeSuscripcion(sus);
                                 const dias = diasRestantes(sus.fecha_renovacion);
@@ -244,7 +196,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
 
                                 return (
                                     <div
-                                        key={sus.id ?? index}
+                                        key={sus.id}
                                         className="sub-card"
                                         style={{ '--accent': accent }}
                                     >
@@ -286,7 +238,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
                                         </div>
 
                                         <div className="sub-card-precio">
-                                            <span className="monto">${Number(sus.monto).toLocaleString('es-CO')}</span>
+                                            <span className="monto">{dinero(sus.monto)}</span>
                                             <span className="periodo">{t(`suscripciones.periodos.${frecuencia(sus)}`)}</span>
                                         </div>
 
@@ -305,7 +257,7 @@ function Suscripciones({ cuentas, suscripciones, setSuscripciones, setCuentas, s
 
                                         <button className="sub-card-btn-pagar" onClick={() => pagarSuscripcion(sus)}>
                                             <Icon name="credit-card" size={16} />
-                                            {t('suscripciones.pagar', { monto: '$' + Number(sus.monto).toLocaleString('es-CO') })}
+                                            {t('suscripciones.pagar', { monto: dinero(sus.monto) })}
                                         </button>
                                     </div>
                                 );

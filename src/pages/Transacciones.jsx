@@ -8,12 +8,9 @@ import Tour from '../components/Tour/Tour';
 import { exportarPDF, pesos } from '../utils/exportarPDF';
 import { formatearFecha, compararFechas } from '../utils/fechas';
 import { useIdioma, nombreCategoria } from '../i18n/idioma';
+import { dinero } from '../utils/moneda';
 
 const ITEMS_POR_PAGINA = 10;
-
-function formatoPesos(valor) {
-    return '$' + Number(valor || 0).toLocaleString('es-CO');
-}
 
 function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
 
@@ -119,21 +116,21 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
                     <span className="tarjeta-total-icono"><Icon name="arrow-down-left" size={18} /></span>
                     <div>
                         <p>{t('transacciones.totalIngresos')}</p>
-                        <h2>{formatoPesos(totalIngresos)}</h2>
+                        <h2>{dinero(totalIngresos)}</h2>
                     </div>
                 </div>
                 <div className="tarjeta-total tarjeta-total-gasto">
                     <span className="tarjeta-total-icono"><Icon name="arrow-up-right" size={18} /></span>
                     <div>
                         <p>{t('transacciones.totalGastos')}</p>
-                        <h2>{formatoPesos(totalGastos)}</h2>
+                        <h2>{dinero(totalGastos)}</h2>
                     </div>
                 </div>
                 <div className="tarjeta-total tarjeta-total-neto">
                     <span className="tarjeta-total-icono"><Icon name="wallet" size={18} /></span>
                     <div>
                         <p>{t('transacciones.flujoNeto')}</p>
-                        <h2>{totalIngresos - totalGastos < 0 ? '-' : ''}{formatoPesos(Math.abs(totalIngresos - totalGastos))}</h2>
+                        <h2>{dinero(totalIngresos - totalGastos)}</h2>
                     </div>
                 </div>
             </div>
@@ -182,7 +179,7 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
                                 </div>
                                 <p className="transaccion-fecha">{formatearFecha(mov.fecha, { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                                 <p className={mov.tipo === 'ingreso' ? 'monto-ingreso' : 'monto-gasto'}>
-                                    {mov.tipo === 'ingreso' ? '+' : '-'}{formatoPesos(mov.monto)}
+                                    {mov.tipo === 'ingreso' ? '+' : '-'}{dinero(mov.monto)}
                                 </p>
                                 <div className="transaccion-acciones">
                                     <button className="btn-icono" title={t('comun.editar')} onClick={() => abrirModal(mov.tipo, mov)}>

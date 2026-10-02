@@ -59,7 +59,9 @@ function Sidebar({ onAgregar, onTransferir, sesion, esAdmin = false }) {
                 </button>
             </header>
 
-            {abierto && <div className="sidebar-velo" onClick={cerrar} />}
+            {/* Fondo oscuro del menú en celular: un botón (no un div) para que también
+                funcione con teclado y lectores de pantalla. */}
+            {abierto && <button type="button" className="sidebar-velo" onClick={cerrar} aria-label={t('sidebar.cerrarMenu')} tabIndex={-1} />}
 
             <aside className={`sidebar ${abierto ? 'sidebar-abierto' : ''}`}>
                 <div className="sidebar-cabecera">

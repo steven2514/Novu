@@ -11,6 +11,7 @@ import { exportarPDF, pesos } from '../utils/exportarPDF';
 import { useIdioma } from '../i18n/idioma';
 import { useToast } from '../Context/toast';
 import { useConfirmar } from '../Context/confirmar';
+import { dinero } from '../utils/moneda';
 
 const TIPO_ICONO = { debito: 'landmark', ahorros: 'piggy-bank', credito: 'credit-card', efectivo: 'wallet' };
 
@@ -19,17 +20,17 @@ const TIPO_ICONO = { debito: 'landmark', ahorros: 'piggy-bank', credito: 'credit
 // el degradado de la tarjeta).
 const TIPO_COLOR = { debito: '#0B5E66', ahorros: '#1F7A4D', credito: '#FF6B4A', efectivo: '#E39A2D' };
 
-function formatoMoneda(valor) {
-    return Number(valor || 0).toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
 function ultimosDigitos(cuenta) {
     const fuente = cuenta.numero || cuenta.id || '0000';
     const soloDigitos = String(fuente).replace(/\D/g, '') || '0000';
     return soloDigitos.slice(-4).padStart(4, '0');
 }
 
-function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia, onCuentaRenombrada }) {
+// Valor por defecto fijo: un [] nuevo en cada render haría que todo lo que
+// depende de 'cuentas' (useMemo) se recalculara siempre.
+const SIN_CUENTAS = [];
+
+function Cuentas({ cuentas = SIN_CUENTAS, setCuentas, sesion, abrirModalTransferencia, onCuentaRenombrada }) {
 
     const { mostrarTour, cerrarTour } = useTour('cuentas', sesion);
     const { t } = useIdioma();
@@ -141,16 +142,16 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia, on
                 <div className="resumen-metricas">
                     <div className="resumen-metrica">
                         <span className="resumen-label">{t('cuentas.patrimonio')}</span>
-                        <span className="resumen-valor">${formatoMoneda(patrimonioNeto)}</span>
+                        <span className="resumen-valor">{dinero(patrimonioNeto)}</span>
                     </div>
                     <div className="resumen-metrica">
                         <span className="resumen-label">{t('cuentas.totalActivos')}</span>
-                        <span className="resumen-valor resumen-valor-activos">${formatoMoneda(totalActivos)}</span>
+                        <span className="resumen-valor resumen-valor-activos">{dinero(totalActivos)}</span>
                         <span className="resumen-conteo">{t('comun.cuentas', { n: cuentasActivos.length })}</span>
                     </div>
                     <div className="resumen-metrica">
                         <span className="resumen-label">{t('cuentas.totalDeuda')}</span>
-                        <span className="resumen-valor resumen-valor-deuda">${formatoMoneda(totalDeuda)}</span>
+                        <span className="resumen-valor resumen-valor-deuda">{dinero(totalDeuda)}</span>
                         <span className="resumen-conteo">{t('comun.cuentas', { n: cuentasDeuda.length })}</span>
                     </div>
                 </div>
@@ -230,7 +231,7 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia, on
                                 <div className="cuenta-tarjeta-bottom">
                                     <div className="cuenta-saldo-bloque">
                                         <span className="cuenta-saldo-label">{t('cuentas.saldo')}</span>
-                                        <span className="cuenta-saldo">${formatoMoneda(cuenta.saldo)}</span>
+                                        <span className="cuenta-saldo">{dinero(cuenta.saldo)}</span>
                                     </div>
                                     <button
                                         className="cuenta-btn-transferir"
@@ -245,7 +246,7 @@ function Cuentas({ cuentas = [], setCuentas, sesion, abrirModalTransferencia, on
                 </div>
             )}
 
-            <Modal visible={modalVisible} onClose={cerrarModal}>
+            <Modal visible={modalVisible} titulo={cuentaEditar ? t('formularios.editarCuenta') : t('formularios.nuevaCuenta')} onClose={cerrarModal}>
                 <FormularioCuenta setCuenta={setCuentas} onClose={cerrarModal} cuentaEditar={cuentaEditar}
                     cuentas={cuentas} onRenombrada={onCuentaRenombrada} />
             </Modal>

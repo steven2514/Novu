@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import './Presupuestos.css';
 import { supabase } from '../supabase';
 import Modal from '../components/Modal/Modal';
@@ -8,8 +8,8 @@ import { useConfirmar } from '../Context/confirmar';
 import { useIdioma, nombreCategoria } from '../i18n/idioma';
 import { parseFecha, mismoMes } from '../utils/fechas';
 import { CATEGORIAS_GASTO, ICONO_CATEGORIA } from '../utils/categorias';
+import { dinero } from '../utils/moneda';
 
-const formatoPesos = (valor) => '$' + Math.round(Number(valor || 0)).toLocaleString('es-CO');
 const soloDigitos = (valor) => String(valor).replace(/\D/g, '');
 
 // A partir del 80% del límite se avisa; por encima del 100% está excedido
@@ -20,6 +20,8 @@ function estadoDe(porcentaje) {
 }
 
 function FormularioPresupuesto({ presupuesto, categoriaInicial, disponibles, onGuardar, onClose }) {
+    // Ids para conectar cada etiqueta con su campo (accesibilidad)
+    const idForm = useId();
     const { t } = useIdioma();
     const [categoria, setCategoria] = useState(presupuesto?.categoria || categoriaInicial || disponibles[0] || '');
     const [monto, setMonto] = useState(presupuesto ? soloDigitos(presupuesto.monto) : '');
@@ -41,7 +43,7 @@ function FormularioPresupuesto({ presupuesto, categoriaInicial, disponibles, onG
             </div>
 
             <div className="modal-kaipo-body">
-                <label>{t('comun.categoria')}</label>
+                <p className="etiqueta-campo">{t('comun.categoria')}</p>
                 <div className="pres-form-categorias">
                     {opciones.map((valor) => (
                         <button
@@ -57,15 +59,14 @@ function FormularioPresupuesto({ presupuesto, categoriaInicial, disponibles, onG
                     ))}
                 </div>
 
-                <label>{t('presupuestos.limiteMensual')}</label>
-                <input
+                <label htmlFor={`${idForm}-1`}>{t('presupuestos.limiteMensual')}</label>
+                <input id={`${idForm}-1`}
                     className="campo-pildora"
                     type="text"
                     inputMode="numeric"
                     value={monto ? Number(monto).toLocaleString('es-CO') : ''}
                     onChange={(e) => setMonto(soloDigitos(e.target.value))}
                     placeholder="0"
-                    autoFocus
                 />
                 <p className="pres-form-ayuda">{t('presupuestos.ayudaLimite')}</p>
             </div>
@@ -198,18 +199,18 @@ function Presupuestos({ presupuestos, setPresupuestos, disponibles, transaccione
                         <div className="pres-resumen-principal">
                             <span className="pres-label">{t('presupuestos.gastadoDe')}</span>
                             <div className="pres-resumen-cifras">
-                                <strong>{formatoPesos(totalGastado)}</strong>
-                                <span>/ {formatoPesos(totalLimite)}</span>
+                                <strong>{dinero(totalGastado)}</strong>
+                                <span>/ {dinero(totalLimite)}</span>
                             </div>
                             <div className="pres-barra"><span style={{ width: `${Math.min(porcentajeTotal, 100)}%` }} /></div>
                         </div>
                         <div className="pres-resumen-dato">
                             <span className="pres-label">{t('presupuestos.disponible')}</span>
-                            <strong>{formatoPesos(Math.max(totalLimite - totalGastado, 0))}</strong>
+                            <strong>{dinero(Math.max(totalLimite - totalGastado, 0))}</strong>
                         </div>
                         <div className="pres-resumen-dato">
                             <span className="pres-label">{t('presupuestos.porDia')}</span>
-                            <strong>{esMesActual ? formatoPesos(Math.max(totalLimite - totalGastado, 0) / diasRestantes) : '—'}</strong>
+                            <strong>{esMesActual ? dinero(Math.max(totalLimite - totalGastado, 0) / diasRestantes) : '—'}</strong>
                         </div>
                         <div className="pres-resumen-dato">
                             <span className="pres-label">{t('presupuestos.excedidos')}</span>
@@ -240,8 +241,8 @@ function Presupuestos({ presupuestos, setPresupuestos, disponibles, transaccione
                                     </div>
 
                                     <div className="pres-cifras">
-                                        <strong>{formatoPesos(fila.gastado)}</strong>
-                                        <span>{t('presupuestos.deLimite', { limite: formatoPesos(fila.limite) })}</span>
+                                        <strong>{dinero(fila.gastado)}</strong>
+                                        <span>{t('presupuestos.deLimite', { limite: dinero(fila.limite) })}</span>
                                         <b>{Math.round(fila.porcentaje)}%</b>
                                     </div>
 
@@ -249,8 +250,8 @@ function Presupuestos({ presupuestos, setPresupuestos, disponibles, transaccione
 
                                     <p className="pres-restante">
                                         {restante >= 0
-                                            ? t('presupuestos.teQuedan', { monto: formatoPesos(restante) })
-                                            : t('presupuestos.tePasaste', { monto: formatoPesos(-restante) })}
+                                            ? t('presupuestos.teQuedan', { monto: dinero(restante) })
+                                            : t('presupuestos.tePasaste', { monto: dinero(-restante) })}
                                     </p>
                                 </article>
                             );
@@ -274,7 +275,7 @@ function Presupuestos({ presupuestos, setPresupuestos, disponibles, transaccione
                             >
                                 <Icon name={ICONO_CATEGORIA[categoria] || 'wallet'} size={16} />
                                 <span>{nombreCategoria(categoria)}</span>
-                                <b>{formatoPesos(gastado)}</b>
+                                <b>{dinero(gastado)}</b>
                                 {CATEGORIAS_GASTO.includes(categoria) && <Icon name="plus" size={14} />}
                             </button>
                         ))}
@@ -282,7 +283,7 @@ function Presupuestos({ presupuestos, setPresupuestos, disponibles, transaccione
                 </section>
             )}
 
-            <Modal visible={!!formulario} onClose={() => setFormulario(null)}>
+            <Modal visible={!!formulario} titulo={formulario?.presupuesto ? t('presupuestos.editar') : t('presupuestos.nuevo')} onClose={() => setFormulario(null)}>
                 {formulario && (
                     <FormularioPresupuesto
                         presupuesto={formulario.presupuesto}
