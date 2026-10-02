@@ -6,8 +6,9 @@
 
 :root {
   /* ---- Tamaño general de la interfaz ----
-     Todo el CSS usa rem: este número agranda textos, espacios e iconos por
-     igual en todos los dispositivos (1 = normal, 1.4 = 40% más grande). */
+     Todo el CSS usa rem: este número agranda textos, espacios e iconos
+     (1 = normal, 1.4 = 40% más grande). En computador es 1.4; en tablets y
+     celulares baja (ver el final de este bloque :root). */
   --escala: 1.4;
 
   /* ---- Colores base de la paleta (paletas.css los sobrescribe) ---- */
@@ -145,9 +146,34 @@
   box-sizing: border-box;
 }
 
-/* Mismo tamaño en todos los dispositivos: --escala lo multiplica. */
+/* --escala multiplica el tamaño de toda la interfaz */
 html {
   font-size: calc(100% * var(--escala));
+  /* Safari en iPhone no agranda el texto por su cuenta al girar la pantalla */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Tablets: un poco más pequeño que en computador */
+@media (max-width: 900px) {
+  :root {
+    --escala: 1.15;
+  }
+}
+
+/* Celulares: tamaño normal */
+@media (max-width: 560px) {
+  :root {
+    --escala: 1;
+  }
+
+  /* El iPhone hace zoom al tocar un campo con letra menor a 16px */
+  /* :root delante para ganarle a los estilos de cada página */
+  :root input,
+  :root select,
+  :root textarea {
+    font-size: 1rem;
+  }
 }
 
 html,
