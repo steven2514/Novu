@@ -5,8 +5,8 @@
 // cualquier función pueda formatear sin recibirlas por props; PreferenciasProvider
 // las cambia y hace que la app se vuelva a dibujar.
 //
-// Los montos se guardan como números sin moneda: cambiar de moneda cambia cómo
-// se muestran (símbolo, separadores, decimales), no convierte valores.
+// Los montos se guardan en pesos colombianos. Al elegir USD o EUR se muestran
+// convertidos con la tasa del día (ej: $30.000 COP → US$9.06).
 
 export const MONEDAS = {
     COP: { locale: 'es-CO', decimales: 0 },
@@ -47,6 +47,48 @@ export function establecerSaldosOcultos(valor) {
     return saldosOcultos;
 }
 
+// ─── Tasas de cambio ───
+// Cuánto vale 1 peso colombiano en cada moneda. Se consultan una vez al día
+// (open.er-api.com, gratis y sin clave) y se guardan; sin internet se usa la
+// última conocida o, la primera vez, estas aproximadas (oct. 2026).
+const TASAS_RESPALDO = { COP: 1, USD: 0.000302, EUR: 0.000268 };
+const URL_TASAS = 'https://open.er-api.com/v6/latest/COP';
+const UN_DIA = 24 * 60 * 60 * 1000;
+
+function tasasGuardadas() {
+    try {
+        const guardado = JSON.parse(leer('tasas-cambio'));
+        if (guardado?.tasas?.USD > 0 && guardado?.tasas?.EUR > 0) return guardado;
+    } catch { /* dato dañado: se ignora */ }
+    return null;
+}
+
+let tasas = tasasGuardadas()?.tasas || TASAS_RESPALDO;
+
+/** Tasas actuales: { COP: 1, USD, EUR } (cuánto vale 1 COP en cada una). */
+export function obtenerTasas() {
+    return tasas;
+}
+
+/**
+ * Trae las tasas del día si las guardadas tienen más de un día.
+ * Devuelve true si cambiaron (para volver a dibujar la app).
+ */
+export async function actualizarTasas() {
+    const guardado = tasasGuardadas();
+    if (guardado && Date.now() - guardado.fecha < UN_DIA) return false;
+    try {
+        const respuesta = await fetch(URL_TASAS);
+        const { result, rates } = await respuesta.json();
+        if (result !== 'success' || !(rates?.USD > 0) || !(rates?.EUR > 0)) return false;
+        tasas = { COP: 1, USD: rates.USD, EUR: rates.EUR };
+        try { localStorage.setItem('tasas-cambio', JSON.stringify({ tasas, fecha: Date.now() })); } catch { /* sin almacenamiento */ }
+        return true;
+    } catch {
+        return false; // sin internet: se sigue con las que hay
+    }
+}
+
 // Un formateador por combinación (crearlos es costoso)
 const cache = new Map();
 function formateador(codigo, compacto) {
@@ -66,17 +108,50 @@ function formateador(codigo, compacto) {
 }
 
 /**
- * Formatea un monto en la moneda elegida.
- *   dinero(1234567)                     → "$1.234.567" (COP) · "$1,234,567.00" (USD)
+ * Convierte un monto en pesos a la moneda elegida y lo formatea.
+ *   dinero(30000)                       → "$30.000" (COP) · "US$9.06" (USD) · "8,04 €" (EUR)
  *   dinero(-500, { signo: true })       → "-$500"   (y "+$500" si es positivo)
  *   dinero(2800000, { compacto: true }) → "$2,8 M"  (ejes de gráficas)
  *   ocultable: false → se muestra aunque "ocultar saldos" esté activo (PDF)
  */
 export function dinero(valor, { signo = false, compacto = false, ocultable = true } = {}) {
     if (ocultable && saldosOcultos) return OCULTO;
-    const n = Number(valor || 0);
+    const n = Number(valor || 0) * tasas[monedaActual];
     // En pesos colombianos se escribe "$1.000" (sin el espacio de Intl)
-    const texto = formateador(monedaActual, compacto).format(Math.abs(n)).replace(/^\$\s/, '$');
+    let texto = formateador(monedaActual, compacto).format(Math.abs(n)).replace(/^\$\s/, '$');
+    // "US$" para que el dólar no se confunda con el peso, que también usa "$"
+    if (monedaActual === 'USD') texto = texto.replace(/^\$/, 'US$');
     if (n < 0) return `-${texto}`;
     return signo && n > 0 ? `+${texto}` : texto;
+}
+
+// ─── Formularios ───
+// En los formularios se escribe en la moneda elegida y en Supabase se guarda
+// en pesos.
+
+/** Monto en pesos → número en la moneda elegida (redondeado a sus decimales). */
+export function aMonedaElegida(pesos) {
+    const { decimales } = MONEDAS[monedaActual];
+    const factor = 10 ** decimales;
+    return Math.round(Number(pesos || 0) * tasas[monedaActual] * factor) / factor;
+}
+
+/**
+ * Lo escrito en la moneda elegida → pesos para guardar.
+ * Si se edita algo y el monto no se tocó, devuelve el original: así 26.900
+ * pesos no pasan a 26.887 por ir y volver de US$8.12.
+ */
+export function aPesos(escrito, pesosOriginales) {
+    const valor = Number(escrito || 0);
+    if (pesosOriginales !== undefined && pesosOriginales !== null && valor === aMonedaElegida(pesosOriginales)) {
+        return Number(pesosOriginales);
+    }
+    if (monedaActual === 'COP') return Math.round(valor);
+    return Math.round(valor / tasas[monedaActual]);
+}
+
+/** Texto inicial de un campo de monto al editar ('' si no hay valor). */
+export function montoParaCampo(pesos) {
+    if (pesos === undefined || pesos === null || pesos === '') return '';
+    return String(aMonedaElegida(pesos));
 }
