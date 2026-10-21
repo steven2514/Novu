@@ -1,14 +1,25 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     ArrowRight,
+    Briefcase,
+    CalendarClock,
     CalendarDays,
     ChevronDown,
     ChevronRight,
+    Coins,
     CreditCard,
+    EyeOff,
+    FileDown,
+    GraduationCap,
     Heart,
+    House,
+    Languages,
+    Palette,
+    PieChart,
     PiggyBank,
     Search,
     ShieldCheck,
+    Smartphone,
     Target,
     TrendingUp,
     Wallet,
@@ -58,6 +69,26 @@ const METAS = [
     { clave: 'tecnologia', fecha: new Date(2027, 2, 1), progreso: 23, aporte: 320000, icono: <Target size="2.5rem" strokeWidth={1.4} />, tono: 'meta-coral' },
 ];
 
+// "Todo lo que incluye": la clave apunta a landing.incluye.<clave> y <clave>Texto
+const INCLUYE = [
+    { clave: 'presupuestos', icono: <PieChart size="1.375rem" /> },
+    { clave: 'monedas', icono: <Coins size="1.375rem" /> },
+    { clave: 'pdf', icono: <FileDown size="1.375rem" /> },
+    { clave: 'renovaciones', icono: <CalendarClock size="1.375rem" /> },
+    { clave: 'ocultar', icono: <EyeOff size="1.375rem" /> },
+    { clave: 'instalable', icono: <Smartphone size="1.375rem" /> },
+    { clave: 'apariencia', icono: <Palette size="1.375rem" /> },
+    { clave: 'idiomas', icono: <Languages size="1.375rem" /> },
+];
+
+const PERFILES = [
+    { clave: 'estudiantes', icono: <GraduationCap size="1.5rem" />, tono: 'perfil-teal' },
+    { clave: 'independientes', icono: <Briefcase size="1.5rem" />, tono: 'perfil-coral' },
+    { clave: 'hogares', icono: <House size="1.5rem" />, tono: 'perfil-ambar' },
+];
+
+const PREGUNTAS = ['gratis', 'banco', 'celular', 'monedas', 'datos', 'exportar'];
+
 const PASOS = [
     { clave: 'registra', icono: <Wallet size="1.25rem" /> },
     { clave: 'planea', icono: <CalendarDays size="1.25rem" /> },
@@ -83,9 +114,9 @@ function Landing() {
 
     return (
         <div className="lp">
-            {/* HERO */}
-            <section className="lp-hero">
-                <header className="lp-nav">
+            {/* Barra superior: fuera del hero para quedar fija al hacer scroll */}
+            <header className="lp-nav-barra">
+                <div className="lp-nav">
                     <a className="lp-marca" href="#inicio">
                         <span className="lp-marca-icono">N</span>
                         Novu<span className="lp-marca-app">App</span>
@@ -102,7 +133,11 @@ function Landing() {
                         <button className="lp-link" onClick={irALogin}>{t('landing.nav.iniciarSesion')}</button>
                         <button className="lp-btn lp-btn-coral" onClick={irALogin}>{t('landing.nav.crearCuenta')}</button>
                     </div>
-                </header>
+                </div>
+            </header>
+
+            {/* HERO */}
+            <section className="lp-hero">
 
                 <div className="lp-hero-contenido" id="inicio">
                     <div className="lp-hero-texto">
@@ -265,6 +300,52 @@ function Landing() {
                 </div>
             </section>
 
+            {/* TODO LO QUE INCLUYE */}
+            <section className="lp-seccion lp-crema" id="incluye">
+                <div className="lp-contenedor">
+                    <div className="lp-encabezado">
+                        <div>
+                            <span className="lp-overline">{t('landing.incluye.overline')}</span>
+                            <h2>{t('landing.incluye.titulo')}</h2>
+                            <p>{t('landing.incluye.texto')}</p>
+                        </div>
+                    </div>
+
+                    <ul className="lp-incluye">
+                        {INCLUYE.map((item) => (
+                            <li key={item.clave}>
+                                <span className="lp-incluye-icono">{item.icono}</span>
+                                <h3>{t(`landing.incluye.${item.clave}`)}</h3>
+                                <p>{t(`landing.incluye.${item.clave}Texto`)}</p>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </section>
+
+            {/* PARA QUIÉN ES */}
+            <section className="lp-seccion lp-menta" id="para-quien">
+                <div className="lp-contenedor">
+                    <div className="lp-encabezado">
+                        <div>
+                            <span className="lp-overline">{t('landing.perfiles.overline')}</span>
+                            <h2>{t('landing.perfiles.titulo')}</h2>
+                            <p>{t('landing.perfiles.texto')}</p>
+                        </div>
+                    </div>
+
+                    <div className="lp-perfiles">
+                        {PERFILES.map((perfil) => (
+                            <article key={perfil.clave} className={`lp-perfil ${perfil.tono}`}>
+                                <span className="lp-perfil-icono">{perfil.icono}</span>
+                                <h3>{t(`landing.perfiles.${perfil.clave}`)}</h3>
+                                <p>{t(`landing.perfiles.${perfil.clave}Texto`)}</p>
+                            </article>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* PASOS */}
             <section className="lp-seccion lp-crema" id="como-funciona">
                 <div className="lp-contenedor lp-pasos-grid">
@@ -287,6 +368,28 @@ function Landing() {
                 </div>
             </section>
 
+            {/* PREGUNTAS FRECUENTES */}
+            <section className="lp-seccion lp-menta" id="preguntas">
+                <div className="lp-contenedor lp-faq-grid">
+                    <div className="lp-pasos-intro">
+                        <span className="lp-overline">{t('landing.faq.overline')}</span>
+                        <h2>{t('landing.faq.titulo')}</h2>
+                    </div>
+
+                    <div className="lp-faq">
+                        {PREGUNTAS.map((clave) => (
+                            <details key={clave}>
+                                <summary>
+                                    {t(`landing.faq.${clave}`)}
+                                    <ChevronDown size="1.125rem" aria-hidden="true" />
+                                </summary>
+                                <p>{t(`landing.faq.${clave}Resp`)}</p>
+                            </details>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* BANDA */}
             <section className="lp-banda">
                 <div className="lp-contenedor lp-banda-contenido">
@@ -304,12 +407,31 @@ function Landing() {
             </section>
 
             <footer className="lp-footer">
-                <div className="lp-contenedor lp-footer-contenido">
-                    <span className="lp-marca">
-                        <span className="lp-marca-icono">N</span>
-                        Novu<span className="lp-marca-app">App</span>
-                    </span>
-                    <p>{t('landing.pie.lema')}</p>
+                <div className="lp-contenedor lp-footer-columnas">
+                    <div className="lp-footer-marca">
+                        <span className="lp-marca">
+                            <span className="lp-marca-icono">N</span>
+                            Novu<span className="lp-marca-app">App</span>
+                        </span>
+                        <p>{t('landing.pie.lema')}</p>
+                    </div>
+
+                    <nav aria-label={t('landing.pie.producto')}>
+                        <h4>{t('landing.pie.producto')}</h4>
+                        <a href="#funciones">{t('landing.nav.funciones')}</a>
+                        <a href="#incluye">{t('landing.incluye.overline')}</a>
+                        <a href="#como-funciona">{t('landing.nav.comoFunciona')}</a>
+                        <a href="#preguntas">{t('landing.faq.overline')}</a>
+                    </nav>
+
+                    <nav aria-label={t('landing.pie.legal')}>
+                        <h4>{t('landing.pie.legal')}</h4>
+                        <Link to="/terminos">{t('sidebar.terminos')}</Link>
+                        <Link to="/privacidad">{t('sidebar.privacidad')}</Link>
+                        <Link to="/login">{t('landing.pie.entrar')}</Link>
+                    </nav>
+                </div>
+                <div className="lp-contenedor lp-footer-copy">
                     <p>© 2026 NovuApp</p>
                 </div>
             </footer>

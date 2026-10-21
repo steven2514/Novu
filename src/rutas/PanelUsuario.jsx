@@ -36,15 +36,18 @@ function PanelUsuario({ datos }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalTipo, setModalTipo] = useState('');
     const [transaccionEditar, setTransaccionEditar] = useState(null);
+    // Cuenta de origen ya elegida al transferir desde la tarjeta de una cuenta
+    const [origenInicial, setOrigenInicial] = useState('');
     const { mostrarToast } = useToast();
     const confirmar = useConfirmar();
     const { t } = useIdioma();
 
     // Abre el modal de transacciones (gasto / ingreso / transferencia / aporte).
     // Se usa tanto para crear como para editar (pasando la transacción existente).
-    function abrirModal(tipo, transaccion = null) {
+    function abrirModal(tipo, transaccion = null, origen = '') {
         setModalTipo(tipo);
         setTransaccionEditar(transaccion);
+        setOrigenInicial(origen);
         setModalVisible(true);
     }
 
@@ -95,7 +98,7 @@ function PanelUsuario({ datos }) {
                 <Routes>
                     <Route path='/' element={<Inicio transacciones={transacciones} metas={metas} suscripciones={suscripciones} cuentas={cuentas} presupuestos={presupuestos} sesion={sesion} abrirModal={abrirModal} />} />
                     <Route path='/transacciones' element={<Transacciones transacciones={transacciones} setTransacciones={setTransacciones} abrirModal={abrirModal} eliminar={eliminar} sesion={sesion} />} />
-                    <Route path='/cuentas' element={<Cuentas cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} abrirModalTransferencia={() => abrirModal('transferencia')} onCuentaRenombrada={renombrarCuentaEnEstado} />} />
+                    <Route path='/cuentas' element={<Cuentas cuentas={cuentas} setCuentas={setCuentas} sesion={sesion} abrirModalTransferencia={(cuenta) => abrirModal('transferencia', null, cuenta?.nombre)} onCuentaRenombrada={renombrarCuentaEnEstado} />} />
                     <Route path='/Suscripciones' element={<Suscripciones cuentas={cuentas} suscripciones={suscripciones} setSuscripciones={setSuscripciones} setCuentas={setCuentas} setTransacciones={setTransacciones} sesion={sesion} />} />
                     <Route path='/Metas' element={<Metas metas={metas} setMetas={setMetas} sesion={sesion} />} />
                     <Route path='/Calendario' element={<Calendario metas={metas} transacciones={transacciones} suscripciones={suscripciones} tareas={tareas} sesion={sesion} />} />
@@ -126,6 +129,7 @@ function PanelUsuario({ datos }) {
                         onClose={cerrarModal}
                         transaccionEditar={transaccionEditar}
                         tipoInicial={modalTipo}
+                        origenInicial={origenInicial}
                     />
                 </Modal>
             </div>

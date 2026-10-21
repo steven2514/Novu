@@ -15,14 +15,14 @@ const PESTANAS = ['gasto', 'ingreso', 'transferencia', 'aporte'];
 // Al editar un movimiento, los campos arrancan con sus datos. El modal se
 // desmonta al cerrarse, así que cada apertura vuelve a inicializarlos.
 // "monto" está en la moneda elegida; al guardar se pasa a pesos con aPesos().
-function camposIniciales(editar) {
+function camposIniciales(editar, origenInicial) {
     return {
         monto: montoParaCampo(editar?.monto),
         categoria: editar?.categoria ?? '',
         cuenta: editar?.cuenta ?? '',
         fecha: editar?.fecha ? aInputFecha(editar.fecha) : hoyISO(),
         nota: editar?.descripcion || '',
-        origen: '',
+        origen: origenInicial || '',
         destino: '',
     };
 }
@@ -36,10 +36,10 @@ function faltaEnMovimiento({ monto, categoria, cuenta, fecha }) {
     return null;
 }
 
-function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, sesion, onClose, transaccionEditar, tipoInicial }) {
+function ModalAgregar({ setTransacciones, cuentas, setCuentas, metas, setMetas, sesion, onClose, transaccionEditar, tipoInicial, origenInicial }) {
     // Si se edita un movimiento existente, se fija en su pestaña y se ocultan las demás
     const [tab, setTab] = useState(transaccionEditar ? transaccionEditar.tipo : (tipoInicial || 'gasto'));
-    const [campos, setCampos] = useState(() => camposIniciales(transaccionEditar));
+    const [campos, setCampos] = useState(() => camposIniciales(transaccionEditar, origenInicial));
     const [guardando, setGuardando] = useState(false);
     const { mostrarToast } = useToast();
     const { t } = useIdioma();
