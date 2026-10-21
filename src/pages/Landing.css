@@ -182,14 +182,31 @@
     mask-image: linear-gradient(90deg, transparent 0%, #000 55%, #000 100%);
 }
 
+/* Barra superior fija: .lp es el contenedor que hace scroll, así que
+   sticky la deja pegada arriba mientras se baja por la página. Usa el mismo
+   degradado del hero para que arriba se vea como parte de él. */
+.lp-nav-barra {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    color: #fff;
+    background: linear-gradient(115deg, #0A3A40 0%, #0B5E66 55%, #13807F 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0.5rem 1.5rem rgba(10, 58, 64, 0.18);
+}
+
 .lp-nav {
     width: min(73.75rem, 100% - 2rem);
     margin-inline: auto;
     display: flex;
     align-items: center;
     gap: 2rem;
-    padding: 1.375rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 1rem 0;
+}
+
+/* Al saltar a una sección desde el menú, el título no queda tapado por la barra */
+.lp [id] {
+    scroll-margin-top: 5.5rem;
 }
 
 .lp-nav-links {
@@ -936,6 +953,147 @@
     color: var(--lp-gris);
 }
 
+/* ---------- Todo lo que incluye ---------- */
+
+.lp-incluye {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.lp-incluye li {
+    padding: 1.5rem;
+    border: 1px solid var(--lp-borde);
+    border-radius: 1.125rem;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lp-incluye li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 1rem 2rem rgba(16, 38, 43, 0.08);
+}
+
+.lp-incluye-icono {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.75rem;
+    background: #DCEDEA;
+    color: var(--lp-teal);
+}
+
+.lp-incluye h3 {
+    margin-top: 1.125rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--lp-tinta);
+}
+
+.lp-incluye p {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--lp-gris);
+}
+
+/* ---------- Para quién es ---------- */
+
+.lp-perfiles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.lp-perfil {
+    padding: 2rem;
+    border-radius: 1.375rem;
+    color: #fff;
+}
+
+.perfil-teal { background: linear-gradient(140deg, #0B5E66, #0A3A40); }
+.perfil-coral { background: linear-gradient(140deg, #FF6B4A, #E0472A); }
+.perfil-ambar { background: linear-gradient(140deg, #E39A2D, #B9741A); }
+
+.lp-perfil-icono {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 0.875rem;
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.lp-perfil h3 {
+    margin-top: 3rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.lp-perfil p {
+    margin-top: 0.625rem;
+    line-height: 1.6;
+    opacity: 0.88;
+}
+
+/* ---------- Preguntas frecuentes ---------- */
+
+.lp-faq-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 4rem;
+    align-items: start;
+}
+
+.lp-faq {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.lp-faq details {
+    border: 1px solid var(--lp-borde);
+    border-radius: 1rem;
+    background: #fff;
+}
+
+.lp-faq summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.125rem 1.375rem;
+    font-weight: 700;
+    color: var(--lp-tinta);
+    cursor: pointer;
+    list-style: none;
+}
+
+.lp-faq summary::-webkit-details-marker {
+    display: none;
+}
+
+.lp-faq summary svg {
+    flex-shrink: 0;
+    color: var(--lp-teal);
+    transition: transform 0.2s ease;
+}
+
+.lp-faq details[open] summary svg {
+    transform: rotate(180deg);
+}
+
+.lp-faq details p {
+    padding: 0 1.375rem 1.25rem;
+    line-height: 1.65;
+    color: var(--lp-gris);
+}
+
 /* ---------- Banda y footer ---------- */
 
 .lp-banda {
@@ -979,17 +1137,54 @@
 }
 
 .lp-footer {
-    padding: 2rem 0;
+    padding: 3.5rem 0 2rem;
     background: var(--lp-tinta);
     color: rgba(255, 255, 255, 0.75);
     font-size: 0.875rem;
 }
 
-.lp-footer-contenido {
+.lp-footer-columnas {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2rem;
+}
+
+.lp-footer-marca p {
+    margin-top: 0.875rem;
+    max-width: 20rem;
+    line-height: 1.6;
+}
+
+.lp-footer nav {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.lp-footer h4 {
+    margin: 0 0 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.lp-footer nav a {
+    width: fit-content;
+    transition: color 0.15s ease;
+}
+
+.lp-footer nav a:hover {
+    color: #fff;
+}
+
+.lp-footer-copy {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .lp-footer .lp-marca-icono {
@@ -1020,6 +1215,12 @@
         display: none;
     }
 
+    /* Sin la ilustración el hero no necesita ocupar toda la pantalla:
+       con alto mínimo quedaba un hueco vacío encima del título */
+    .lp-hero {
+        min-height: auto;
+    }
+
     .lp-hero-contenido {
         grid-template-columns: 1fr;
         padding: 3.5rem 0 4.5rem;
@@ -1041,20 +1242,45 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .lp-pasos-grid {
+    .lp-pasos-grid,
+    .lp-faq-grid {
         grid-template-columns: 1fr;
         gap: 2.5rem;
+    }
+
+    .lp-incluye {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lp-perfiles {
+        grid-template-columns: 1fr;
+    }
+
+    .lp-perfil h3 {
+        margin-top: 1.5rem;
     }
 }
 
 @media (max-width: 760px) {
-    .lp-nav-links,
-    .lp-link {
+    .lp-nav-links {
         display: none;
     }
 
     .lp-nav {
         justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .lp-nav-acciones {
+        gap: 0.625rem;
+    }
+
+    /* En celular "Iniciar sesión" se ve como botón con borde, junto a "Crear cuenta" */
+    .lp-nav .lp-link {
+        padding: 0.6875rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        border-radius: 0.75rem;
+        font-weight: 700;
     }
 
     .lp-buscador {
@@ -1092,26 +1318,50 @@
         display: none;
     }
 
-    .lp-banda-contenido,
-    .lp-footer-contenido {
+    .lp-banda-contenido {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .lp-incluye,
+    .lp-perfiles {
+        grid-template-columns: 1fr;
+    }
+
+    .lp-footer-columnas {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .lp-footer-marca {
+        grid-column: 1 / -1;
     }
 }
 
 @media (max-width: 480px) {
-    /* Logo, idioma y "Crear cuenta" tienen que caber en 360 px */
+    /* Logo, idioma y los dos botones no caben en una fila de 360 px: van en dos.
+       Arriba logo e idioma; abajo "Iniciar sesión" y "Crear cuenta" a lo ancho. */
     .lp-nav {
-        gap: 0.5rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        gap: 0.625rem;
+        padding: 0.75rem 0;
     }
 
     .lp-nav-acciones {
-        gap: 0.5rem;
+        display: contents;
     }
 
+    .lp-nav .selector-idioma {
+        justify-self: end;
+    }
+
+    .lp-nav .lp-link,
     .lp-nav .lp-btn {
-        padding: 0.5625rem 0.75rem;
-        font-size: 0.8125rem;
+        width: 100%;
+        padding: 0.625rem 0.75rem;
+        font-size: 0.875rem;
+        text-align: center;
     }
 
     .lp-nav .selector-idioma button {

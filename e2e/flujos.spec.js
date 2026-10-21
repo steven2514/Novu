@@ -72,6 +72,20 @@ test('transferir mueve el dinero entre cuentas', async ({ page }) => {
     expect(db.transferencias).toHaveLength(1);
 });
 
+test('transferir desde la tarjeta de una cuenta la deja elegida como origen', async ({ page }) => {
+    const { db } = await abrir(page, '/cuentas');
+
+    await page.locator('.cuenta-btn-transferir').first().click();
+    await expect(modal(page).getByRole('combobox', { name: 'Desde la cuenta' })).toHaveText('Nequi');
+
+    await elegir(page, 'Hacia la cuenta', 'Nu');
+    await modal(page).getByLabel('Monto (COP)').fill('10000');
+    await modal(page).getByRole('button', { name: 'Guardar' }).click();
+
+    await expect(page.getByText('Transferencia realizada con éxito')).toBeVisible();
+    expect(db.cuentas.find(c => c.nombre === 'Nequi').saldo).toBe(290000);
+});
+
 test('no deja transferir más de lo que hay en la cuenta', async ({ page }) => {
     const { db } = await abrir(page);
 
