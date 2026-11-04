@@ -12,11 +12,13 @@ import ConfirmarProvider from './Context/ConfirmarProvider';
 import PreferenciasProvider from './Context/PreferenciasProvider';
 import LimiteErrores from './components/LimiteErrores';
 import { iniciarMonitoreo } from './utils/monitoreo';
+import { bloquearZoom } from './utils/sinZoom';
 
 // Aplica tema y color guardados antes del primer render para evitar parpadeos.
 iniciarApariencia();
 document.documentElement.lang = obtenerIdioma();
 iniciarMonitoreo();
+bloquearZoom();
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>

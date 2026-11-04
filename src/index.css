@@ -157,6 +157,29 @@
   }
 }
 
+/* App instalada en el iPhone: 100dvh no cuenta la zona de la hora y la
+   batería, y abajo quedaba una franja vacía de ese mismo alto. */
+@media (display-mode: standalone) {
+  :root {
+    --alto-pantalla: calc(100dvh + env(safe-area-inset-top));
+  }
+
+  /* El iPhone tiñe la zona de la hora con el fondo de la página; con el fondo
+     claro se veía una mancha blanca difuminada sobre la barra superior.
+     Cada pantalla (panel, login, landing) pone su propio fondo encima.
+     :root delante para ganarle a la regla body de más abajo. */
+  :root,
+  :root body {
+    background: var(--sidebar-fondo);
+  }
+}
+
+/* Sin zoom con dos dedos ni con doble toque (se sigue pudiendo desplazar) */
+html,
+html * {
+  touch-action: pan-x pan-y;
+}
+
 /* --escala multiplica el tamaño de toda la interfaz */
 html {
   font-size: calc(100% * var(--escala));
