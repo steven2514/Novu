@@ -5,6 +5,7 @@ import { supabase } from '../../supabase';
 import { useToast } from '../../Context/toast';
 import { useIdioma } from '../../i18n/idioma';
 import { aInputFecha } from '../../utils/fechas';
+import { ESTIMADOS, REPETICIONES, duracionCorta, guardarConRespaldo } from '../../utils/tareas';
 
 function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
     // Ids para conectar cada etiqueta con su campo (accesibilidad)
@@ -17,6 +18,9 @@ function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
     const [categoria, setCategoria] = useState(tareaEditar?.categoria ?? 'Tarea');
     const [prioridad, setPrioridad] = useState(tareaEditar?.prioridad ?? 'media');
     const [fechaLimite, setFechaLimite] = useState(() => aInputFecha(tareaEditar?.fecha_limite));
+    // '' = sin estimar; si no, los minutos (valor del <select>)
+    const [estimado, setEstimado] = useState(tareaEditar?.minutos_estimados ? String(tareaEditar.minutos_estimados) : '');
+    const [repetir, setRepetir] = useState(tareaEditar?.repetir || 'nunca');
     const [guardando, setGuardando] = useState(false);
     const { mostrarToast } = useToast();
     const { t } = useIdioma();
@@ -24,14 +28,19 @@ function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
     async function guardar() {
         if (titulo.trim() === '') return;
         setGuardando(true);
+        const campos = {
+            titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite,
+            minutos_estimados: estimado ? Number(estimado) : null,
+            repetir,
+        };
         if (tareaEditar) {
-            const { error } = await supabase.from('tareas').update({ titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite }).eq('id', tareaEditar.id);
+            const { error } = await guardarConRespaldo(campos, (datos) => supabase.from('tareas').update(datos).eq('id', tareaEditar.id));
             if (error) { mostrarToast(t('formularios.tareaNoActualizada'), 'error'); setGuardando(false); return; }
-            setTareas(prev => prev.map(tarea => tarea.id === tareaEditar.id ? { ...tarea, titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite } : tarea));
+            setTareas(prev => prev.map(tarea => tarea.id === tareaEditar.id ? { ...tarea, ...campos } : tarea));
             mostrarToast(t('formularios.tareaActualizada'), 'exito');
         } else {
-            const nuevaTarea = { titulo, descripcion, categoria, prioridad, fecha_limite: fechaLimite, completada: false, user_id: sesion.user.id };
-            const { data, error } = await supabase.from('tareas').insert([nuevaTarea]).select().single();
+            const nuevaTarea = { ...campos, completada: false, creada_en: new Date().toISOString(), user_id: sesion.user.id };
+            const { data, error } = await guardarConRespaldo(nuevaTarea, (datos) => supabase.from('tareas').insert([datos]).select().single());
             if (error) { mostrarToast(t('formularios.tareaNoCreada'), 'error'); setGuardando(false); return; }
             setTareas(prev => [...prev, data]);
             mostrarToast(t('formularios.tareaCreada'), 'exito');
@@ -64,6 +73,25 @@ function FormularioTarea({ setTareas, onClose, sesion, tareaEditar }) {
             </select>
             <label htmlFor={`${idForm}-5`}>{t('formularios.fechaLimiteOpcional')}</label>
             <input id={`${idForm}-5`} type="date" value={fechaLimite} onChange={(e) => setFechaLimite(e.target.value)} />
+            <div className="formulario-tarea-fila">
+                <div>
+                    <label htmlFor={`${idForm}-6`}>{t('formularios.tiempoEstimado')}</label>
+                    <select id={`${idForm}-6`} value={estimado} onChange={(e) => setEstimado(e.target.value)}>
+                        <option value="">{t('formularios.sinEstimar')}</option>
+                        {ESTIMADOS.map((minutos) => (
+                            <option key={minutos} value={minutos}>{duracionCorta(minutos * 60)}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label htmlFor={`${idForm}-7`}>{t('formularios.repetir')}</label>
+                    <select id={`${idForm}-7`} value={repetir} onChange={(e) => setRepetir(e.target.value)}>
+                        {REPETICIONES.map((opcion) => (
+                            <option key={opcion} value={opcion}>{t(`tareas.repetir.${opcion}`)}</option>
+                        ))}
+                    </select>
+                </div>
+            </div>
             <button className="btn-crear-tarea" onClick={guardar} disabled={guardando}>
                 {guardando ? t('comun.guardando') : tareaEditar ? t('comun.guardarCambios') : t('formularios.crearTarea')}
             </button>

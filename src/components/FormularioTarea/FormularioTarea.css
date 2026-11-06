@@ -50,3 +50,16 @@
 .btn-crear-tarea:disabled {
     opacity: 0.6;
 }
+
+/* Tiempo estimado y Repetir, uno al lado del otro */
+.formulario-tarea-fila {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 0.75rem;
+}
+
+.formulario-tarea-fila > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}

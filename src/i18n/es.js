@@ -255,6 +255,22 @@ const es = {
         tour1Texto: 'Organiza tus tareas, actividades diarias y compromisos.',
         tour2Titulo: 'Filtros y prioridad',
         tour2Texto: 'Marca tareas como completadas y filtra por categoría.',
+        // Vistas por fecha
+        vistas: { todas: 'Todas', hoy: 'Hoy', semana: 'Esta semana', atrasadas: 'Atrasadas' },
+        vistaVacia: 'No hay tareas en esta vista',
+        // Repetición (las claves son los valores de la base de datos)
+        repetir: { nunca: 'No se repite', diaria: 'Cada día', semanal: 'Cada semana', mensual: 'Cada mes' },
+        siguienteCreada: 'Listo. La próxima queda para el {fecha}',
+        // Tiempo
+        empezar: 'Empezar',
+        empezarCronometro: 'Empezar cronómetro de {nombre}',
+        pausarCronometro: 'Pausar cronómetro de {nombre}',
+        estimado: 'Estimado {tiempo}',
+        trabajado: 'Trabajaste {tiempo}',
+        trabajadoDe: 'Trabajaste {tiempo} de {estimado}',
+        terminadaEn: 'Terminada en {tiempo}',
+        dias: { uno: '{n} día', otros: '{n} días' },
+        faltaMigracion: 'Para usar el cronómetro falta actualizar la base de datos (migración v5)',
     },
 
     ajustes: {
@@ -541,6 +557,9 @@ const es = {
         detalles: 'Detalles adicionales...',
         prioridad: 'Prioridad',
         fechaLimiteOpcional: 'Fecha límite (opcional)',
+        tiempoEstimado: 'Tiempo estimado (opcional)',
+        sinEstimar: 'Sin estimar',
+        repetir: 'Repetir',
         crearTarea: 'Crear tarea',
         cuentaActualizada: 'Cuenta actualizada correctamente',
         cuentaNoActualizada: 'No se pudo actualizar la cuenta',

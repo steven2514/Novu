@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { formatearFecha } from '../utils/fechas';
+import { VISTAS, enVista, estaAtrasada, pausarCronometro, tareaSiguiente, guardarConRespaldo } from '../utils/tareas';
 import './Aprendizaje.css';
 import Modal from '../components/Modal/Modal';
 import { supabase } from '../supabase';
 import FormularioTarea from '../components/FormularioTarea/FormularioTarea';
+import TareaTiempo from '../components/TareaTiempo/TareaTiempo';
 import { useTour } from '../hooks/useTour';
 import Tour from '../components/Tour/Tour';
 import { Icon } from '../components/Icon';
@@ -24,6 +26,7 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
     const [tareaEditar, setTareaEditar] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [filtro, setFiltro] = useState('todas');
+    const [vista, setVista] = useState('todas');
     const { mostrarTour, cerrarTour } = useTour('aprendizaje', sesion);
     const { t } = useIdioma();
     const { mostrarToast } = useToast();
@@ -35,19 +38,65 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
     const avance = total > 0 ? Math.round((completadas / total) * 100) : 0;
 
     const categoriaFiltro = FILTROS.find(f => f.id === filtro)?.categoria;
-    const tareasFiltradas = tareas.filter(tarea => !categoriaFiltro || tarea.categoria === categoriaFiltro);
+    const deLaCategoria = tareas.filter(tarea => !categoriaFiltro || tarea.categoria === categoriaFiltro);
+    const tareasFiltradas = deLaCategoria.filter(tarea => enVista(tarea, vista));
+    // Número junto a cada vista: lo que falta por hacer en ella
+    const pendientesPorVista = Object.fromEntries(VISTAS.map(v => [
+        v, deLaCategoria.filter(tarea => !tarea.completada && enVista(tarea, v)).length,
+    ]));
 
-    // Antes el cambio solo se veía en pantalla y se perdía al recargar.
-    // Ahora se guarda en Supabase; si falla, la tarea vuelve a su estado anterior.
+    // Cambia una tarea en pantalla y en Supabase. Si falla, vuelve como estaba.
+    async function actualizar(tarea, cambios) {
+        const anterior = Object.fromEntries(Object.keys(cambios).map(clave => [clave, tarea[clave]]));
+        const aplicar = (valores) => setTareas(prev => prev.map(item => item.id === tarea.id ? { ...item, ...valores } : item));
+        aplicar(cambios);
+        const { error } = await guardarConRespaldo(cambios, (datos) => supabase.from('tareas').update(datos).eq('id', tarea.id));
+        if (error) {
+            aplicar(anterior);
+            mostrarToast(error.code === 'sin-migracion' ? t('tareas.faltaMigracion') : t('errores.tareaEstado'), 'error');
+            return false;
+        }
+        return true;
+    }
+
     async function toggleCompletada(tarea) {
         const completada = !tarea.completada;
-        const cambiar = (valor) => setTareas(prev => prev.map(item => item.id === tarea.id ? { ...item, completada: valor } : item));
-        cambiar(completada);
-        const { error } = await supabase.from('tareas').update({ completada }).eq('id', tarea.id);
-        if (error) {
-            cambiar(!completada);
-            mostrarToast(t('errores.tareaEstado'), 'error');
+        const ahora = new Date();
+        const cambios = completada
+            // Al terminarla se guarda la hora y se detiene el cronómetro si corría
+            ? { completada, completada_en: ahora.toISOString(), ...(tarea.cronometro_desde ? pausarCronometro(tarea, ahora) : {}) }
+            : { completada, completada_en: null };
+        const ok = await actualizar(tarea, cambios);
+        if (ok && completada) await crearSiguiente(tarea, ahora);
+    }
+
+    // Una tarea que se repite deja lista la próxima al terminarla
+    async function crearSiguiente(tarea, ahora) {
+        const siguiente = tareaSiguiente(tarea, ahora);
+        if (!siguiente) return;
+        // Si ya existe (la marcaste, desmarcaste y volviste a marcar), no se duplica
+        const yaExiste = tareas.some(item => item.id !== tarea.id && !item.completada
+            && item.titulo === siguiente.titulo && item.repetir === siguiente.repetir
+            && String(item.fecha_limite || '').slice(0, 10) === siguiente.fecha_limite);
+        if (yaExiste) return;
+        const nueva = { ...siguiente, creada_en: ahora.toISOString(), user_id: tarea.user_id ?? sesion.user.id };
+        const { data, error } = await guardarConRespaldo(nueva, (datos) => supabase.from('tareas').insert([datos]).select().single());
+        if (error) { mostrarToast(t('formularios.tareaNoCreada'), 'error'); return; }
+        setTareas(prev => [...prev, data]);
+        mostrarToast(t('tareas.siguienteCreada', { fecha: formatearFecha(siguiente.fecha_limite, { day: 'numeric', month: 'long' }) }), 'exito');
+    }
+
+    // Empieza o pausa el cronómetro. Solo corre uno a la vez: empezar uno
+    // pausa el que estuviera corriendo.
+    async function alternarCronometro(tarea) {
+        const ahora = new Date();
+        if (tarea.cronometro_desde) {
+            await actualizar(tarea, pausarCronometro(tarea, ahora));
+            return;
         }
+        const corriendo = tareas.filter(item => item.id !== tarea.id && item.cronometro_desde && !item.completada);
+        await Promise.all(corriendo.map(otra => actualizar(otra, pausarCronometro(otra, ahora))));
+        await actualizar(tarea, { cronometro_desde: ahora.toISOString() });
     }
 
     async function eliminarTarea(tarea) {
@@ -110,12 +159,28 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
             </div>
 
             <div className="aprendizaje-lista-card">
-                <div className="filtros-tabs">
+                {/* Cuándo: todas, hoy, esta semana, atrasadas */}
+                <div className="filtros-tabs filtros-vistas">
+                    {VISTAS.map(v => (
+                        <button
+                            key={v}
+                            className={`${vista === v ? 'tab-activo' : ''} ${v === 'atrasadas' && pendientesPorVista.atrasadas > 0 ? 'tab-alerta' : ''}`}
+                            onClick={() => setVista(v)}
+                            aria-pressed={vista === v}
+                        >
+                            {t(`tareas.vistas.${v}`)}
+                            {v !== 'todas' && pendientesPorVista[v] > 0 && <span className="tab-contador">{pendientesPorVista[v]}</span>}
+                        </button>
+                    ))}
+                </div>
+                {/* Qué: categoría */}
+                <div className="filtros-tabs filtros-categorias">
                     {FILTROS.map(op => (
                         <button
                             key={op.id}
                             className={filtro === op.id ? 'tab-activo' : ''}
                             onClick={() => setFiltro(op.id)}
+                            aria-pressed={filtro === op.id}
                         >
                             {t(`tareas.filtros.${op.id}`)}
                         </button>
@@ -125,7 +190,7 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
                 {tareasFiltradas.length === 0 ? (
                     <div className="tareas-vacio">
                         <div className="check-circulo"><Icon name="circle-check" size={26} /></div>
-                        <p className="vacio-titulo">{t('tareas.vacioTitulo')}</p>
+                        <p className="vacio-titulo">{vista === 'todas' ? t('tareas.vacioTitulo') : t('tareas.vistaVacia')}</p>
                         <p className="vacio-subtitulo">{t('tareas.vacioTexto')}</p>
                         <button className="btn-pildora-acento" onClick={abrirNueva}>
                             <Icon name="plus" size={16} /> {t('tareas.crear')}
@@ -150,12 +215,18 @@ function Aprendizaje({ tareas, setTareas, sesion }) {
                                         <span className={`tarea-prioridad prioridad-${tarea.prioridad}`}>
                                             <Icon name="flag" size={12} /> {t(`tareas.prioridades.${tarea.prioridad}`)}
                                         </span>
+                                        {tarea.repetir && tarea.repetir !== 'nunca' && (
+                                            <span className="tarea-repetir">
+                                                <Icon name="repeat" size={12} /> {t(`tareas.repetir.${tarea.repetir}`)}
+                                            </span>
+                                        )}
                                         {tarea.fecha_limite && (
-                                            <span className="tarea-fecha">
+                                            <span className={`tarea-fecha ${estaAtrasada(tarea) ? 'tarea-fecha-atrasada' : ''}`}>
                                                 <Icon name="calendar-days" size={12} />
                                                 {formatearFecha(tarea.fecha_limite, { day: 'numeric', month: 'short', year: 'numeric' })}
                                             </span>
                                         )}
+                                        <TareaTiempo tarea={tarea} onCronometro={alternarCronometro} />
                                     </div>
                                 </div>
                                 <div className="tarea-acciones">

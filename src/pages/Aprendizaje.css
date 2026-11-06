@@ -271,4 +271,131 @@
     .aprendizaje-resumen {
         grid-template-columns: 1fr;
     }
+
+    /* Las cuatro vistas caben en el celular sin desplazarse de lado */
+    .filtros-tabs {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .filtros-vistas {
+        flex-wrap: wrap;
+    }
+
+    .filtros-vistas button {
+        padding: 0.4375rem 0.625rem;
+    }
+}
+
+/* ---------- Vistas por fecha y categorías ---------- */
+
+/* La fila de categorías va debajo de las vistas, más discreta */
+.filtros-tabs.filtros-categorias {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+    background: var(--superficie-suave);
+}
+
+.filtros-categorias button {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.7813rem;
+}
+
+.filtros-vistas button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.tab-contador {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.3125rem;
+    border-radius: 6.1875rem;
+    background: var(--superficie-suave);
+    color: var(--texto-gris);
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.tab-activo .tab-contador {
+    background: var(--principal);
+    color: #fff;
+}
+
+.tab-alerta .tab-contador {
+    background: var(--negativo);
+    color: #fff;
+}
+
+/* ---------- Repetición, fecha atrasada y tiempo ---------- */
+
+.tarea-repetir {
+    background: var(--principal-claro);
+    color: var(--principal);
+}
+
+.tarea-fecha.tarea-fecha-atrasada {
+    border-color: var(--negativo);
+    background: var(--negativo-claro);
+    color: var(--negativo);
+}
+
+.tarea-tiempo {
+    color: var(--texto-gris);
+    border: 1px dashed var(--borde-fuerte);
+    font-variant-numeric: tabular-nums;
+}
+
+.tarea-tiempo.tiempo-a-tiempo {
+    border-style: solid;
+    border-color: transparent;
+    background: var(--positivo-claro);
+    color: var(--positivo);
+}
+
+.tarea-tiempo.tiempo-pasado {
+    border-style: solid;
+    border-color: transparent;
+    background: var(--ahorro-claro);
+    color: var(--ahorro);
+}
+
+/* Botón del cronómetro, con la misma forma que las etiquetas */
+.tarea-cronometro {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3125rem;
+    padding: 0.1875rem 0.5625rem;
+    border: 1px solid var(--borde);
+    border-radius: 0.375rem;
+    background: var(--tarjeta);
+    color: var(--texto);
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.tarea-cronometro:hover {
+    border-color: var(--principal);
+    color: var(--principal);
+}
+
+.tarea-cronometro.cronometro-corriendo {
+    border-color: var(--acento);
+    background: var(--acento);
+    color: #fff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .cronometro-corriendo svg {
+        animation: cronometro-latido 1.6s ease-in-out infinite;
+    }
+}
+
+@keyframes cronometro-latido {
+    50% { opacity: 0.45; }
 }

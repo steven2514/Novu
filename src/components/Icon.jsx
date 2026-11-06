@@ -66,6 +66,12 @@ const ICON_MAP = {
   'circle-dashed': Lucide.CircleDashed,
   'list-checks': Lucide.ListChecks,
   clock: Lucide.Clock,
+  // Tareas: cronómetro y repetición
+  play: Lucide.Play,
+  pause: Lucide.Pause,
+  repeat: Lucide.Repeat,
+  hourglass: Lucide.Hourglass,
+  timer: Lucide.Timer,
   flag: Lucide.Flag,
   'shield-check': Lucide.ShieldCheck,
   'trending-up-down': Lucide.ArrowUpDown,
