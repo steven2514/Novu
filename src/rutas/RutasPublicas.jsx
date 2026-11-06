@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Landing from '../pages/Landing';
 
 // Landing no es lazy: es lo primero que ve un visitante.
@@ -16,7 +16,8 @@ function RutasPublicas({ onLoginSuccess }) {
             {/* Los términos y la privacidad se leen ANTES de registrarse */}
             <Route path='/terminos' element={<Terminos />} />
             <Route path='/privacidad' element={<Privacidad />} />
-            <Route path='*' element={<Landing />} />
+            {/* Cualquier otra dirección (ej: /hola) lleva al inicio, sin dejarla en la barra */}
+            <Route path='*' element={<Navigate to="/" replace />} />
         </Routes>
     );
 }

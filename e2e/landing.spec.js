@@ -19,6 +19,19 @@ test('la barra superior queda fija al bajar por la página', async ({ page }) =>
     await expect(page.getByRole('button', { name: 'Crear cuenta' }).first()).toBeInViewport();
 });
 
+test('la dirección queda limpia: sin /hola ni #seccion', async ({ page }) => {
+    await prepararApp(page, { conSesion: false });
+    await page.goto('/hola#inicio');
+    await expect(page.locator('.lp-nav-barra')).toBeVisible({ timeout: 15000 });
+    await expect(page).toHaveURL(/\/$/);
+
+    // El menú baja a la sección sin cambiar la dirección
+    await page.locator('.lp-nav-links').getByRole('link', { name: 'Funciones' }).click();
+    await expect(page.locator('#funciones')).toBeInViewport();
+    await page.locator('a.lp-marca').click();
+    await expect(page).toHaveURL(/\/$/);
+});
+
 test.describe('en el celular', () => {
     test.use({ viewport: { width: 360, height: 780 }, isMobile: true, hasTouch: true });
 

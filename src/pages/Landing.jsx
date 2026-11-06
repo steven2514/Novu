@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
     ArrowRight,
@@ -100,6 +101,22 @@ function Landing() {
     const { t, locale } = useIdioma();
     const irALogin = () => navigate('/login');
 
+    // Si se entra con un enlace viejo como /#inicio, se quita el "#inicio"
+    useEffect(() => {
+        if (window.location.hash) window.history.replaceState(window.history.state, '', window.location.pathname);
+    }, []);
+
+    // Los enlaces del menú bajan a su sección sin agregar "#seccion" a la
+    // dirección de la página (queda siempre novu.../ limpia).
+    const irASeccion = (evento) => {
+        const id = evento.currentTarget.getAttribute('href').slice(1);
+        const destino = document.getElementById(id);
+        if (!destino) return;
+        evento.preventDefault();
+        if (id === 'inicio') destino.closest('.lp')?.scrollTo({ top: 0, behavior: 'smooth' });
+        else destino.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
     const mesYAnio = (fecha) => {
         const texto = fecha.toLocaleDateString(locale, { month: 'long', year: 'numeric' }).replace(' de ', ' ');
         return texto.charAt(0).toUpperCase() + texto.slice(1);
@@ -117,15 +134,15 @@ function Landing() {
             {/* Barra superior: fuera del hero para quedar fija al hacer scroll */}
             <header className="lp-nav-barra">
                 <div className="lp-nav">
-                    <a className="lp-marca" href="#inicio">
+                    <a className="lp-marca" onClick={irASeccion} href="#inicio">
                         <span className="lp-marca-icono">N</span>
                         Novu<span className="lp-marca-app">App</span>
                     </a>
 
                     <nav className="lp-nav-links">
-                        <a href="#funciones">{t('landing.nav.funciones')}</a>
-                        <a href="#metas">{t('landing.nav.metas')}</a>
-                        <a href="#como-funciona">{t('landing.nav.comoFunciona')}</a>
+                        <a onClick={irASeccion} href="#funciones">{t('landing.nav.funciones')}</a>
+                        <a onClick={irASeccion} href="#metas">{t('landing.nav.metas')}</a>
+                        <a onClick={irASeccion} href="#como-funciona">{t('landing.nav.comoFunciona')}</a>
                     </nav>
 
                     <div className="lp-nav-acciones">
@@ -418,10 +435,10 @@ function Landing() {
 
                     <nav aria-label={t('landing.pie.producto')}>
                         <h4>{t('landing.pie.producto')}</h4>
-                        <a href="#funciones">{t('landing.nav.funciones')}</a>
-                        <a href="#incluye">{t('landing.incluye.overline')}</a>
-                        <a href="#como-funciona">{t('landing.nav.comoFunciona')}</a>
-                        <a href="#preguntas">{t('landing.faq.overline')}</a>
+                        <a onClick={irASeccion} href="#funciones">{t('landing.nav.funciones')}</a>
+                        <a onClick={irASeccion} href="#incluye">{t('landing.incluye.overline')}</a>
+                        <a onClick={irASeccion} href="#como-funciona">{t('landing.nav.comoFunciona')}</a>
+                        <a onClick={irASeccion} href="#preguntas">{t('landing.faq.overline')}</a>
                     </nav>
 
                     <nav aria-label={t('landing.pie.legal')}>
