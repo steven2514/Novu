@@ -12,6 +12,7 @@ import { usePreferencias } from '../Context/preferencias';
 import { totalPorTipo, delMes, calcularTendencia, gastosPorCategoria, datosResumen } from '../utils/resumen';
 import TarjetasResumen from '../components/Inicio/TarjetasResumen';
 import ColumnaLateral from '../components/Inicio/ColumnaLateral';
+import ResumenMes from '../components/Inicio/ResumenMes';
 import { MovimientosRecientes, TransferenciaRapida } from '../components/Inicio/MovimientosRecientes';
 import { COLORES } from '../components/Inicio/graficas';
 
@@ -38,6 +39,7 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = SIN_DATOS, pres
     const { saldosOcultos, cambiarSaldosOcultos } = usePreferencias();
     const [temaOscuro, setTemaOscuro] = useState(() => temaGuardado() === 'oscuro');
     const [periodoResumen, setPeriodoResumen] = useState('mes');
+    const [resumenVisible, setResumenVisible] = useState(false);
 
     // El tema se aplica al iniciar la app (main.jsx); aquí solo se alterna.
     function alternarTema() {
@@ -90,6 +92,9 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = SIN_DATOS, pres
                             <Icon name="chevron-right" size={16} />
                         </button>
                     </div>
+                    <button className="dashboard-btn-resumen" onClick={() => setResumenVisible(true)} title={t('resumenMes.boton')}>
+                        <Icon name="sparkles" size={17} /> <span>{t('resumenMes.boton')}</span>
+                    </button>
                     <button className="dashboard-icon-btn" onClick={() => cambiarSaldosOcultos(!saldosOcultos)} title={saldosOcultos ? t('inicio.mostrarValores') : t('inicio.ocultarValores')}>
                         <Icon name={saldosOcultos ? 'eye-off' : 'eye'} size={18} />
                     </button>
@@ -103,6 +108,8 @@ function Inicio({ transacciones, metas, suscripciones, cuentas = SIN_DATOS, pres
                     )}
                 </div>
             </div>
+
+            <ResumenMes transacciones={transacciones} mes={mesSeleccionado} visible={resumenVisible} onClose={() => setResumenVisible(false)} />
 
             <TarjetasResumen
                 balance={cuentas.reduce((acc, c) => acc + saldoEnPesos(c), 0)}

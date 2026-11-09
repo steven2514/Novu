@@ -1,6 +1,7 @@
-import { lazy, useState } from 'react';
+import { lazy, useMemo, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar/Sidebar';
+import { calcularAvisos } from '../utils/avisos';
 import Modal from '../components/Modal/Modal';
 import ModalAgregar from '../components/ModalAgregar/ModalAgregar';
 import { supabase } from '../supabase';
@@ -27,11 +28,17 @@ const Admin = lazy(() => import('../pages/Admin'));
 // Panel con sesión iniciada: menú lateral, páginas y el modal de movimientos.
 function PanelUsuario({ datos }) {
     const {
-        sesion, setSesion, esAdmin, errorCarga, reintentarCarga,
+        sesion, setSesion, cargando, esAdmin, errorCarga, reintentarCarga,
         transacciones, setTransacciones, cuentas, setCuentas, metas, setMetas,
         suscripciones, setSuscripciones, tareas, setTareas,
         presupuestos, setPresupuestos, presupuestosDisponibles, renombrarCuentaEnEstado,
     } = datos;
+
+    // Avisos de la campanita (cobros cercanos, presupuestos pasados, tareas por vencer)
+    const avisos = useMemo(
+        () => calcularAvisos({ suscripciones, presupuestos, transacciones, tareas }),
+        [suscripciones, presupuestos, transacciones, tareas],
+    );
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalTipo, setModalTipo] = useState('');
@@ -87,7 +94,14 @@ function PanelUsuario({ datos }) {
 
     return (
         <div className='layout'>
-            <Sidebar onAgregar={() => abrirModal('gasto')} onTransferir={() => abrirModal('transferencia')} sesion={sesion} esAdmin={esAdmin} />
+            <Sidebar
+                onAgregar={() => abrirModal('gasto')}
+                onTransferir={() => abrirModal('transferencia')}
+                sesion={sesion}
+                esAdmin={esAdmin}
+                avisos={avisos}
+                datosListos={!cargando && !errorCarga}
+            />
             <div className='contenido'>
                 {errorCarga && (
                     <div className="aviso-carga" role="alert">

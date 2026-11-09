@@ -710,3 +710,36 @@
         margin-top: 0.75rem;
     }
 }
+
+/* Botón "Resumen del mes" */
+.dashboard-btn-resumen {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4375rem;
+    height: 2.625rem;
+    padding: 0 0.875rem;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-sm);
+    background: var(--tarjeta);
+    color: var(--principal);
+    font-size: 0.875rem;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.dashboard-btn-resumen:hover {
+    border-color: var(--principal);
+    background: var(--principal-claro);
+}
+
+/* En el celular: arriba el mes con los íconos; abajo Resumen y Nuevo movimiento */
+@container pagina (max-width: 40rem) {
+    .dashboard-top-actions .dashboard-btn-resumen,
+    .dashboard-top-actions .btn-pildora-acento {
+        order: 1;
+        flex: 1 1 9rem;
+        justify-content: center;
+        width: auto;
+    }
+}

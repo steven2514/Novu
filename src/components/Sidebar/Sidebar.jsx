@@ -4,6 +4,10 @@ import { useState } from 'react';
 import { Icon } from '../Icon';
 import { supabase } from '../../supabase';
 import { useIdioma } from '../../i18n/idioma';
+import { BotonAvisos, PanelAvisos } from '../Avisos/Avisos';
+import { useAvisos, useNotificarAlertas } from '../../hooks/useAvisos';
+
+const SIN_AVISOS = [];
 
 // Los textos son claves de traducción dentro de "sidebar.*"
 const SECCIONES = [
@@ -27,11 +31,13 @@ const SECCIONES = [
     },
 ];
 
-function Sidebar({ onAgregar, onTransferir, sesion, esAdmin = false }) {
+function Sidebar({ onAgregar, onTransferir, sesion, esAdmin = false, avisos = SIN_AVISOS, datosListos = false }) {
 
     const [abierto, setAbierto] = useState(false);
     const { t } = useIdioma();
     const cerrar = () => setAbierto(false);
+    const campana = useAvisos(avisos);
+    useNotificarAlertas(avisos, datosListos);
 
     async function cerrarSesion() {
         await supabase.auth.signOut();
@@ -54,10 +60,14 @@ function Sidebar({ onAgregar, onTransferir, sesion, esAdmin = false }) {
                     <span className="sidebar-marca-icono">N</span>
                     Novu<span className="sidebar-marca-app">App</span>
                 </span>
-                <button className="topbar-movil-agregar" onClick={onAgregar} aria-label={t('sidebar.nuevoMovimiento')}>
-                    <Icon name="plus" size={20} />
-                </button>
+                <div className="topbar-movil-acciones">
+                    <BotonAvisos nuevos={campana.nuevos} onClick={campana.abrir} />
+                    <button className="topbar-movil-agregar" onClick={onAgregar} aria-label={t('sidebar.nuevoMovimiento')}>
+                        <Icon name="plus" size={20} />
+                    </button>
+                </div>
             </header>
+            <PanelAvisos avisos={avisos} vistos={campana.vistos} visible={campana.abierto} onClose={campana.cerrar} />
 
             {/* Fondo oscuro del menú en celular: un botón (no un div) para que también
                 funcione con teclado y lectores de pantalla. */}
@@ -69,6 +79,7 @@ function Sidebar({ onAgregar, onTransferir, sesion, esAdmin = false }) {
                         <span className="sidebar-marca-icono">N</span>
                         Novu<span className="sidebar-marca-app">App</span>
                     </Link>
+                    <BotonAvisos nuevos={campana.nuevos} onClick={campana.abrir} className="sidebar-avisos" />
                     <button className="sidebar-cerrar" onClick={cerrar} aria-label={t('sidebar.cerrarMenu')}>
                         <Icon name="x" size={18} />
                     </button>

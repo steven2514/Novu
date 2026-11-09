@@ -235,3 +235,16 @@
 .sidebar-legal-links a:hover {
     color: #fff;
 }
+
+/* Campanita de avisos: junto al logo en el PC; en celular va en la barra superior */
+.topbar-movil-acciones {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media (max-width: 900px) {
+    .sidebar-avisos {
+        display: none;
+    }
+}

@@ -1,0 +1,215 @@
+/* =========================================================
+   RESUMEN DEL MES (modal desde Inicio)
+   ========================================================= */
+
+.modal-contenido:has(.resumen-mes) {
+    width: min(40rem, 100%);
+}
+
+.resumen-mes {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.resumen-mes-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.resumen-mes-cabecera h2::first-letter {
+    text-transform: uppercase;
+}
+
+.resumen-mes-vacio {
+    padding: 1.5rem 0;
+    color: var(--texto-gris);
+    text-align: center;
+}
+
+/* Titular: cuánto ahorraste (o cuánto te pasaste) */
+.resumen-mes-titular {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.125rem 1.25rem;
+    border-radius: var(--radio);
+    background: linear-gradient(135deg, var(--principal), var(--principal-oscuro));
+    color: #fff;
+}
+
+.resumen-mes-titular.titular-negativo {
+    background: linear-gradient(135deg, var(--acento), var(--acento-oscuro));
+}
+
+.resumen-mes-titular > svg {
+    flex-shrink: 0;
+}
+
+.resumen-mes-titular p {
+    font-size: 0.8438rem;
+    opacity: 0.88;
+}
+
+.resumen-mes-titular .resumen-mes-titular-texto {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    opacity: 1;
+}
+
+/* Ingresos, gastos, movimientos */
+.resumen-mes-cifras {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.resumen-mes-cifras > div {
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio-sm);
+}
+
+.resumen-mes-etiqueta {
+    color: var(--texto-gris);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.resumen-mes-valor {
+    margin-top: 0.25rem;
+    font-size: 1.125rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+.valor-positivo {
+    color: var(--positivo);
+}
+
+.valor-negativo {
+    color: var(--negativo);
+}
+
+.resumen-mes-tendencia {
+    margin-top: 0.25rem;
+    color: var(--texto-gris);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.tendencia-buena {
+    color: var(--positivo);
+}
+
+.tendencia-mala {
+    color: var(--negativo);
+}
+
+.resumen-mes-subtitulo {
+    margin: 0 0 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+}
+
+/* En qué se fue el dinero */
+.resumen-mes-categorias {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.resumen-mes-categoria-fila {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.375rem;
+    font-size: 0.8438rem;
+}
+
+.resumen-mes-categoria-fila span:last-child {
+    color: var(--texto-gris);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.resumen-mes-categoria-fila strong {
+    color: var(--texto);
+}
+
+.resumen-mes-barra {
+    height: 0.5rem;
+    border-radius: 6.1875rem;
+    background: var(--superficie-suave);
+    overflow: hidden;
+}
+
+.resumen-mes-barra span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+}
+
+/* Lo más destacado */
+.resumen-mes-destacados {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.resumen-mes-destacado {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border-radius: var(--radio-sm);
+    background: var(--superficie-suave);
+}
+
+.resumen-mes-destacado-icono {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    border-radius: 0.5rem;
+    background: var(--principal-claro);
+    color: var(--principal);
+}
+
+.resumen-mes-destacado-valor {
+    margin-top: 0.125rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+.resumen-mes-destacado-detalle {
+    margin-top: 0.125rem;
+    color: var(--texto-gris);
+    font-size: 0.8125rem;
+}
+
+.resumen-mes-destacado-detalle::first-letter {
+    text-transform: uppercase;
+}
+
+@media (max-width: 560px) {
+    .resumen-mes-cifras {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .resumen-mes-cifras > div:last-child {
+        grid-column: span 2;
+    }
+
+    .resumen-mes-destacados {
+        grid-template-columns: 1fr;
+    }
+}
