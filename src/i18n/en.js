@@ -174,6 +174,8 @@ const en = {
         filtroFechas: 'Filter by date',
         sinMovimientos: "You don't have any transactions yet",
         anterior: 'Previous',
+        paginas: 'Transaction pages',
+        paginaDe: 'Page {actual} of {total}',
         siguiente: 'Next',
         tour1Titulo: 'Your transactions',
         tour1Texto: 'Here you can see your full income and spending history.',

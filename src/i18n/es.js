@@ -177,6 +177,8 @@ const es = {
         limpiarFechas: 'Quitar fechas',
         filtroFechas: 'Filtrar por fecha',
         anterior: 'Anterior',
+        paginas: 'Páginas de movimientos',
+        paginaDe: 'Página {actual} de {total}',
         siguiente: 'Siguiente',
         tour1Titulo: 'Tus movimientos',
         tour1Texto: 'Aquí ves todo tu historial de ingresos y gastos.',

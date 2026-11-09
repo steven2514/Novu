@@ -253,7 +253,23 @@
 
 .trans-paginacion-numeros {
     display: flex;
+    align-items: center;
     gap: 0.25rem;
+}
+
+.pagina-hueco {
+    min-width: 1.5rem;
+    color: var(--texto-muted);
+    text-align: center;
+}
+
+/* "Página 3 de 12": solo en celular */
+.trans-paginacion-texto {
+    display: none;
+    color: var(--texto-gris);
+    font-size: 0.8438rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
 }
 
 .pagina-btn {
@@ -356,9 +372,36 @@
     .transaccion-item > :first-child {
         grid-row: 1 / span 2;
     }
+}
 
+/* ---------- Paginación según el ancho ---------- */
+
+/* Mediana: flechas sin texto, con los números */
+@container pagina (max-width: 40rem) {
+    .pagina-btn-texto {
+        display: none;
+    }
+
+    .trans-paginacion {
+        padding: 0.75rem 1rem;
+    }
+
+    .trans-paginacion > .pagina-btn {
+        width: 2.75rem;
+        height: 2.75rem;
+        justify-content: center;
+        padding: 0;
+    }
+}
+
+/* Celular: flechas a los lados y "Página 3 de 12" en el medio */
+@container pagina (max-width: 26rem) {
     .trans-paginacion-numeros {
         display: none;
+    }
+
+    .trans-paginacion-texto {
+        display: block;
     }
 }
 

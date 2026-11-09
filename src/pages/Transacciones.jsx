@@ -10,6 +10,7 @@ import { formatearFecha, compararFechas } from '../utils/fechas';
 import { useIdioma, nombreCategoria } from '../i18n/idioma';
 import { dinero } from '../utils/moneda';
 import { ATAJOS_FECHA, rangoDeAtajo, dentroDelRango } from '../utils/rangoFechas';
+import { paginasVisibles } from '../utils/paginacion';
 
 const ITEMS_POR_PAGINA = 10;
 
@@ -44,7 +45,9 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
         .slice()
         .sort((a, b) => compararFechas(b.fecha, a.fecha));
     const totalPaginas = Math.max(1, Math.ceil(transaccionesFiltradas.length / ITEMS_POR_PAGINA));
-    const inicio = (paginaActual - 1) * ITEMS_POR_PAGINA;
+    // Si se borran movimientos y la página actual deja de existir, se va a la última
+    const pagina = Math.min(paginaActual, totalPaginas);
+    const inicio = (pagina - 1) * ITEMS_POR_PAGINA;
     const transaccionesPagina = transaccionesFiltradas.slice(inicio, inicio + ITEMS_POR_PAGINA);
 
     function cambiarFiltro(nuevoFiltro) {
@@ -259,32 +262,43 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
                 </div>
 
                 {transaccionesFiltradas.length > 0 && totalPaginas > 1 && (
-                    <div className="trans-paginacion">
+                    <nav className="trans-paginacion" aria-label={t('transacciones.paginas')}>
                         <button
                             className="pagina-btn"
-                            disabled={paginaActual === 1}
-                            onClick={() => setPaginaActual(p => p - 1)}>
-                            <Icon name="chevron-left" size={16} /> {t('transacciones.anterior')}
+                            disabled={pagina === 1}
+                            onClick={() => setPaginaActual(pagina - 1)}
+                            aria-label={t('transacciones.anterior')}>
+                            <Icon name="chevron-left" size={16} /> <span className="pagina-btn-texto">{t('transacciones.anterior')}</span>
                         </button>
 
+                        {/* Solo la primera, la última y dos a cada lado de la actual */}
                         <div className="trans-paginacion-numeros">
-                            {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(num => (
-                                <button
-                                    key={num}
-                                    className={`pagina-btn pagina-num ${paginaActual === num ? 'activo' : ''}`}
-                                    onClick={() => setPaginaActual(num)}>
-                                    {num}
-                                </button>
+                            {paginasVisibles(pagina - 1, totalPaginas).map(p => (
+                                typeof p === 'string'
+                                    ? <span key={p} className="pagina-hueco" aria-hidden="true">…</span>
+                                    : (
+                                        <button
+                                            key={p}
+                                            className={`pagina-btn pagina-num ${pagina === p + 1 ? 'activo' : ''}`}
+                                            aria-current={pagina === p + 1 ? 'page' : undefined}
+                                            onClick={() => setPaginaActual(p + 1)}>
+                                            {p + 1}
+                                        </button>
+                                    )
                             ))}
                         </div>
 
+                        {/* En el celular, en lugar de los números */}
+                        <span className="trans-paginacion-texto">{t('transacciones.paginaDe', { actual: pagina, total: totalPaginas })}</span>
+
                         <button
                             className="pagina-btn"
-                            disabled={paginaActual === totalPaginas}
-                            onClick={() => setPaginaActual(p => p + 1)}>
-                            {t('transacciones.siguiente')} <Icon name="chevron-right" size={16} />
+                            disabled={pagina === totalPaginas}
+                            onClick={() => setPaginaActual(pagina + 1)}
+                            aria-label={t('transacciones.siguiente')}>
+                            <span className="pagina-btn-texto">{t('transacciones.siguiente')}</span> <Icon name="chevron-right" size={16} />
                         </button>
-                    </div>
+                    </nav>
                 )}
             </div>
         </div>

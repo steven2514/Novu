@@ -58,3 +58,47 @@ test('los atajos rápidos llenan las fechas', async ({ page }) => {
     await page.getByLabel('Desde').fill(`${anio}-02-01`);
     await expect(page.getByRole('button', { name: 'Este año' })).toHaveAttribute('aria-pressed', 'false');
 });
+
+// 120 movimientos = 12 páginas de 10
+async function abrirConMuchos(page) {
+    const app = await prepararApp(page);
+    app.db.transacciones = Array.from({ length: 120 }, (_, i) => {
+        const d = new Date(2026, 0, 1 + i);
+        const fecha = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        return mov(i + 1, `Gasto ${i + 1}`, fecha, 1000);
+    });
+    await page.goto('/transacciones');
+    await expect(page.locator('.trans-paginacion')).toBeVisible({ timeout: 15000 });
+    return app;
+}
+
+test('la paginación muestra pocas páginas, no todas', async ({ page }) => {
+    await abrirConMuchos(page);
+    const numeros = page.locator('.trans-paginacion-numeros .pagina-num');
+
+    // Página 1: 1 2 3 … 12
+    await expect(numeros).toHaveText(['1', '2', '3', '12']);
+    await numeros.filter({ hasText: /^3$/ }).click();
+    // Página 3: 1 2 3 4 5 … 12
+    await expect(numeros).toHaveText(['1', '2', '3', '4', '5', '12']);
+    await numeros.filter({ hasText: /^12$/ }).click();
+    await expect(numeros).toHaveText(['1', '10', '11', '12']);
+    await expect(page.getByRole('button', { name: 'Siguiente' })).toBeDisabled();
+});
+
+test.describe('en el celular', () => {
+    test.use({ viewport: { width: 360, height: 780 }, isMobile: true, hasTouch: true });
+
+    test('la paginación muestra "Página X de Y" con flechas y cabe en la pantalla', async ({ page }) => {
+        await abrirConMuchos(page);
+        const paginacion = page.locator('.trans-paginacion');
+        await expect(paginacion.getByText('Página 1 de 12')).toBeVisible();
+        await expect(paginacion.locator('.trans-paginacion-numeros')).toBeHidden();
+
+        await paginacion.getByRole('button', { name: 'Siguiente' }).tap();
+        await expect(paginacion.getByText('Página 2 de 12')).toBeVisible();
+
+        const caja = await paginacion.boundingBox();
+        expect(caja.x + caja.width).toBeLessThanOrEqual(360);
+    });
+});
