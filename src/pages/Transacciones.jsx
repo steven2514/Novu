@@ -9,6 +9,7 @@ import { exportarPDF, pesos } from '../utils/exportarPDF';
 import { formatearFecha, compararFechas } from '../utils/fechas';
 import { useIdioma, nombreCategoria } from '../i18n/idioma';
 import { dinero } from '../utils/moneda';
+import { ATAJOS_FECHA, rangoDeAtajo, dentroDelRango } from '../utils/rangoFechas';
 
 const ITEMS_POR_PAGINA = 10;
 
@@ -17,19 +18,26 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
     const [filtro, setFiltro] = useState('todos');
     const [busqueda, setBusqueda] = useState('');
     const [paginaActual, setPaginaActual] = useState(1);
+    // Rango de fechas: un atajo (este mes, mes pasado...) o 'personalizado'
+    const [atajo, setAtajo] = useState('todo');
+    const [rango, setRango] = useState({ desde: '', hasta: '' });
     const { mostrarTour, cerrarTour } = useTour('transacciones', sesion);
     const { t } = useIdioma();
 
-    const totalIngresos = transacciones
+    // Los totales de arriba siguen el rango de fechas elegido
+    const delRango = transacciones.filter(mov => dentroDelRango(mov.fecha, rango));
+    const hayFechas = !!(rango.desde || rango.hasta);
+
+    const totalIngresos = delRango
         .filter(mov => mov.tipo === 'ingreso')
         .reduce((acc, mov) => acc + Number(mov.monto), 0);
 
-    const totalGastos = transacciones
+    const totalGastos = delRango
         .filter(mov => mov.tipo === 'gasto')
         .reduce((acc, mov) => acc + Number(mov.monto), 0);
 
     const texto = busqueda.trim().toLowerCase();
-    const transaccionesFiltradas = transacciones
+    const transaccionesFiltradas = delRango
         .filter(mov => filtro === 'todos' || mov.tipo === filtro)
         .filter(mov => !texto || [mov.descripcion, mov.categoria, nombreCategoria(mov.categoria), mov.cuenta]
             .some(campo => (campo || '').toLowerCase().includes(texto)))
@@ -49,6 +57,29 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
         setPaginaActual(1);
     }
 
+    function elegirAtajo(nuevo) {
+        setAtajo(nuevo);
+        setRango(rangoDeAtajo(nuevo));
+        setPaginaActual(1);
+    }
+
+    // Escribir una fecha a mano pasa a un rango personalizado
+    function cambiarFecha(extremo, valor) {
+        const nuevo = { ...rango, [extremo]: valor };
+        setRango(nuevo);
+        setAtajo(nuevo.desde || nuevo.hasta ? 'personalizado' : 'todo');
+        setPaginaActual(1);
+    }
+
+    // Texto del rango para el PDF: "Del 1 nov 2026 al 30 nov 2026"
+    function textoRango() {
+        const corta = (valor) => formatearFecha(valor, { day: 'numeric', month: 'short', year: 'numeric' });
+        if (rango.desde && rango.hasta) return t('pdf.rango', { desde: corta(rango.desde), hasta: corta(rango.hasta) });
+        if (rango.desde) return t('pdf.desdeFecha', { fecha: corta(rango.desde) });
+        if (rango.hasta) return t('pdf.hastaFecha', { fecha: corta(rango.hasta) });
+        return null;
+    }
+
     // El PDF lleva lo que se está viendo: con el filtro y la búsqueda aplicados.
     function exportar() {
         const suma = (tipo) => transaccionesFiltradas.filter(mov => mov.tipo === tipo).reduce((acc, mov) => acc + Number(mov.monto), 0);
@@ -60,6 +91,7 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
             titulo: t('transacciones.titulo'),
             subtitulo: [
                 t('pdf.registros', { n: transaccionesFiltradas.length }),
+                textoRango(),
                 filtro !== 'todos' ? t(`transacciones.${filtro === 'ingreso' ? 'ingresos' : 'gastos'}`) : null,
                 busqueda.trim() ? t('pdf.busqueda', { texto: busqueda.trim() }) : null,
             ].filter(Boolean).join('  ·  '),
@@ -153,12 +185,44 @@ function Transacciones({ transacciones, eliminar, abrirModal, sesion }) {
                     </label>
                 </div>
 
+                {/* Fechas: atajos rápidos o un rango a mano */}
+                <div className="trans-fechas" role="group" aria-label={t('transacciones.filtroFechas')}>
+                    <div className="trans-atajos">
+                        {ATAJOS_FECHA.map(id => (
+                            <button
+                                key={id}
+                                type="button"
+                                className={atajo === id ? 'activo' : ''}
+                                aria-pressed={atajo === id}
+                                onClick={() => elegirAtajo(id)}
+                            >
+                                {t(`transacciones.atajos.${id}`)}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="trans-rango">
+                        <label>
+                            <span>{t('transacciones.desde')}</span>
+                            <input type="date" value={rango.desde} max={rango.hasta || undefined} onChange={(e) => cambiarFecha('desde', e.target.value)} />
+                        </label>
+                        <label>
+                            <span>{t('transacciones.hasta')}</span>
+                            <input type="date" value={rango.hasta} min={rango.desde || undefined} onChange={(e) => cambiarFecha('hasta', e.target.value)} />
+                        </label>
+                        {hayFechas && (
+                            <button type="button" className="trans-limpiar-fechas" onClick={() => elegirAtajo('todo')}>
+                                <Icon name="x" size={14} /> {t('transacciones.limpiarFechas')}
+                            </button>
+                        )}
+                    </div>
+                </div>
+
                 <div className="trans-lista">
                     {transaccionesFiltradas.length === 0
                         ? (
                             <div className="vacio">
                                 <Icon name="receipt" size={28} />
-                                <p>{busqueda ? t('transacciones.sinResultados') : t('transacciones.sinMovimientos')}</p>
+                                <p>{busqueda || hayFechas ? t('transacciones.sinResultados') : t('transacciones.sinMovimientos')}</p>
                             </div>
                         )
                         : transaccionesPagina.map((mov) => (

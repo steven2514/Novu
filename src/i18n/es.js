@@ -170,6 +170,12 @@ const es = {
         buscar: 'Buscar por descripción, categoría o cuenta',
         sinResultados: 'No hay movimientos que coincidan con tu búsqueda',
         sinMovimientos: 'Todavía no tienes movimientos',
+        // Filtro por fechas
+        atajos: { todo: 'Todas las fechas', mes: 'Este mes', mesPasado: 'Mes pasado', semana: 'Últimos 7 días', anio: 'Este año' },
+        desde: 'Desde',
+        hasta: 'Hasta',
+        limpiarFechas: 'Quitar fechas',
+        filtroFechas: 'Filtrar por fecha',
         anterior: 'Anterior',
         siguiente: 'Siguiente',
         tour1Titulo: 'Tus movimientos',
@@ -634,6 +640,9 @@ const es = {
         sinDatos: 'No hay datos para mostrar',
         registros: { uno: '{n} registro', otros: '{n} registros' },
         busqueda: 'Búsqueda: "{texto}"',
+        rango: 'Del {desde} al {hasta}',
+        desdeFecha: 'Desde el {fecha}',
+        hastaFecha: 'Hasta el {fecha}',
         col: {
             fecha: 'Fecha',
             descripcion: 'Descripción',
